@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "57106897766",
+    "firebase_url": "https://erp-ranger-app.firebaseio.com",
+    "project_id": "erp-ranger-app",
+    "storage_bucket": "erp-ranger-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:57106897766:android:ad2af91e19678c56",
+        "android_client_info": {
+          "package_name": "ngo.erp.erp_ranger_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "57106897766-5gclcvgef8rj8h63csvksdqaqk958eb6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArcavcPL0-hdLcbknUGGx9xdX6NR1AJ0o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "57106897766-5gclcvgef8rj8h63csvksdqaqk958eb6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
