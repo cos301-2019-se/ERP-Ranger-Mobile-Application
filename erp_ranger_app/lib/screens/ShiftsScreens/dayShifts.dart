@@ -20,13 +20,11 @@ class DSState extends State<DSScreen>{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
-        body: ListView(
+    return Stack(
+        children: <Widget>[
+        ListView(
         children : <Widget>[
-          Container(
-              child: RaisedButton(onPressed: goBack,
-                child: Text("Back"),)
-          ),
+
           Container(margin: new EdgeInsets.symmetric(vertical:5.0),child:
           Card(child: _sizedCardDS(context, "Day - DD/MM/YYYY")),
           ),
@@ -34,7 +32,32 @@ class DSState extends State<DSScreen>{
           Card(child: _sizedCardDS(context, "Day - DD/MM/YYYY")),
           ),
 
-        ]));
+        ]),
+        PreferredSize(child: Container(
+            decoration : BoxDecoration(color: Colors.transparent) ,height: 50,child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+
+            GestureDetector(
+              onTap: goBack,
+              child: ClipOval(
+                child: Container(
+
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(25.0), border: Border.all(color: Colors.blue,width: 1.0), color: Colors.white),
+
+                height: 40.0,
+                width: 40.0,
+                child: Center(
+                  child:  Icon(Icons.arrow_back, color: Colors.blue,),
+                ),
+              ),
+            ))
+
+
+          ],
+        )), preferredSize: Size.fromHeight(50.0),)
+        ]);
   }
 
 }
