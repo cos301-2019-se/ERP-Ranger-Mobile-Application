@@ -156,7 +156,7 @@ class EndOfShift extends State<EndOfShiftScreen> {
           ),
           color: Colors.blue,
           child: Text(
-            'Return Asset', style: TextStyle(
+            'End Shift', style: TextStyle(
               fontSize: 20.0,
               color: Colors.white
           ),
