@@ -1,4 +1,5 @@
 import 'package:erp_ranger_app/screens/home.dart';
+import 'package:erp_ranger_app/screens/shifts.dart';
 import 'package:flutter/material.dart';
 
 
@@ -12,6 +13,7 @@ class BaseScreen extends StatefulWidget {
 
   final drawerItems = [
     new DrawerItem("Home", Icons.home),
+    new DrawerItem("Shifts", Icons.timer),
     //new DrawerItem("Screen Items", Icons.mail),
   ];
 
@@ -32,8 +34,9 @@ class BaseScreenState extends State<BaseScreen> {
     switch (pos) {
       case 0:
         return new HomeScreen();
-      //case 1:
+      case 1:
         //return new Screen();...
+        return new ShiftsScreen();
       default:
         return new Text("Error");
     }
