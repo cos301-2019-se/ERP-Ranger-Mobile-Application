@@ -12,7 +12,7 @@ class EndOfShift extends State<EndOfShiftScreen> {
   bool feedbackBoxValue = false;
   bool feedbackFlag = false;
   int length = 7;
-
+//
 /*
   void showReturnAssetForm() async {
     if(checkBoxValue && !assetFlag) {
