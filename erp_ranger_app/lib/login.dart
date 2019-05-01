@@ -1,4 +1,5 @@
 import 'package:erp_ranger_app/base.dart';
+import 'package:erp_ranger_app/dashboard.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -11,7 +12,7 @@ class LoginScreen extends StatefulWidget {
 class LoginState extends State<LoginScreen> {
 
   void performLogin() async {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => BaseScreen()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Dashboard()));
   }
   
   @override
