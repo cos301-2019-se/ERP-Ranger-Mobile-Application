@@ -1,5 +1,6 @@
 import 'package:erp_ranger_app/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:erp_ranger_app/screens/endShift.dart';
 
 
 class DrawerItem {
@@ -12,6 +13,7 @@ class BaseScreen extends StatefulWidget {
 
   final drawerItems = [
     new DrawerItem("Home", Icons.home),
+    new DrawerItem("Shift End", Icons.cake),
     //new DrawerItem("Screen Items", Icons.mail),
   ];
 
@@ -32,7 +34,10 @@ class BaseScreenState extends State<BaseScreen> {
     switch (pos) {
       case 0:
         return new HomeScreen();
-      //case 1:
+
+      case 1:
+        return new EndOfShiftScreen();
+      //case n:
         //return new Screen();...
       default:
         return new Text("Error");
