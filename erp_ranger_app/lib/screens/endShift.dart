@@ -28,9 +28,6 @@ class EndOfShift extends State<EndOfShiftScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('End of Shift'),
-      ),
       body: new Container(
           padding: EdgeInsets.all(16.0),
           child: new ListView.builder(
@@ -72,6 +69,7 @@ class EndOfShift extends State<EndOfShiftScreen> {
             'Asset to return?',
             textAlign: TextAlign.center,
             textScaleFactor: 1.5,
+            style: TextStyle(color: Colors.white),
           ),
         ),
       ),
@@ -107,6 +105,7 @@ class EndOfShift extends State<EndOfShiftScreen> {
             'Feedback to report?',
             textAlign: TextAlign.center,
             textScaleFactor: 1.5,
+            style: TextStyle(color: Colors.white),
           ),
         ),
       ),
