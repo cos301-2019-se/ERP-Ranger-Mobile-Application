@@ -1,0 +1,23 @@
+os:
+  - linux
+sudo: false
+licenses:
+  - 'android-sdk-preview-license-.+'
+  - 'android-sdk-license-.+'
+  - 'google-gdk-license-.+'
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - libstdc++6
+      - fonts-droid
+before_script:
+  - git clone https://github.com/flutter/flutter.git -b beta
+  - ./flutter/bin/flutter doctor
+  - ./flutter/bin/flutter packages get
+script:
+  - ./flutter/bin/flutter test test/full_test.dart
+cache:
+  directories:
+    - $HOME/.pub-cache
