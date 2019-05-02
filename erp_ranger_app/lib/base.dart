@@ -1,7 +1,6 @@
 import 'package:erp_ranger_app/screens/home.dart';
 import 'package:flutter/material.dart';
 
-
 class DrawerItem {
   String title;
   IconData icon;

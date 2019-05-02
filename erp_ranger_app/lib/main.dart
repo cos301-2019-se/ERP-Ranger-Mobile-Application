@@ -1,10 +1,10 @@
 import 'package:erp_ranger_app/login.dart';
+import 'package:erp_ranger_app/services/auth.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(RangerApp());
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class RangerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginScreen()
+      home: LoginScreen(auth: new Auth())
     );
   }
 }
