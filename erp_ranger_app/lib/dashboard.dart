@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:erp_ranger_app/base.dart';
+import 'package:erp_ranger_app/login.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -40,7 +42,22 @@ class _DashboardState extends State<Dashboard> {
         child: Container(
           decoration: BoxDecoration(color: Color.fromRGBO(220, 220, 220, 1.0)),
           child: new InkWell(
-            onTap: () {},
+            // Bind individual screens to buttons TODO add various screen links
+            onTap: () {
+              if (title == "Log Shifts") {
+                Navigator.pop(context);
+                Navigator.push(context, new MaterialPageRoute(
+                    builder: (context) => new BaseScreen()));
+              } else if (title == "Log Reports"){
+                Navigator.pop(context);
+                Navigator.push(context, new MaterialPageRoute(
+                    builder: (context) => new BaseScreen()));
+              } else {
+                Navigator.pop(context);
+                Navigator.push(context, new MaterialPageRoute(
+                    builder: (context) => new LoginScreen()));
+              }
+            },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
