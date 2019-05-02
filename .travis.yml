@@ -12,6 +12,8 @@ addons:
     packages:
       - libstdc++6
       - fonts-droid
+before_install: 
+  -cd erp_ranger_app
 before_script:
   - git clone https://github.com/flutter/flutter.git -b beta
   - ./flutter/bin/flutter doctor
