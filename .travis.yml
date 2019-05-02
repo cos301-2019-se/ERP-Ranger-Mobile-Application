@@ -1,12 +1,9 @@
 os:
   - linux
 sudo: false
-licenses:
-  - 'android-sdk-preview-license-.+'
-  - 'android-sdk-license-.+'
-  - 'google-gdk-license-.+'
 addons:
   apt:
+    # Flutter dependencies
     sources:
       - ubuntu-toolchain-r-test
     packages:
