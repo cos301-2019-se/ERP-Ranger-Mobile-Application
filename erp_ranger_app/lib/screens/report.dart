@@ -1,3 +1,4 @@
+import 'package:erp_ranger_app/components/drawer.dart';
 import 'package:flutter/material.dart';
 
 class ReportScreen extends StatefulWidget {
@@ -16,14 +17,22 @@ class ReportState extends State<ReportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 0.0),
-      child: ListView(
-        children: <Widget>[
-          _showReportDetails(),
-          _showReportTextField(),
-          _showReportButton()
-        ],
+    return new Scaffold(
+      appBar: new AppBar(
+        title: Text("ERP Ranger Mobile App"),
+        elevation: .1,
+        backgroundColor: Color.fromRGBO(18, 27, 65, 1.0),
+      ),
+      drawer: new CustomDrawer(),
+      body: Container(
+        padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 0.0),
+        child: ListView(
+          children: <Widget>[
+            _showReportDetails(),
+            _showReportTextField(),
+            _showReportButton()
+          ],
+        ),
       ),
     );
   }
@@ -37,10 +46,10 @@ class ReportState extends State<ReportScreen> {
           color: Colors.blue
         ),
         children: <TextSpan>[
-          new TextSpan(text: 'Ranger name:\n'),
+          /*new TextSpan(text: 'Ranger name:\n'),
           new TextSpan(text: 'Automatically Retrieved\n',style: new TextStyle(fontSize: 15.0,color: Colors.black)),
           new TextSpan(text: 'Ranger ID:\n'),
-          new TextSpan(text: 'Automatically Retrieved\n',style: new TextStyle(fontSize: 15.0,color: Colors.black)),
+          new TextSpan(text: 'Automatically Retrieved\n',style: new TextStyle(fontSize: 15.0,color: Colors.black)),*/
           new TextSpan(text: 'Location:\n'),
           new TextSpan(text: 'Automatically Retrieved\n',style: new TextStyle(fontSize: 15.0,color: Colors.black)),
           new TextSpan(text: 'Date:\n'),

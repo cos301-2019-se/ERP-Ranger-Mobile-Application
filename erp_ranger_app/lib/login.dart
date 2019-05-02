@@ -1,4 +1,5 @@
-import 'package:erp_ranger_app/base.dart';
+
+import 'package:erp_ranger_app/screens/dashboard.dart';
 import 'package:erp_ranger_app/services/auth.dart';
 import 'package:erp_ranger_app/services/validator.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class LoginState extends State<LoginScreen> {
       });
       try {
         String uid = await widget.auth.signIn(_email, _password);
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BaseScreen()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
       } on PlatformException catch (e) {
         setState(() {
           this._attempting = false;
