@@ -12,7 +12,7 @@ addons:
 before_install: 
   - cd erp_ranger_app
 before_script:
-  - git clone https://github.com/flutter/flutter.git -b beta
+  - git clone https://github.com/flutter/flutter.git -b v1.2.1
   - ./flutter/bin/flutter doctor
   - ./flutter/bin/flutter packages get
 script:
