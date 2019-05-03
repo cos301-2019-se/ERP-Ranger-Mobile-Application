@@ -1,4 +1,5 @@
 import 'package:erp_ranger_app/components/drawer.dart';
+import 'package:erp_ranger_app/screens/assets.dart';
 import 'package:erp_ranger_app/screens/report.dart';
 import 'package:erp_ranger_app/screens/shifts.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +61,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               } else {
                 //Navigator.pop(context);
                 Navigator.push(context, new MaterialPageRoute(
-                    builder: (context) => new LoginScreen()));
+                    builder: (context) => new AssetsScreen(myAssets: false)));
               }
             },
             child: Column(
