@@ -1,5 +1,6 @@
 import 'package:erp_ranger_app/components/drawer.dart';
 import 'package:erp_ranger_app/screens/assets.dart';
+import 'package:erp_ranger_app/screens/endShift.dart';
 import 'package:erp_ranger_app/screens/report.dart';
 import 'package:erp_ranger_app/screens/shifts.dart';
 import 'package:flutter/material.dart';
@@ -58,10 +59,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 //Navigator.pop(context);
                 Navigator.push(context, new MaterialPageRoute(
                     builder: (context) => new ReportScreen()));
-              } else {
+              } else if (title == "View Assets") {
                 //Navigator.pop(context);
                 Navigator.push(context, new MaterialPageRoute(
                     builder: (context) => new AssetsScreen(myAssets: false)));
+              } else {
+                Navigator.push(context, new MaterialPageRoute(
+                    builder: (context) => new EndOfShiftScreen()));
               }
             },
             child: Column(

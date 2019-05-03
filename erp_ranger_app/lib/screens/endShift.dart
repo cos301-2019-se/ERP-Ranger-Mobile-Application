@@ -1,3 +1,5 @@
+
+import 'package:erp_ranger_app/components/drawer.dart';
 import 'package:flutter/material.dart';
 
 class EndOfShiftScreen extends StatefulWidget {
@@ -28,6 +30,12 @@ class EndOfShift extends State<EndOfShiftScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      appBar: AppBar(
+        title: Text("End Shift"),
+        elevation: .1,
+        backgroundColor: Color.fromRGBO(18, 27, 65, 1.0),
+      ),
+      drawer: CustomDrawer(),
       body: new Container(
           padding: EdgeInsets.all(16.0),
           child: new ListView.builder(
