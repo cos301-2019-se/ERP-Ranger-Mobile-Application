@@ -1,5 +1,6 @@
 
 import 'package:erp_ranger_app/login.dart';
+import 'package:erp_ranger_app/screens/assets.dart';
 import 'package:erp_ranger_app/screens/dashboard.dart';
 import 'package:erp_ranger_app/screens/report.dart';
 import 'package:erp_ranger_app/screens/shifts.dart';
@@ -43,7 +44,7 @@ class CustomDrawerState extends State<CustomDrawer> {
         Navigator.push(context, MaterialPageRoute(builder: (context) => ShiftsScreen()));
         return;
       case 3: // Park Assets
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ShiftsScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => AssetsScreen(myAssets: false)));
         return;
       case 4: // Submit a Report
         Navigator.push(context, MaterialPageRoute(builder: (context) => ReportScreen()));
