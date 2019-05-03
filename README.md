@@ -26,3 +26,6 @@ flutter test test/widget_test.dart
 flutter test test/integration_test.dart
 ```
 
+## Team Page
+[The Tenacious Technicians Team Page:](https://cs.up.ac.za/teams/pages/site_view/66)
+
