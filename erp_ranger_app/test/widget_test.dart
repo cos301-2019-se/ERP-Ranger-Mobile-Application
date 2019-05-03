@@ -1,30 +1,25 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:erp_ranger_app/main.dart';
+import 'widget/asset_test.dart' as asset_test;
+import 'widget/assets_test.dart' as assets_test;
+import 'widget/end_shift_test.dart' as end_shift_test;
+import 'widget/login_test.dart' as login_test;
+import 'widget/dashboard_test.dart' as dashboard_test;
+import 'widget/report_test.dart' as report_test;
+import 'widget/shifts_test.dart' as shifts_test;
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  group('Widget Tests', () {
+    login_test.main();
+    dashboard_test.main();
+    report_test.main();
+    shifts_test.main();
+    asset_test.main();
+    assets_test.main();
+    end_shift_test.main();
   });
+
 }
+
