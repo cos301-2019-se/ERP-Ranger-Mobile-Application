@@ -1,21 +1,28 @@
+import 'package:erp_ranger_app/components/drawer.dart';
+import 'package:erp_ranger_app/screens/assets.dart';
+import 'package:erp_ranger_app/screens/endShift.dart';
+import 'package:erp_ranger_app/screens/report.dart';
+import 'package:erp_ranger_app/screens/shifts.dart';
 import 'package:flutter/material.dart';
-import 'package:erp_ranger_app/base.dart';
 import 'package:erp_ranger_app/login.dart';
 
-class Dashboard extends StatefulWidget {
+class DashboardScreen extends StatefulWidget {
+
   @override
-  _DashboardState createState() => _DashboardState();
+  _DashboardScreenState createState() => _DashboardScreenState();
+
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("ERP Ranger Mobile App"),
         elevation: .1,
-        backgroundColor: Color.fromRGBO(49, 87, 110, 1.0),
+        backgroundColor: Color.fromRGBO(18, 27, 65, 1.0),
       ),
+      drawer: CustomDrawer(),
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 2.0),
         child: GridView.count(
@@ -23,12 +30,10 @@ class _DashboardState extends State<Dashboard> {
           padding: EdgeInsets.all(3.0),
           children: <Widget>[
             // TODO rename
-            makeDashboardItem("Shifts", Icons.book),
-            makeDashboardItem("Reports", Icons.alarm),
-            makeDashboardItem("Log Feedback", Icons.alarm),
-            makeDashboardItem("View Assets", Icons.alarm),
-            makeDashboardItem("Alphabet", Icons.alarm),
-            makeDashboardItem("Alphabet", Icons.alarm)
+            makeDashboardItem("Shifts", Icons.assignment_ind),
+            makeDashboardItem("Reports", Icons.warning),
+            makeDashboardItem("Log Feedback", Icons.assignment),
+            makeDashboardItem("View Assets", Icons.business_center)
           ],
         ),
       ),
@@ -45,17 +50,20 @@ class _DashboardState extends State<Dashboard> {
             // Bind individual screens to buttons TODO add various screen links
             onTap: () {
               if (title == "Shifts") {
-                Navigator.pop(context);
+                //Navigator.pop(context);
                 Navigator.push(context, new MaterialPageRoute(
-                    builder: (context) => new BaseScreen()));
+                    builder: (context) => new ShiftsScreen()));
               } else if (title == "Reports"){
-                Navigator.pop(context);
+                //Navigator.pop(context);
                 Navigator.push(context, new MaterialPageRoute(
-                    builder: (context) => new BaseScreen()));
+                    builder: (context) => new ReportScreen()));
+              } else if (title == "View Assets") {
+                //Navigator.pop(context);
+                Navigator.push(context, new MaterialPageRoute(
+                    builder: (context) => new AssetsScreen(myAssets: false)));
               } else {
-                Navigator.pop(context);
                 Navigator.push(context, new MaterialPageRoute(
-                    builder: (context) => new LoginScreen()));
+                    builder: (context) => new EndOfShiftScreen()));
               }
             },
             child: Column(
