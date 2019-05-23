@@ -1,0 +1,8 @@
+language: node_js
+node_js:
+  - "node"
+cache: npm
+env:
+  - production=false
+  
+# WE WON'T IMPLEMENT CD BECAUSE THE REPO ISN'T PRIVATE

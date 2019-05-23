@@ -1,0 +1,43 @@
+<mat-drawer-container class="" [hasBackdrop]="false">
+  <mat-drawer #drawer mode="side" [opened]="loggedIn">
+    <div class="drawer-container">
+      <img src="assets/images/erplogo_trans.png" alt="ERP Logo" class="drawer-logo">
+      <ul>
+        <li>
+          Dashboard
+        </li>
+        <li>
+          Rangers
+        </li>
+      </ul>
+    </div>
+  </mat-drawer>
+  <mat-drawer-content>
+    <mat-toolbar color="primary" *ngIf="loggedIn">
+      <div>
+        <button mat-icon-button (click)="drawer.toggle()">
+            <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+      <div>
+        <a>
+          ERP Ranger Admin Portal
+        </a>
+      </div>
+      <div fxFlex fxLayout fxLayoutAlign="flex-end">
+        <ul fxLayout fxLayoutGap="20px" class="navigation-items">
+          <li *ngIf="loggedIn">
+            <a (click)="logout()">
+              <span class="label">Logout</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </mat-toolbar>
+    <main>
+      <div class="main-container">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </mat-drawer-content>
+</mat-drawer-container>
