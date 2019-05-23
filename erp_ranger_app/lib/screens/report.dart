@@ -1,7 +1,8 @@
 import 'package:erp_ranger_app/components/drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:location/location.dart';
 
 class ReportScreen extends StatefulWidget {
     @override
@@ -10,29 +11,31 @@ class ReportScreen extends StatefulWidget {
 
 class ReportState extends State<ReportScreen> {
   final TextEditingController _reportTextFieldController = new TextEditingController();
-  final DatabaseReference _firebaseDatabase = FirebaseDatabase.instance.reference();
-  final Geolocator _geolocator = Geolocator();
+  final Geoflutterfire _geoFlutterFire = Geoflutterfire();
 
-  Position _userLocation;
+  Location _location = new Location();
+  GeoFirePoint _userPointLocation;
   DateTime _now;
   String _reportDetails;
   String _reportType;
 
   void _performReport() async {
-    _userLocation = await _geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    var _userPos = await _location.getLocation();
+    _userPointLocation = _geoFlutterFire.point(latitude: _userPos.latitude, longitude: _userPos.longitude);
     _now = new DateTime.now();
-    _firebaseDatabase.push().set({"location": _userLocation,
-      "park": "Rietvlei",
-      "report": _reportDetails,
-      "time": _now,
-      "type": _reportType,
-      "user": 1});
+    await Firestore.instance.collection('reports').add({
+                                                      "location": _userPointLocation.data,
+                                                      "park": "Rietvlei",
+                                                      "report": _reportDetails,
+                                                      "time": _now,
+                                                      "type": _reportType,
+                                                      "user": 1
+                                                    });
     _reportTextFieldController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
-    _firebaseDatabase.child("reports");
     return new Scaffold(
       appBar: new AppBar(
         title: Text("ERP Ranger Mobile App"),
