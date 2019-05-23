@@ -4,6 +4,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ShiftNewComponent } from './pages/shift-new/shift-new.component';
 import { ShiftListComponent } from './pages/shift-list/shift-list.component';
 import { ShiftDetailComponent } from './pages/shift-detail/shift-detail.component';
+import { ReportOverviewComponent } from './pages/report-overview/report-overview.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
   {
     path: 'shifts',
     component: ShiftListComponent
+  },
+  {
+    path: 'reports',
+    component: ReportOverviewComponent
   },
   {
     path: '',

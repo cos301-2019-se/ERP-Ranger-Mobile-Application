@@ -6,12 +6,18 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ShiftListComponent } from './pages/shift-list/shift-list.component';
 import { ShiftNewComponent } from './pages/shift-new/shift-new.component';
 import { ShiftDetailComponent } from './pages/shift-detail/shift-detail.component';
+import { ReportOverviewComponent } from './pages/report-overview/report-overview.component';
+import { AgmCoreModule } from '@agm/core';
 
 @NgModule({
-  declarations: [DashboardComponent, ShiftListComponent, ShiftNewComponent, ShiftDetailComponent],
+  declarations: [DashboardComponent, ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, ReportOverviewComponent],
   imports: [
     CommonModule,
-    AdminRoutingModule
+    AdminRoutingModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyArcavcPL0-hdLcbknUGGx9xdX6NR1AJ0o'
+      //apiKey: 'AIzaSyAvcDy5ZYc2ukCS6TTtI3RYX5QmuoV8Ffw'
+    })
   ]
 })
 export class AdminModule { }

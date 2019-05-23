@@ -14,6 +14,7 @@ import { environment } from 'src/environments/environment';
 import { MaterialModule } from './material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AgmCoreModule } from '@agm/core';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MaterialModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyArcavcPL0-hdLcbknUGGx9xdX6NR1AJ0o'
+      //apiKey: 'AIzaSyAvcDy5ZYc2ukCS6TTtI3RYX5QmuoV8Ffw'
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
