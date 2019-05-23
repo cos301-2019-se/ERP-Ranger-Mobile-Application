@@ -30,16 +30,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
           padding: EdgeInsets.all(3.0),
           children: <Widget>[
             // TODO rename
-            makeDashboardItem("Shifts", Icons.book),
-            makeDashboardItem("Reports", Icons.alarm),
-            makeDashboardItem("Log Feedback", Icons.alarm),
-            makeDashboardItem("View Assets", Icons.alarm),
-            makeDashboardItem("Alphabet", Icons.alarm),
-            makeDashboardItem("Alphabet", Icons.alarm)
+            makeDashboardItem("Shifts", Icons.assignment_ind),
+            makeDashboardItem("Reports", Icons.warning),
+            makeDashboardItem("Log Feedback", Icons.assignment),
+            makeDashboardItem("View Assets", Icons.business_center)
           ],
         ),
       ),
     );
+  }
+
+  void _openScreen(String title) {
+    if (title == "Shifts") {
+      //Navigator.pop(context);
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new ShiftsScreen()));
+    } else if (title == "Reports"){
+      //Navigator.pop(context);
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new ReportScreen()));
+    } else if (title == "View Assets") {
+      //Navigator.pop(context);
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new AssetsScreen(myAssets: false)));
+    } else {
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new EndOfShiftScreen()));
+    }
   }
 
   Card makeDashboardItem(String title, IconData icon) {
@@ -51,22 +68,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: new InkWell(
             // Bind individual screens to buttons TODO add various screen links
             onTap: () {
-              if (title == "Shifts") {
-                //Navigator.pop(context);
-                Navigator.push(context, new MaterialPageRoute(
-                    builder: (context) => new ShiftsScreen()));
-              } else if (title == "Reports"){
-                //Navigator.pop(context);
-                Navigator.push(context, new MaterialPageRoute(
-                    builder: (context) => new ReportScreen()));
-              } else if (title == "View Assets") {
-                //Navigator.pop(context);
-                Navigator.push(context, new MaterialPageRoute(
-                    builder: (context) => new AssetsScreen(myAssets: false)));
-              } else {
-                Navigator.push(context, new MaterialPageRoute(
-                    builder: (context) => new EndOfShiftScreen()));
-              }
+              _openScreen(title);
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
