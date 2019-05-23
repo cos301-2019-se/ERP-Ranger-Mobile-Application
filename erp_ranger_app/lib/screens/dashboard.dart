@@ -40,6 +40,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  void _openScreen(String title) {
+    if (title == "Shifts") {
+      //Navigator.pop(context);
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new ShiftsScreen()));
+    } else if (title == "Reports"){
+      //Navigator.pop(context);
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new ReportScreen()));
+    } else if (title == "View Assets") {
+      //Navigator.pop(context);
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new AssetsScreen(myAssets: false)));
+    } else {
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new EndOfShiftScreen()));
+    }
+  }
+
   Card makeDashboardItem(String title, IconData icon) {
     return Card(
         elevation: 1.0,
@@ -49,22 +68,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: new InkWell(
             // Bind individual screens to buttons TODO add various screen links
             onTap: () {
-              if (title == "Shifts") {
-                //Navigator.pop(context);
-                Navigator.push(context, new MaterialPageRoute(
-                    builder: (context) => new ShiftsScreen()));
-              } else if (title == "Reports"){
-                //Navigator.pop(context);
-                Navigator.push(context, new MaterialPageRoute(
-                    builder: (context) => new ReportScreen()));
-              } else if (title == "View Assets") {
-                //Navigator.pop(context);
-                Navigator.push(context, new MaterialPageRoute(
-                    builder: (context) => new AssetsScreen(myAssets: false)));
-              } else {
-                Navigator.push(context, new MaterialPageRoute(
-                    builder: (context) => new EndOfShiftScreen()));
-              }
+              _openScreen(title);
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
