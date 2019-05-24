@@ -25,6 +25,8 @@ dependencies:
   cloud_firestore: 0.9.13
   cloud_functions: 0.1.2
   flutter_calendar: ^0.0.8
+  geoflutterfire: 2.0.2
+  location: 2.3.5
   #firebase_messaging: 4.0.0+4
   #geolocator: 4.0.1
 
