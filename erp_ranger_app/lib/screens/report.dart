@@ -25,7 +25,7 @@ class ReportState extends State<ReportScreen> {
     _now = new DateTime.now();
     await Firestore.instance.collection('reports').add({
                                                       "location": _userPointLocation.data,
-                                                      "park": "Rietvlei",
+                                                      "park": "iwGnWNuDC3m1hRzNNBT5",
                                                       "report": _reportDetails,
                                                       "time": _now,
                                                       "type": _reportType,
