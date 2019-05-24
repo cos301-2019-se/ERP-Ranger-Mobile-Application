@@ -4,10 +4,16 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ShiftNewComponent } from './pages/shift-new/shift-new.component';
 import { ShiftListComponent } from './pages/shift-list/shift-list.component';
 import { ShiftDetailComponent } from './pages/shift-detail/shift-detail.component';
+import { NavComponent } from './components/nav/nav.component';
 
 const routes: Routes = [
   {
-    path: 'dashboard',
+    path: '',
+    component: NavComponent,
+    outlet: 'nav'
+  },
+  {
+    path: '',
     component: DashboardComponent
   },
   {
@@ -23,8 +29,8 @@ const routes: Routes = [
     component: ShiftListComponent
   },
   {
-    path: '',
-    redirectTo: 'dashboard',
+    path: 'dashboard',
+    redirectTo: '',
     pathMatch: 'full'
   }
 ];

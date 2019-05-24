@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -7,14 +8,20 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
 
-  loggedIn: boolean;
+  loggedIn: boolean = false;
 
-  constructor() {
-    this.loggedIn = false;
+  constructor(private auth: AuthService) {
+    this.auth.user.subscribe(result => {
+      if(result != null) {
+        this.loggedIn = true;
+      } else {
+        this.loggedIn = false;
+      }
+    });
   }
 
   logout() {
-    console.log('logged out!');
+    this.auth.logout();
   }
 
 }
