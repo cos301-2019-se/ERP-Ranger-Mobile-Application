@@ -1,3 +1,18 @@
-<p>
-  shift-list works!
-</p>
+
+  <div *ngFor="let shifts of shiftsAll">
+      <div class="shift">
+          
+          <div>
+            Name: {{ getUser(shifts.payload.doc.data().user) }}
+            
+          </div>
+          <div>
+            <!--Starting time : {{ convertToDate(shifts.payload.doc.data().start) }}-->
+            Starting time : {{ shifts.payload.doc.data().start.toDate() | date:'dd/MM/yyyy HH:mm:ss'}}
+          </div>
+          <div>
+            Ending time : {{ shifts.payload.doc.data().end.toDate() | date:'dd/MM/yyyy HH:mm:ss'}}
+          </div>
+      </div>
+
+
