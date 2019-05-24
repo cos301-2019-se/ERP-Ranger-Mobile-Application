@@ -3,8 +3,6 @@ import { ShiftService} from '../../services/shift.service';
 import { shiftInitState } from '@angular/core/src/view';
 import { UserService} from '../../../../services/user.service';
 
-import { tmpdir } from 'os';
-import { currentId } from 'async_hooks';
 import {firestore} from 'firebase/app';
 import Timestamp = firestore.Timestamp;
 
