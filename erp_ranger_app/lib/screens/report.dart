@@ -29,7 +29,7 @@ class ReportState extends State<ReportScreen> {
                                                       "report": _reportDetails,
                                                       "time": _now,
                                                       "type": _reportType,
-                                                      "user": gQvk9DfM0KSrdSONKfXtnLJ6e0P2
+                                                      "user": "gQvk9DfM0KSrdSONKfXtnLJ6e0P2"
                                                     });
     _reportTextFieldController.clear();
   }
