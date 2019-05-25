@@ -34,6 +34,14 @@ flutter test test/integration_test.dart
  
  <a href="https://trello.com/b/DdRmfdV3/erp-ranger-mobile-application" target="_blank">Trello (Project Management)</a>
 
+## Document Overleaf Links:
+
+ -<a href="https://www.overleaf.com/read/zgmzmhzfqndd" target="_blank">SRS Document</a>
+ 
+ -<a href="https://www.overleaf.com/read/ftvrgyrxcxst" target="_blank">Coding Standards</a>
+ 
+ -<a href="https://www.overleaf.com/read/nbsrrrqczhgd" target="_blank">User Manual</a>
+ 
 ## Team Members: 
 
 #### Dylan Schwikkard
