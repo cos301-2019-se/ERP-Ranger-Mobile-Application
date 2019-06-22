@@ -14,7 +14,7 @@
     <agm-info-window>
       {{ m.payload.doc.data().type }} - {{ m.payload.doc.data().report }}
       <br>
-      <a routerLink="reports">
+      <a [routerLink] = "['/admin/report', m.payload.doc.id]">
         <span>More Info</span>
       </a>
     </agm-info-window>
