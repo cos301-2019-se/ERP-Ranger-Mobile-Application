@@ -2,7 +2,14 @@
   <mat-card class="content-card mat-elevation-z8 animated slideInUp">
     <mat-card-content *ngIf="report">
       <p>
-        some string: {{report.location.geopoint.latitude}}
+       <!--some string: {{report.location.geopoint.latitude}} -->
+        Type of report: {{report.type}}
+        <br>
+        Time of report: {{report.time.toDate() | date:'dd/MM/yyyy HH:mm:ss'}}
+        <br>
+        Reported by: {{report.user}}
+        <br>
+        Incident: {{report.report}}
       </p>
     </mat-card-content>
   </mat-card>
