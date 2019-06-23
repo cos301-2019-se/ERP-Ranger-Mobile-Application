@@ -1,6 +1,9 @@
-<div *ngIf="report">
-  <p>
-    {{report.type}}
-  </p>
-  
+<div class="page-container">
+  <mat-card class="content-card mat-elevation-z8 animated slideInUp">
+    <mat-card-content *ngIf="report">
+      <p>
+        some string: {{report.location.geopoint.latitude}}
+      </p>
+    </mat-card-content>
+  </mat-card>
 </div>
