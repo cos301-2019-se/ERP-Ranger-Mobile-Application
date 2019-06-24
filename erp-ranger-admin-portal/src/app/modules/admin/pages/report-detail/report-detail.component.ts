@@ -20,8 +20,10 @@ export class ReportDetailComponent implements OnInit {
   displayReports() {
     this.reports.readReport(this.route.snapshot.paramMap.get("id")).subscribe(result => {
       this.report = result;
-      console.log(this.report);
     });
   }
 
+  getUser(id: string) {
+    return "Test user";
+  }
 }

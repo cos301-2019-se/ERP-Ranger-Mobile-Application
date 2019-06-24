@@ -3,13 +3,13 @@
     <mat-card-content *ngIf="report">
       <p>
        <!--some string: {{report.location.geopoint.latitude}} -->
-        Type of report: {{report.type}}
+        Type of report: {{ report.type }}
         <br>
-        Time of report: {{report.time.toDate() | date:'dd/MM/yyyy HH:mm:ss'}}
+        Time of report: {{ report.time.toDate() | date:'dd/MM/yyyy @ HH:mm:ss' }}
         <br>
-        Reported by: {{report.user}}
+        Reported by: {{ getUser(report.user) }}
         <br>
-        Incident: {{report.report}}
+        Incident: {{ report.report }}
       </p>
     </mat-card-content>
   </mat-card>
