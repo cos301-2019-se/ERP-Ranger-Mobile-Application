@@ -9,6 +9,7 @@ import { ActivatedRoute } from "@angular/router";
 })
 export class ReportDetailComponent implements OnInit {
 
+  
   zoom: number = 13;
 
   report;
@@ -19,6 +20,7 @@ export class ReportDetailComponent implements OnInit {
     this.displayReports();
   }
 
+  // Function used to retrieve info of each individual marker placed on the map by rangers
   displayReports() {
     this.reports.readReport(this.route.snapshot.paramMap.get("id")).subscribe(result => {
       this.report = result;
