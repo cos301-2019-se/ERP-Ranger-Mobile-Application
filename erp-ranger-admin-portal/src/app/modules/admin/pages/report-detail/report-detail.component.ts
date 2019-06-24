@@ -9,6 +9,11 @@ import { ActivatedRoute } from "@angular/router";
 })
 export class ReportDetailComponent implements OnInit {
 
+  zoom: number = 13;
+  
+  lat: number = -25.876910;
+  lng: number = 28.273253;
+
   report;
 
   constructor(private reports: ReportService, private route: ActivatedRoute) { }
