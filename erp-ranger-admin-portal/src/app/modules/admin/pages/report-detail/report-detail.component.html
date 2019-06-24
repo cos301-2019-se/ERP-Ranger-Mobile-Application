@@ -1,9 +1,9 @@
-<!--Report detail page used for displaying more info of current incidents in the reserve-->>
+<!--Report detail page used for displaying more info of current incidents in the reserve-->
 <div class="page-container">
   <mat-card class="content-card mat-elevation-z8 animated slideInUp">
-    <!--Card container generated only if there are more info to show of an exisitng report-->>
+    <!--Card container generated only if there are more info to show of an exisitng report-->
     <mat-card-content *ngIf="report">
-      <!--Info based on exisiting report selected on the Report Overview screen's map-->>
+      <!--Info based on exisiting report selected on the Report Overview screen's map-->
       <p>
        <!--some string: {{report.location.geopoint.latitude}} -->
         Type of report: <strong> {{ report.type }} </strong>
@@ -20,7 +20,7 @@
   </mat-card>
   <mat-card class="content-card mat-elevation-z8 animated slideInUp">
       <mat-card-content *ngIf="report">
-        <!--Map generated to display the location of the reported incident by making use of a marker-->>
+        <!--Map generated to display the location of the reported incident by making use of a marker-->
           <agm-map 
           [latitude]="report.location.geopoint.latitude"
           [longitude]="report.location.geopoint.longitude"
