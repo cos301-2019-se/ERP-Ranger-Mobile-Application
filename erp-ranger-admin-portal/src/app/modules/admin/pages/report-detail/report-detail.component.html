@@ -16,14 +16,13 @@
   <mat-card class="content-card mat-elevation-z8 animated slideInUp">
       <mat-card-content *ngIf="report">
           <agm-map 
-          [latitude]="lat"
-          [longitude]="lng"
+          [latitude]="report.location.geopoint.latitude"
+          [longitude]="report.location.geopoint.longitude"
           [zoom]="zoom"
           [disableDefaultUI]="false"
           [zoomControl]="false">
         
           <agm-marker 
-              *ngFor="let m of markers"
               [latitude]="report.location.geopoint.latitude"
               [longitude]="report.location.geopoint.longitude"
               [label]="R">
