@@ -16,10 +16,7 @@ export class ReportOverviewComponent implements OnInit {
 
   markers;
 
-  constructor(private reports: ReportService) {
-    
-
-  }
+  constructor(private reports: ReportService) { }
 
   ngOnInit() {
     this.displayReports();

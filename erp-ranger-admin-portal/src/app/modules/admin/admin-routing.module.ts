@@ -6,6 +6,7 @@ import { ShiftListComponent } from './pages/shift-list/shift-list.component';
 import { ShiftDetailComponent } from './pages/shift-detail/shift-detail.component';
 import { NavComponent } from './components/nav/nav.component';
 import { ReportOverviewComponent } from './pages/report-overview/report-overview.component';
+import { ReportDetailComponent } from './pages/report-detail/report-detail.component';
 
 const routes: Routes = [
   {
@@ -32,6 +33,10 @@ const routes: Routes = [
   {
     path: 'reports',
     component: ReportOverviewComponent
+  },
+  {
+    path: 'report/:id',
+    component: ReportDetailComponent
   },
   {
     path: 'dashboard',
