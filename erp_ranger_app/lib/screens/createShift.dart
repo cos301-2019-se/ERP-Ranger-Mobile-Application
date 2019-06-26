@@ -15,6 +15,7 @@ class ShiftState extends State<CreateShift> {
   DateTime selectedEndDateTime;
   bool startFlag = false;
   bool endFlag = false;
+  bool dateFlag = false;
 
   static Firestore db = Firestore.instance;
   static CollectionReference shiftRef = db.collection('shifts');
@@ -27,45 +28,168 @@ class ShiftState extends State<CreateShift> {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
+        firstDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
         lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate)
+    if (picked != null) {
+      dateFlag = true;
       setState(() {
         selectedDate = picked;
       });
+    } else{
+      dateFlag = false;
+      setState(() {
+
+      });
+    }
+  }
+
+  void _selectStartDate(BuildContext context){
+    dateFlag = true;
+    _selectedDate(context);
   }
 
   Future<Null> _selectedTime(BuildContext context) async{
     final TimeOfDay picked = await showTimePicker(
         context: context,
-        initialTime: selectedTime);
-    if (picked != null && picked != selectedTime)
+        initialTime: TimeOfDay.now());
+    if (picked != null) {
+      print("set State");
       setState(() {
         selectedTime = picked;
+        print("selected Time set");
+        if (startFlag && !endFlag && selectedTime != null) {
+          print("cdtn 1");
+          _setStart();
+        } else if (!startFlag && endFlag && selectedTime != null) {
+          print("cdtn 2");
+          _setEnd();
+        } else if (selectedStartDateTime == null && startFlag && endFlag) {
+          print("cdtn 3");
+          _setStart();
+        } else if (selectedEndDateTime == null && startFlag && endFlag) {
+          print("cdtn 4");
+          _setEnd();
+        }
+        else {
+          print("else");
+        }
+        if (_validateTime()) {
+
+        }
+        else {
+          print("error: please reselect times");
+          startFlag = false;
+          endFlag = false;
+          selectedStartDateTime = null;
+          selectedEndDateTime = null;
+        }
       });
+    } else{
+      if(startFlag && !endFlag){
+        startFlag = false;
+      } else if(endFlag && !startFlag){
+        endFlag = false;
+      } else{
+        startFlag = false;
+        endFlag = false;
+      }
+      setState(() {
+
+      });
+    }
+  }
+
+  void _resetPickers(BuildContext context){
+    setState(() {
+
+    });
+  }
+
+  bool _validateTime(){
+    if(dateFlag){
+      if(selectedDate.year == DateTime.now().year){
+        if(selectedDate.month == DateTime.now().month){
+          if(selectedDate.day == DateTime.now().day){
+            if(startFlag) {
+              if (selectedStartDateTime.hour < DateTime.now().hour) {
+                return false;
+              } else if (selectedStartDateTime.hour == DateTime.now().hour && selectedStartDateTime.minute < DateTime.now().minute - 5) {
+                return false;
+              } else if(endFlag){
+                if(selectedEndDateTime.hour < selectedStartDateTime.hour){
+                  return false;
+                } else if(selectedEndDateTime.hour == selectedStartDateTime.hour && selectedEndDateTime.minute < selectedStartDateTime.minute){
+                  return false;
+                }
+              } else{
+                return true;
+              }
+            }
+            if(endFlag && !startFlag){
+              if(selectedEndDateTime.hour < DateTime.now().hour){
+                return false;
+              } else if(selectedEndDateTime.hour == DateTime.now().hour && selectedStartDateTime.minute < DateTime.now().minute -5){
+                return false;
+              } else{
+                return true;
+              }
+            }
+          } else{
+            return true;
+          }
+        } else{
+          return true;
+        }
+      } else{
+        return true;
+      }
+    } else {
+      if(startFlag) {
+        if (selectedStartDateTime.hour < DateTime.now().hour) {
+          return false;
+        } else if (selectedStartDateTime.hour == DateTime.now().hour && selectedStartDateTime.minute < DateTime.now().minute - 5) {
+          return false;
+        } else if(endFlag){
+          if(selectedEndDateTime.hour < selectedStartDateTime.hour){
+            return false;
+          } else if(selectedEndDateTime.hour == selectedStartDateTime.hour && selectedEndDateTime.minute < selectedStartDateTime.minute){
+            return false;
+          }
+        } else{
+          return true;
+        }
+      }
+      if(endFlag && !startFlag){
+        if(selectedEndDateTime.hour < DateTime.now().hour){
+          return false;
+        } else if(selectedEndDateTime.hour == DateTime.now().hour && selectedStartDateTime.minute < DateTime.now().minute -5){
+          return false;
+        } else{
+          return true;
+        }
+      }
+      else{
+        return true;
+      }
+    }
   }
 
   void _selectStartDateTime(BuildContext context) {
-    _selectedDate(context);
-    _selectedTime(context);
     startFlag = true;
-    setStart();
+    _selectedTime(context);
   }
 
-  void setStart(){
-    selectedStartDateTime = new DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
+  void _setStart(){
+      selectedStartDateTime = new DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
   }
 
   void _selectEndDateTime(BuildContext context) {
-    setStart();
-    _selectedDate(context);
-    _selectedTime(context);
     endFlag = true;
-    setEnd();
+    _selectedTime(context);
   }
 
-  void setEnd(){
-    selectedEndDateTime = new DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
+  void _setEnd(){
+      selectedEndDateTime = new DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
   }
 
   Future<void> compileData() async{
@@ -85,212 +209,172 @@ class ShiftState extends State<CreateShift> {
         .catchError((err) => print(err));
   }
 
+  String displayDateTime(DateTime t){
+    if(t != null) {
+      if (t.minute == 0) {
+        return t.hour.toString() + ":00";
+      } else {
+        return t.hour.toString() + ":" + t.minute.toString();
+      }
+    }else{
+      return "";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      appBar: AppBar(
+        title: Text("Book a shift"),
+        elevation: .1,
+        backgroundColor: Color.fromRGBO(18, 27, 65, 1.0),
+      ),
       body: new Container(
         padding: EdgeInsets.all(16.0),
         child: ListView(
           children: <Widget>[
-            _showStartDateTimeInput(),
-            _showStartDisplay(),
-            _showEndDateTimeInput(),
-            _showEndDisplay(),
+            _showDatePicker(),
+            _showStartTimePicker(),
+            _showEndTimePicker(),
             _showSendData(),
           ],
         ),
       ),
     );
   }
-
-  Widget _showStartDateTimeInput(){
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
-      child: SizedBox(
-        height: 40.0,
-        child: new RaisedButton(
-            elevation: 5.0,
-            shape: new RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(30.0)
-            ),
-            color:  Colors.red,
-            child:  Text(
-              'Choose start Time',
-              style: TextStyle(
-                fontSize: 20.0,
-                color: Colors.white
+  
+  Widget _showDatePicker(){
+    if(!dateFlag) {
+      return Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+        child: new TextField(
+          key: Key('Text'),
+          maxLines: 1,
+          enabled: true,
+          maxLength: 1,
+          maxLengthEnforced: true,
+          decoration: new InputDecoration(
+              labelText: 'Date',
+              border: OutlineInputBorder(),
+              prefixIcon: new Icon(
+                Icons.calendar_today,
+                color: Colors.grey,
               )
-            ),
-            onPressed: () => _selectStartDateTime(context)
-        ),
-      ),
-    );
-  }
-
-  Widget _showStartDisplay(){
-    if(selectedStartDateTime != null && startFlag && !endFlag) {
-      print("start: " + selectedStartDateTime.toString());
-      return Container(
-        padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
-        decoration: BoxDecoration(
-          color: Colors.blue,
-        ),
-        child: Column(
-          children: <Widget>[
-            Text(
-              "Shift start date: " + selectedDate.day.toString() + "/" + selectedDate.month.toString() + "/" +selectedDate.year.toString(),
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0
-              ),
-            ),
-            Text(
-              "Shift start time: " + selectedTime.hour.toString() + ":" + selectedTime.minute.toString(),
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0
-              ),
-            )
-          ],
+          ),
+          onTap: () => _selectStartDate(context),
         ),
       );
-    }
-    else if(selectedStartDateTime != null && startFlag && endFlag) {
-      print("start: " + selectedStartDateTime.toString());
-      return Container(
-        padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
-        decoration: BoxDecoration(
-          color: Colors.blue,
-        ),
-        child: Column(
-          children: <Widget>[
-            Text(
-              "Shift start date: " + selectedStartDateTime.day.toString() + "/" + selectedStartDateTime.month.toString() + "/" +selectedStartDateTime.year.toString(),
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0
-              ),
-            ),
-            Text(
-              "Shift start time: " + selectedStartDateTime.hour.toString() + ":" + selectedStartDateTime.minute.toString(),
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0
-              ),
-            )
-          ],
-        ),
-      );
-    }
-    else{
-      return Container(
-        padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
-        decoration: BoxDecoration(
-          color: Colors.blue,
-        ),
-        child: Column(
-          children: <Widget>[
-            Text(
-              "Shift date: ",
-              style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.white
-              ),
-            ),
-            Text(
-              "Shift time: ",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0
-              ),
-            )
-          ],
+    }else{
+      return Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+        child: new TextField(
+          key: Key('Text'),
+          maxLines: 1,
+          enabled: false,
+          maxLength: 1,
+          maxLengthEnforced: true,
+          decoration: new InputDecoration(
+              labelText: selectedDate.day.toString() + "/" + selectedDate.month.toString() + "/" + selectedDate.year.toString(),
+              border: OutlineInputBorder(),
+              prefixIcon: new Icon(
+                Icons.calendar_today,
+                color: Colors.grey,
+              )
+          ),
+          onTap: () => _selectStartDate(context),
         ),
       );
     }
   }
 
-  Widget _showEndDateTimeInput(){
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
-      child: SizedBox(
-        height: 40.0,
-        child: new RaisedButton(
-            elevation: 5.0,
-            shape: new RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(30.0)
-            ),
-            color:  Colors.red,
-            child:  Text(
-                'Choose end Time',
-                style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white
-                )
-            ),
-            onPressed: () => _selectEndDateTime(context)
-        ),
-      ),
-    );
-  }
-
-  Widget _showEndDisplay(){
-    if(selectedEndDateTime != null && endFlag) {
-      setEnd();
-      print("end: " + selectedEndDateTime.toString());
-      return Container(
-        padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
-        decoration: BoxDecoration(
-          color: Colors.blue,
-        ),
-        child: Column(
-          children: <Widget>[
-            Text(
-              "Shift end date: " + selectedEndDateTime.day.toString() + "/" + selectedEndDateTime.month.toString() + "/" +selectedEndDateTime.year.toString(),
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0
-              ),
-            ),
-            Text(
-              "Shift end time: " + selectedEndDateTime.hour.toString() + ":" + selectedEndDateTime.minute.toString(),
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0
-              ),
-            )
-          ],
+  Widget _showStartTimePicker(){
+    if(!startFlag) {
+      return Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+        child: new TextField(
+          key: Key('Text'),
+          maxLines: 1,
+          enabled: true,
+          maxLength: 1,
+          maxLengthEnforced: true,
+          decoration: new InputDecoration(
+              labelText: 'StartTime',
+              border: OutlineInputBorder(),
+              prefixIcon: new Icon(
+                Icons.watch,
+                color: Colors.grey,
+              )
+          ),
+          onTap: () => _selectStartDateTime(context),
         ),
       );
-    }
-    else{
-      return Container(
-        padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
-        decoration: BoxDecoration(
-          color: Colors.blue,
-        ),
-        child: Column(
-          children: <Widget>[
-            Text(
-              "Shift end date: ",
-              style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.white
-              ),
-            ),
-            Text(
-              "Shift end time: ",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0
-              ),
-            )
-          ],
+    } else {
+      return Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+        child: new TextField(
+          key: Key('Text'),
+          maxLines: 1,
+          enabled: false,
+          maxLength: 1,
+          maxLengthEnforced: true,
+          decoration: new InputDecoration(
+              labelText: displayDateTime(selectedStartDateTime),
+              border: OutlineInputBorder(),
+              prefixIcon: new Icon(
+                Icons.watch,
+                color: Colors.grey,
+              )
+          ),
+          onTap: () => _selectStartDateTime(context),
         ),
       );
     }
   }
 
+  Widget _showEndTimePicker() {
+    if (!endFlag) {
+      return Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+        child: new TextField(
+          key: Key('Text'),
+          maxLines: 1,
+          enabled: true,
+          maxLength: 1,
+          maxLengthEnforced: true,
+          decoration: new InputDecoration(
+              labelText: 'EndTime',
+              border: OutlineInputBorder(),
+              prefixIcon: new Icon(
+                Icons.watch,
+                color: Colors.grey,
+              )
+          ),
+          onTap: () => _selectEndDateTime(context),
+        ),
+      );
+    }else{
+      return Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+        child: new TextField(
+          key: Key('Text'),
+          maxLines: 1,
+          enabled: false,
+          maxLength: 1,
+          maxLengthEnforced: true,
+          decoration: new InputDecoration(
+              labelText: displayDateTime(selectedEndDateTime),
+              border: OutlineInputBorder(),
+              prefixIcon: new Icon(
+                Icons.watch,
+                color: Colors.grey,
+              )
+          ),
+          onTap: () => _selectEndDateTime(context),
+        ),
+      );
+    }
+  }
+  
   Widget _showSendData(){
     return Padding(
       padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
@@ -301,7 +385,7 @@ class ShiftState extends State<CreateShift> {
             shape: new RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(30.0)
             ),
-            color:  Colors.red,
+            color:  Color.fromRGBO(18, 27, 65, 1.0),
             child:  Text(
                 'Send Data',
                 style: TextStyle(
