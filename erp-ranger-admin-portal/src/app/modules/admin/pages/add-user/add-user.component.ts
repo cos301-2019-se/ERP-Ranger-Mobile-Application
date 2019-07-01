@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CreateUserService } from '../../services/create-user.service';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormGroupExtension, RxFormBuilder } from '@rxweb/reactive-form-validators';
+import { formDirectiveProvider } from '@angular/forms/src/directives/ng_form';
+import { fromRef } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-add-user',
@@ -10,8 +13,10 @@ import { FormGroup, Validators, FormControl } from '@angular/forms';
 export class AddUserComponent implements OnInit {
 
   regForm: FormGroup;
+  @ViewChild('formDir') formRef;
 
   constructor(private auth: CreateUserService) { }
+
 
   ngOnInit() {
     this.regForm = new FormGroup({
@@ -32,6 +37,7 @@ export class AddUserComponent implements OnInit {
         Validators.required,
       ]),
     });
+    
   }
 
   register(){
@@ -40,7 +46,10 @@ export class AddUserComponent implements OnInit {
       this.regForm.get('password').value,
       this.regForm.get('name').value,
       this.regForm.get('number').value
-    );
+    );    
+    this.regForm.reset();
+    this.formRef.resetForm();
+    
   }
 
 }

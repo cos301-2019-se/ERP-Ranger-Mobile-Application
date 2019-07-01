@@ -13,7 +13,9 @@ import { AgmCoreModule } from '@agm/core';
 import { ReportDetailComponent } from './pages/report-detail/report-detail.component';
 import { AddUserComponent } from './pages/add-user/add-user.component';
 import {FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
+import { resolve } from 'dns';
+ 
 
 @NgModule({
   declarations: [DashboardComponent, ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, ReportOverviewComponent, ReportDetailComponent, AddUserComponent],
@@ -21,6 +23,7 @@ import {FormsModule, ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    RxReactiveFormsModule,
     AdminRoutingModule,
     MaterialModule,
     AgmCoreModule.forRoot({
