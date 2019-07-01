@@ -12,7 +12,7 @@ class FeedbackState extends State<FeedbackScreen> {
   final TextEditingController _feedbackTextFieldController = new TextEditingController();
   DateTime _now;
   DateTime _start;
-  int _points;//will get from app user data
+  int _points=10;//will get from app user data
   String _feedbackDetails;
 
   FeedbackState()
@@ -23,18 +23,18 @@ class FeedbackState extends State<FeedbackScreen> {
   }
 
   Future<DateTime> _getPatrolStart() async {
-    var document = await Firestore.instance.collection('patrol').document('patrolID').get();//will get patrolID from app user data
-    _start = document['time'].toDate();
+    var document = await Firestore.instance.collection('patrol').document('R0Ns1iCiJ8bfVlPjXVeP').get();//will get patrolID from app user data
+    _start = document['start'].toDate();
     return _start;
   }
 
   void _performFeedback() async {
     _now = new DateTime.now();
     await Firestore.instance.collection('feedback').add({
-      "patrol": "patrolID",//will get patrolID from user data
+      "patrol": "R0Ns1iCiJ8bfVlPjXVeP",//will get patrolID from user data
       "report": _feedbackDetails
     });
-    await Firestore.instance.collection('patrol').document('patrolID').updateData({'end': _now});//will get patrolID from app user data
+    await Firestore.instance.collection('patrol').document('R0Ns1iCiJ8bfVlPjXVeP').updateData({'end': _now});//will get patrolID from app user data
     _feedbackTextFieldController.clear();
   }
 
