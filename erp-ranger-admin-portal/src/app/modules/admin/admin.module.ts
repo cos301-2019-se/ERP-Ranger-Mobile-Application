@@ -11,11 +11,16 @@ import { MaterialModule } from 'src/app/material.module';
 import { ReportOverviewComponent } from './pages/report-overview/report-overview.component';
 import { AgmCoreModule } from '@agm/core';
 import { ReportDetailComponent } from './pages/report-detail/report-detail.component';
+import { AddUserComponent } from './pages/add-user/add-user.component';
+import {FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 
 @NgModule({
-  declarations: [DashboardComponent, ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, ReportOverviewComponent, ReportDetailComponent],
+  declarations: [DashboardComponent, ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, ReportOverviewComponent, ReportDetailComponent, AddUserComponent],
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     AdminRoutingModule,
     MaterialModule,
     AgmCoreModule.forRoot({
