@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { AdminRoutingModule } from './admin-routing.module';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ShiftListComponent } from './pages/shift-list/shift-list.component';
@@ -11,11 +10,15 @@ import { MaterialModule } from 'src/app/material.module';
 import { ReportOverviewComponent } from './pages/report-overview/report-overview.component';
 import { AgmCoreModule } from '@agm/core';
 import { ReportDetailComponent } from './pages/report-detail/report-detail.component';
+import { AddMarkerComponent } from './pages/add-marker/add-marker.component';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [DashboardComponent, ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, ReportOverviewComponent, ReportDetailComponent],
+  declarations: [DashboardComponent, ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, ReportOverviewComponent, ReportDetailComponent, AddMarkerComponent],
   imports: [
     CommonModule,
+    FormsModule,
     AdminRoutingModule,
     MaterialModule,
     AgmCoreModule.forRoot({
