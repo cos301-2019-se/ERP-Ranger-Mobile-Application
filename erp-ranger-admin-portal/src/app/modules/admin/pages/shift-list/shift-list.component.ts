@@ -2,17 +2,17 @@ import { Component, ChangeDetectorRef, ViewChild, TemplateRef, OnInit } from '@a
 import { ShiftService} from '../../services/shift.service';
 import { shiftInitState } from '@angular/core/src/view';
 import { UserService} from '../../../../services/user.service';
-
 import {firestore} from 'firebase/app';
 import Timestamp = firestore.Timestamp;
-
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarView} from 'angular-calendar';
 import { startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameMonth, addHours} from 'date-fns';
 import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { elementStart } from '@angular/core/src/render3';
 import { CalendarDayViewEventComponent } from 'angular-calendar/modules/day/calendar-day-view-event.component';
-
+import { google } from '@agm/core/services/google-maps-types';
 
 const colors: any = {
   red: {
@@ -34,81 +34,62 @@ const colors: any = {
   templateUrl: './shift-list.component.html',
   styleUrls: ['./shift-list.component.scss'],
 })
-export class ShiftListComponent implements OnInit {
-
-  tempE : tempEvent [] = new Array();
-  
-  terror : tempEvent;
+export class ShiftListComponent implements OnInit {  
   shiftsAll;
   size = -1;
   temp = 0;
   counter = 0;
   ngOnInit() {
     this.displayShifts();
-    
-    
-   
-  
   }
 
-  ngAfterViewInit() {
-    
-    
-    
-
-    
-
-  }
- 
+  constructor(private shifts: ShiftService, private modal: NgbModal, private cdr: ChangeDetectorRef) {}
 
   
+  
  
-  constructor(private shifts: ShiftService, private users: UserService, private modal: NgbModal, private cdr: ChangeDetectorRef) {
-    
-  }
-  createTempArr(id: number,name: String, startingDate:Date, endDate:Date) : void{
-      var found = false;
-      for(var x =0;x< this.tempE.length;x++)
-      {
-        if(this.tempE[x].id == id)
-        {
-          found = true;
-          return;
-        }
-      }
-      if(!found)
-      {
-        this.tempE.push(new tempEvent(id,name,startingDate,endDate));
-        console.log(id);
-        this.addEventP(startingDate,endDate,id);
-      }
-      
-    
-    
-    
-  }
-  getUser(username: String)
-  {
-    return "Test Ranger";
-    this.users.
-    getUser(username)
-    .subscribe(result => {
-      
-      return result.payload.data().name;
-      
-    });
-    
-    
-  }
 
   displayShifts() {
-    this.shifts.
-    getShifts().
-    subscribe(result => {
-      this.shiftsAll = result;
-      
+    var i = 0;
+    let observer = this.shifts.getShifts().ref
+    .onSnapshot(querySnapshot => {
+      querySnapshot.docChanges().forEach(change => {
+        //console.log(change.doc.data());
+        var name :string;        
+        var id = change.doc.id;      
+        var t = new Date(1970,0,1);
+        t.setSeconds(change.doc.data().end.seconds.toString());
+        t.setHours(t.getHours() + 2);
+        var t2 = new Date(1970,0,1);
+        t2.setSeconds(change.doc.data().start.seconds.toString());
+        t2.setHours(t2.getHours() + 2);
+        let docRef = this.shifts.getUserName(change.doc.data().user);        
+        let getUser = docRef.get()
+        .then(doc => {
+          if(!doc.exists){
+            console.log("User not found ");
+            
+          } else{
+            name = doc.data().name ;
+            let parkRef = this.shifts.getParkName(change.doc.data().park);
+            let getPark = parkRef.get()
+            .then(doc => {
+              if(!doc.exists){
+                console.log("Park not found ");                
+              }
+              else{
+                var park= doc.data().name ;                
+                this.addEventP(t2,t,id, name,park);
+              }
+            })            
+          }
+        })
+        .catch(err => {
+          console.log("Error getting document");         
+        });
+        i++;
+      });
     });
-
 
     
   }
@@ -143,15 +124,10 @@ export class ShiftListComponent implements OnInit {
   ];
 
   refresh: Subject<any> = new Subject();
-
   events: CalendarEvent[] = [
     
   ];
-
   activeDayIsOpen: boolean = true;
-
- 
-
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
       this.viewDate = date;
@@ -185,103 +161,37 @@ export class ShiftListComponent implements OnInit {
   }
 
   handleEvent(action: string, event: CalendarEvent): void {
+    //Do something here when clicking an event    
     this.modalData = { event, action };
     this.modal.open(this.modalContent, { size: 'lg' });
   }
 
-  addEventP( patrolDate: Date, endDate : Date, i): void {
-   
-    // this.events.push('df');
-    // if (this.size < i)
-    // {
-    //   this.size = i;
-    //   this.events= [
-    //     ...this.events,
-    //     {
-    //       title: 'HERE IT IS',
-    //       start: startOfDay(patrolDate),
-    //       end: endOfDay(endDate),
-    //       color: colors.red,
-    //       draggable: false,
-    //       resizable: {
-    //         beforeStart: false,
-    //         afterEnd: false
-    //       }
-        
-    //     }
-    //   ]
-    // }
-    
-    console.log(patrolDate + " HIHIHIHI " + endDate);
-    console.log("NEW DATE FORMAT" + new Date());
+  addEventP( patrolDate: Date, endDate : Date, id, name : string,park : string): void {
     this.events = [
       ...this.events,
       {
-        title: 'HERE IT IS',
+        title:    name + " ( " + patrolDate.getHours() +":"+  patrolDate.getMinutes() + "  -  "+ endDate.getHours() +":"+  endDate.getMinutes() + " ) At " + park ,
         start: startOfDay(patrolDate),
         end: endOfDay(endDate),
-        color: colors.red,
+        id : id,
+        color: colors.blue,
         draggable: false,
         resizable: {
           beforeStart: false,
           afterEnd: false
         }
       }
-    ];
-    console.log(this.events);
+    ];    
   }
-  test() : void{
-    alert("Hi");
-  }
-  addEvent( ): void {
-    
-    var hg = new Date();
-    
-    this.events = [
-      ...this.events,
-      {
-        
-        title: 'here it is',
-        start: startOfDay(hg),
-        end: endOfDay(hg),
-        color: colors.red,
-        draggable: true,
-        resizable: {
-          beforeStart: true,
-          afterEnd: true
-        }
-      }
-    ];
-    console.log(this.events);
-  }
-  
 
   deleteEvent(eventToDelete: CalendarEvent) {
     this.events = this.events.filter(event => event !== eventToDelete);
   }
 
-  setView(view: CalendarView) {
-    this.view = view;
-  }
-
+ 
   closeOpenMonthViewDay() {
     this.activeDayIsOpen = false;
   }
   
   
-}
-
-class tempEvent
-{
-  id;
-  name;
-  startingDate;
-  endDate;
-  constructor(id: number,name: String, startingDate:Date, endDate:Date)
-  {
-    this.id=id;
-    this.name = name;
-    this.startingDate = startingDate;
-    this.endDate = endDate;
-  }
 }
