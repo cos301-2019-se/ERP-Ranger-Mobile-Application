@@ -46,12 +46,12 @@ export class ShiftListComponent implements OnInit {
   }
 
   displayShifts() {
-    this.shifts.
-    getShifts().
-    subscribe(result => {
-      this.shiftsAll = result;
+    // this.shifts.
+    // getShifts().
+    // subscribe(result => {
+    //   this.shiftsAll = result;
       
-    });
+    // });
   }
   
   
