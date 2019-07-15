@@ -1,18 +1,58 @@
 
-  <div *ngFor="let shifts of shiftsAll">
-      <div class="shift">
-          
-          <div>
-            Name: {{ getUser(shifts.payload.doc.data().user) }}
-            
-          </div>
-          <div>
-            <!--Starting time : {{ convertToDate(shifts.payload.doc.data().start) }}-->
-            Starting time : {{ shifts.payload.doc.data().start.toDate() | date:'dd/MM/yyyy HH:mm:ss'}}
-          </div>
-          <div>
-            Ending time : {{ shifts.payload.doc.data().end.toDate() | date:'dd/MM/yyyy HH:mm:ss'}}
-          </div>
-      </div>
-
-
+<div class="row text-center">
+  <div
+  class="btn btn-primary header-views"
+  mwlCalendarPreviousView
+  [view]="view"
+  [(viewDate)]="viewDate"
+  (viewDateChange)="closeOpenMonthViewDay()">
+    <span class="inner-span">
+        Previous
+    </span>
+  </div>
+  <div
+  class="btn btn-outline-secondary header-views"
+  mwlCalendarToday
+  [(viewDate)]="viewDate">
+    <span class="inner-span">
+        Today
+    </span>
+  </div>
+  <div
+  class="btn btn-primary header-views"
+  mwlCalendarNextView
+  [view]="view"
+  [(viewDate)]="viewDate"
+  (viewDateChange)="closeOpenMonthViewDay()">
+    <span class="inner-span">
+        Next
+    </span>
+  </div>
+  <div class="col-md-4">
+    <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+  </div>
+  <div class="col-md-4">
+    <div class="btn-group">            
+    </div>
+  </div>
+</div>
+<br />
+<div [ngSwitch]="view">
+  <mwl-calendar-month-view
+    *ngSwitchCase="CalendarView.Month"
+    [viewDate]="viewDate"
+    [events]="events"
+    [refresh]="refresh"
+    [activeDayIsOpen]="activeDayIsOpen"
+    (dayClicked)="dayClicked($event.day)"
+    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventTimesChanged)="eventTimesChanged($event)"
+  >
+  </mwl-calendar-month-view>
+  
+</div>
+      
+      
+     
+  
+    
