@@ -13,6 +13,7 @@ export class ShiftService {
     return this.fireStore.collection("shifts");
   }
 
+
   getPatrol(id : string){
     return this.fireStore.collection("patrol").doc(id).ref;
   }
@@ -24,6 +25,7 @@ export class ShiftService {
   getFeedbackID(id: string){
     return this.fireStore.collection("feedback").doc(id).ref;
   }
+
 
   getUserName(id : string ){    
     var docRef = this.fireStore.collection("users").doc(id).ref;
