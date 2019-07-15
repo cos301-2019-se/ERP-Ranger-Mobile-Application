@@ -9,6 +9,8 @@ class CreateShift extends StatefulWidget {
 }
 
 class ShiftState extends State<CreateShift> {
+  static const int MAX_SHIFT_LENGTH = 8;
+
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
   DateTime selectedStartDateTime;
@@ -53,31 +55,25 @@ class ShiftState extends State<CreateShift> {
         context: context,
         initialTime: TimeOfDay.now());
     if (picked != null) {
-      print("set State");
       setState(() {
         selectedTime = picked;
-        print("selected Time set");
         if (startFlag && !endFlag && selectedTime != null) {
-          print("cdtn 1");
           _setStart();
         } else if (!startFlag && endFlag && selectedTime != null) {
-          print("cdtn 2");
           _setEnd();
         } else if (selectedStartDateTime == null && startFlag && endFlag) {
-          print("cdtn 3");
           _setStart();
         } else if (selectedEndDateTime == null && startFlag && endFlag) {
-          print("cdtn 4");
           _setEnd();
         }
         else {
-          print("else");
         }
         if (_validateTime()) {
 
         }
         else {
           print("error: please reselect times");
+          _resetPickers(context);
           startFlag = false;
           endFlag = false;
           selectedStartDateTime = null;
@@ -151,7 +147,11 @@ class ShiftState extends State<CreateShift> {
           return false;
         } else if(endFlag){
           if(selectedEndDateTime.hour < selectedStartDateTime.hour){
-            return false;
+            if(selectedStartDateTime.hour - selectedEndDateTime.hour <= MAX_SHIFT_LENGTH){
+              return true;
+            } else {
+              return false;
+            }
           } else if(selectedEndDateTime.hour == selectedStartDateTime.hour && selectedEndDateTime.minute < selectedStartDateTime.minute){
             return false;
           }
@@ -213,6 +213,8 @@ class ShiftState extends State<CreateShift> {
     if(t != null) {
       if (t.minute == 0) {
         return t.hour.toString() + ":00";
+      } else if(t.minute < 10){
+        return t.hour.toString() + ":0" + t.minute.toString();
       } else {
         return t.hour.toString() + ":" + t.minute.toString();
       }
