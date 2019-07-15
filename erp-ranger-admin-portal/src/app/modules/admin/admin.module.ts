@@ -10,9 +10,10 @@ import { NavComponent } from './components/nav/nav.component';
 import { MaterialModule } from 'src/app/material.module';
 import { ReportOverviewComponent } from './pages/report-overview/report-overview.component';
 import { AgmCoreModule } from '@agm/core';
+
+import { ReportDetailComponent } from './pages/report-detail/report-detail.component';
 import { FormsModule } from '@angular/forms';
-
-
+          
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
@@ -20,7 +21,8 @@ import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgInitDirective } from './pages/shift-list/shift-list.directive';
 
 @NgModule({
-  declarations: [DashboardComponent, ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, ReportOverviewComponent, NgInitDirective],
+  declarations: [DashboardComponent, ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, ReportOverviewComponent, ReportDetailComponent, NgInitDirective],
+
   imports: [
     CommonModule,
     AdminRoutingModule,
