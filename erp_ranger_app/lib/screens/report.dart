@@ -5,6 +5,8 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'dart:convert';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class ReportScreen extends StatefulWidget {
   @override
@@ -12,10 +14,13 @@ class ReportScreen extends StatefulWidget {
 }
 
 class ReportState extends State<ReportScreen> {
+  final StorageReference storageRef =
+      FirebaseStorage.instance.ref().child(fileName);
   final TextEditingController _reportTextFieldController =
       new TextEditingController();
   final Geoflutterfire _geoFlutterFire = Geoflutterfire();
 
+  static String fileName = "gQvk9DfM0KSrdSONKfXtnLJ6e0P2.1.jpeg";
   Location _location = new Location();
   GeoFirePoint _userPointLocation;
   DateTime _now = DateTime.now();
@@ -33,15 +38,14 @@ class ReportState extends State<ReportScreen> {
     _userPointLocation = _geoFlutterFire.point(
         latitude: _userPos.latitude, longitude: _userPos.longitude);
     _now = new DateTime.now();
-
-    await Firestore.instance.collection('reports').add({
-      "location": _userPointLocation.data,
-      "park": "iwGnWNuDC3m1hRzNNBT5",
-      "report": _reportDetails,
-      "time": _now,
-      "type": _reportType,
-      "user": "gQvk9DfM0KSrdSONKfXtnLJ6e0P2"
-    });
+      await Firestore.instance.collection('reports').add({
+        "location": _userPointLocation.data,
+        "park": "iwGnWNuDC3m1hRzNNBT5",
+        "report": _reportDetails,
+        "time": _now,
+        "type": _reportType,
+        "user": "gQvk9DfM0KSrdSONKfXtnLJ6e0P2",
+      });
     _reportTextFieldController.clear();
   }
 
