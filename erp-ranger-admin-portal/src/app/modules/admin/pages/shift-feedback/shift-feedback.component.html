@@ -1,0 +1,68 @@
+
+<div class="row text-center">
+  <div
+  class="btn btn-primary header-views"
+  mwlCalendarPreviousView
+  [view]="view"
+  [(viewDate)]="viewDate"
+  (viewDateChange)="closeOpenMonthViewDay()">
+    <span class="inner-span">
+        Previous
+    </span>
+  </div>
+  <div
+  class="btn btn-outline-secondary header-views"
+  mwlCalendarToday
+  [(viewDate)]="viewDate">
+    <span class="inner-span">
+        Today
+    </span>
+  </div>
+  <div
+  class="btn btn-primary header-views"
+  mwlCalendarNextView
+  [view]="view"
+  [(viewDate)]="viewDate"
+  (viewDateChange)="closeOpenMonthViewDay()">
+    <span class="inner-span">
+        Next
+    </span>
+  </div>
+  <div class="col-md-4">
+    <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+  </div>
+  <div class="col-md-4">
+    <div class="btn-group">            
+    </div>
+  </div>
+</div>
+<br />
+<div [ngSwitch]="view">
+  <mwl-calendar-month-view
+    *ngSwitchCase="CalendarView.Month"
+    [viewDate]="viewDate"
+    [events]="events"
+    [refresh]="refresh"
+    [activeDayIsOpen]="activeDayIsOpen"
+    (dayClicked)="dayClicked($event.day)"
+    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventTimesChanged)="eventTimesChanged($event)"
+  >
+  </mwl-calendar-month-view>
+  
+</div>
+
+
+<div id="overlay-info" class="overlay">
+  <button class="hide-overlay-btn" (click)=hideOverlay()>
+    Hide
+  </button>
+  <div class="overlay-inner-div">
+  <span id="overlay-span">hello</span>  
+  </div>
+</div>
+      
+      
+     
+  
+    

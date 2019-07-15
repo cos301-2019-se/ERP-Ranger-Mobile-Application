@@ -9,8 +9,8 @@ import { ShiftDetailComponent } from './pages/shift-detail/shift-detail.componen
 import { NavComponent } from './components/nav/nav.component';
 import { MaterialModule } from 'src/app/material.module';
 import { ReportOverviewComponent } from './pages/report-overview/report-overview.component';
-import { AgmCoreModule } from '@agm/core';
-
+import { FormsModule } from '@angular/forms';
+import { ShiftFeedbackComponent } from './pages/shift-feedback/shift-feedback.component';
 import { ReportDetailComponent } from './pages/report-detail/report-detail.component';
 import { FormsModule } from '@angular/forms';
           
@@ -20,9 +20,15 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgInitDirective } from './pages/shift-list/shift-list.directive';
 
-@NgModule({
-  declarations: [DashboardComponent, ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, ReportOverviewComponent, ReportDetailComponent, NgInitDirective],
+import { FlatpickrModule } from 'angularx-flatpickr';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 
+
+@NgModule({
+
+  declarations: [DashboardComponent, ReportDetailComponent, ShiftFeedbackComponent, ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, ReportOverviewComponent,ngInitDirective],
   imports: [
     CommonModule,
     AdminRoutingModule,
