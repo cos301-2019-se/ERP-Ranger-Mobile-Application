@@ -7,7 +7,9 @@ import { ShiftDetailComponent } from './pages/shift-detail/shift-detail.componen
 import { NavComponent } from './components/nav/nav.component';
 import { ReportOverviewComponent } from './pages/report-overview/report-overview.component';
 import { ReportDetailComponent } from './pages/report-detail/report-detail.component';
+import { AddMarkerComponent } from './pages/add-marker/add-marker.component';
 import { AddUserComponent } from './pages/add-user/add-user.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -17,6 +19,10 @@ const routes: Routes = [
   {
     path: '',
     component: DashboardComponent
+  },
+  {
+    path: 'add-marker',
+    component: AddMarkerComponent
   },
   {
     path: 'add-user',

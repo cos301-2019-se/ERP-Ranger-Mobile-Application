@@ -1,0 +1,17 @@
+agm-map {
+  height: 600px;
+  width: 100%;
+  min-height: 100%;
+}
+.overlay-select{
+  position: absolute;
+  z-index: 10;
+  left:15px;
+  max-width: 30%;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  margin-top:15px;
+  background-color: rgba(255,255,255,0.6);
+}
