@@ -8,7 +8,6 @@ import { NavComponent } from './components/nav/nav.component';
 import { ReportOverviewComponent } from './pages/report-overview/report-overview.component';
 import { ReportDetailComponent } from './pages/report-detail/report-detail.component';
 import { AddUserComponent } from './pages/add-user/add-user.component';
-
 const routes: Routes = [
   {
     path: '',
@@ -26,6 +25,10 @@ const routes: Routes = [
   {
     path: 'shift/new',
     component: ShiftNewComponent
+  },
+  {
+    path: 'shift/feedback',
+    component: ShiftFeedbackComponent
   },
   {
     path: 'shift/:id',

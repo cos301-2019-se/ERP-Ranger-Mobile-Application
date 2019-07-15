@@ -5,7 +5,7 @@ class Validator {
   static String _password = r'^(?=.*\d)(?=.*[a-zA-Z]).{8,}$';
 
   static bool email(String email) {
-    if(email.isNotEmpty) {
+    if((email != null) && (email.isNotEmpty)) {
       RegExp reg = new RegExp(_email);
       return reg.hasMatch(email);
     }
@@ -13,7 +13,7 @@ class Validator {
   }
 
   static bool password(String password) {
-    if(password.isNotEmpty) {
+    if((password != null) && (password.isNotEmpty)) {
       RegExp reg = new RegExp(_password);
       return reg.hasMatch(password);
     }

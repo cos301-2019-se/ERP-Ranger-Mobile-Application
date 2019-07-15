@@ -9,16 +9,28 @@ import { ShiftDetailComponent } from './pages/shift-detail/shift-detail.componen
 import { NavComponent } from './components/nav/nav.component';
 import { MaterialModule } from 'src/app/material.module';
 import { ReportOverviewComponent } from './pages/report-overview/report-overview.component';
-import { AgmCoreModule } from '@agm/core';
+
+import { ShiftFeedbackComponent } from './pages/shift-feedback/shift-feedback.component';
 import { ReportDetailComponent } from './pages/report-detail/report-detail.component';
 import { AddUserComponent } from './pages/add-user/add-user.component';
 import {FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
 import { resolve } from 'dns';
- 
+import { FlatpickrModule } from 'angularx-flatpickr';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgInitDirective } from './pages/shift-list/shift-list.directive';
+
+
+
+
+
+
 
 @NgModule({
-  declarations: [DashboardComponent, ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, ReportOverviewComponent, ReportDetailComponent, AddUserComponent],
+
+  declarations: [DashboardComponent, ReportDetailComponent, ShiftFeedbackComponent, ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, ReportOverviewComponent,AddUserComponent,ngInitDirective],
   imports: [
     CommonModule,
     FormsModule,
@@ -28,7 +40,17 @@ import { resolve } from 'dns';
     MaterialModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyArcavcPL0-hdLcbknUGGx9xdX6NR1AJ0o'
+      //apiKey: 'AIzaSyAvcDy5ZYc2ukCS6TTtI3RYX5QmuoV8Ffw'
+    }),
+
+    FormsModule,
+    NgbModalModule,
+    FlatpickrModule.forRoot(),
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory
     })
-  ]
+  ],
+  exports: [ShiftListComponent]
 })
 export class AdminModule { }
