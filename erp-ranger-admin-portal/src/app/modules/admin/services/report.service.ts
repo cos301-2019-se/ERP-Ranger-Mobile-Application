@@ -12,4 +12,9 @@ export class ReportService {
     return this.fireStore.collection('reports').snapshotChanges();
   }
 
+  readReport(id: string) {
+    //return this.fireStore.doc('reports/' + id).snapshotChanges();
+    return this.fireStore.collection('reports').doc(id).valueChanges();
+  }
+
 }
