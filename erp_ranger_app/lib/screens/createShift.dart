@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:erp_ranger_app/services/auth.dart';
+import 'package:erp_ranger_app/services/park.dart';
 
 class CreateShift extends StatefulWidget {
   @override
@@ -27,7 +28,7 @@ class ShiftState extends State<CreateShift> {
   Auth tempAuth = new Auth();
 
   Future<String> user;
-  String park = "iwGnWNuDC3m1hRzNNBT5";
+  String park;
 
   Future<Null> _selectedDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -170,6 +171,7 @@ class ShiftState extends State<CreateShift> {
 
   Future<void> compileData() async {
     user = tempAuth.getUserUid();
+    park = await Park.getParkId();
     Timestamp end;
     if (midnightFlag) {
       selectedEndDateTime = new DateTime(
