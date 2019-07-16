@@ -20,7 +20,7 @@ import { FlatpickrModule } from 'angularx-flatpickr';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgInitDirective } from './pages/shift-list/shift-list.directive';
+import { AgmCoreModule } from '@agm/core';
 
 
 
@@ -30,7 +30,8 @@ import { NgInitDirective } from './pages/shift-list/shift-list.directive';
 
 @NgModule({
 
-  declarations: [DashboardComponent, ReportDetailComponent, ShiftFeedbackComponent, ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, AddMarkerComponent, ReportOverviewComponent,AddUserComponent,ngInitDirective],
+  declarations: [DashboardComponent, ReportDetailComponent, ShiftFeedbackComponent, 
+    ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, AddMarkerComponent, ReportOverviewComponent,AddUserComponent],
   imports: [
     CommonModule,
     FormsModule,
