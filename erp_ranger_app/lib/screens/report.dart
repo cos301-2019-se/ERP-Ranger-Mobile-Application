@@ -5,8 +5,10 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'dart:convert';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:erp_ranger_app/services/auth.dart';
+import 'package:erp_ranger_app/services/park.dart';
+import 'package:erp_ranger_app/screens/dashboard.dart';
 
 class ReportScreen extends StatefulWidget {
   @override
@@ -14,39 +16,69 @@ class ReportScreen extends StatefulWidget {
 }
 
 class ReportState extends State<ReportScreen> {
-  final StorageReference storageRef =
-      FirebaseStorage.instance.ref().child(fileName);
-  final TextEditingController _reportTextFieldController =
+  final TextEditingController reportTextFieldController =
       new TextEditingController();
-  final Geoflutterfire _geoFlutterFire = Geoflutterfire();
+  final Geoflutterfire geoFlutterFire = Geoflutterfire();
 
-  static String fileName = "gQvk9DfM0KSrdSONKfXtnLJ6e0P2.1.jpeg";
-  Location _location = new Location();
-  GeoFirePoint _userPointLocation;
-  DateTime _now = DateTime.now();
-  String _reportDetails;
-  String _reportType = "Intruder";
-  File _imageOne;
-  bool _flagOne = false;
-  File _imageTwo;
-  bool _flagTwo = false;
-  File _imageThree;
-  bool _flagThree = false;
+  Location location = new Location();
+  GeoFirePoint userPointLocation;
+  DateTime now = DateTime.now();
+  String reportDetails;
+  String reportType = "Intruder";
+  File imageOne;
+  bool flagOne = false;
+  File imageTwo;
+  bool flagTwo = false;
+  File imageThree;
+  bool flagThree = false;
+  bool reportFlag = false;
+
+  Auth tempAuth = new Auth();
+  String user;
+  String park;
 
   void _performReport() async {
-    var _userPos = await _location.getLocation();
-    _userPointLocation = _geoFlutterFire.point(
-        latitude: _userPos.latitude, longitude: _userPos.longitude);
-    _now = new DateTime.now();
-      await Firestore.instance.collection('reports').add({
-        "location": _userPointLocation.data,
-        "park": "iwGnWNuDC3m1hRzNNBT5",
-        "report": _reportDetails,
-        "time": _now,
-        "type": _reportType,
-        "user": "gQvk9DfM0KSrdSONKfXtnLJ6e0P2",
+    park = await Park.getParkId();
+    user = await tempAuth.getUserUid();
+
+    var _userPos = await location.getLocation();
+    userPointLocation = geoFlutterFire.point(latitude: -25.762415, longitude: 28.234624);
+        //latitude: _userPos.latitude, longitude: _userPos.longitude);
+    now = new DateTime.now();
+    DocumentReference result = await Firestore.instance.collection('reports').add({
+        "location": userPointLocation.data,
+        "park": park,
+        "report": reportDetails,
+        "time": now,
+        "type": reportType,
+        "user": user,
       });
-    _reportTextFieldController.clear();
+
+    if(flagOne) {
+      StorageReference storageRefOne =
+      FirebaseStorage.instance.ref().child(
+          "reports/" + result.documentID + '/1.jpeg');
+      StorageUploadTask uploadTaskOne = storageRefOne.putFile(imageOne);
+      StorageTaskSnapshot taskSnapshotOne = await uploadTaskOne.onComplete;
+    }
+    if(flagTwo) {
+      StorageReference storageRefTwo =
+      FirebaseStorage.instance.ref().child(
+          "reports/" + result.documentID + '/2.jpeg');
+      StorageUploadTask uploadTaskTwo = storageRefTwo.putFile(imageTwo);
+      StorageTaskSnapshot taskSnapshotTwo = await uploadTaskTwo.onComplete;
+    }
+    if(flagThree) {
+      StorageReference storageRefThree =
+      FirebaseStorage.instance.ref().child(
+          "reports/" + result.documentID + '/3.jpeg');
+      StorageUploadTask uploadTaskThree = storageRefThree.putFile(imageThree);
+      StorageTaskSnapshot taskSnapshotThree = await uploadTaskThree.onComplete;
+    }
+
+    reportTextFieldController.clear();
+    //Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text("Report Submitted")));
+    Navigator.pushReplacement(this.context, MaterialPageRoute(builder: (context) => DashboardScreen()));
   }
 
   Future _pickImage(int num) async {
@@ -57,23 +89,25 @@ class ReportState extends State<ReportScreen> {
     if(num == 1){
     setState(() {
       print("1 picked");
-      _imageOne = image;
-      _flagOne = true;
-      print(_imageOne.toString());
+      imageOne = image;
+      flagOne = true;
+      print(imageOne.toString());
     });
     }
     if(num == 2){
       setState(() {
         print("2 picked");
-        _imageTwo = image;
-        _flagTwo = true;
+        imageTwo = image;
+        print(imageTwo);
+        flagTwo = true;
       });
     }
     if(num == 3) {
       setState(() {
         print("3 picked");
-        _imageThree = image;
-        _flagThree = true;
+        imageThree = image;
+        print(imageThree);
+        flagThree = true;
       });
     }
 
@@ -108,10 +142,10 @@ class ReportState extends State<ReportScreen> {
       child: new Padding(
         padding: EdgeInsets.fromLTRB(85.0, 15.0, 65.0, 0.0),
         child: DropdownButton<String>(
-          value: _reportType,
+          value: reportType,
           onChanged: (String value) {
             setState(() {
-              _reportType = value;
+              reportType = value;
             });
           },
           items: <String>[
@@ -132,9 +166,9 @@ class ReportState extends State<ReportScreen> {
 
   Widget _showImagePicker() {
     return new Row(children: <Widget>[
-      new Container(padding: EdgeInsets.fromLTRB(15.0, 0.0, 0.0, 0.0), child: _imageOne == null ? RaisedButton(child: Icon(Icons.add_a_photo),onPressed: () => _pickImage(1),) : Image.file(_imageOne, height: 50.0, width: 100.0,)),
-      new Container(padding: EdgeInsets.fromLTRB(15.0, 0.0, 0.0, 0.0), child: _imageTwo == null ? RaisedButton(child: Icon(Icons.add_a_photo),onPressed: () => _pickImage(2),) : Image.file(_imageTwo, height: 50.0, width: 100.0,)),
-      new Container(padding: EdgeInsets.fromLTRB(15.0, 0.0, 0.0, 0.0), child: _imageThree == null ? RaisedButton(child: Icon(Icons.add_a_photo),onPressed: () => _pickImage(3),) : Image.file(_imageThree, height: 50.0, width: 100.0,))
+      new Container(padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0), child: imageOne == null ? RaisedButton(child: Icon(Icons.add_a_photo),onPressed: () => _pickImage(1),) : Image.file(imageOne, height: 50.0, width: 100.0,)),
+      new Container(padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0), child: imageTwo == null ? RaisedButton(child: Icon(Icons.add_a_photo),onPressed: () => _pickImage(2),) : Image.file(imageTwo, height: 50.0, width: 100.0,)),
+      new Container(padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0), child: imageThree == null ? RaisedButton(child: Icon(Icons.add_a_photo),onPressed: () => _pickImage(3),) : Image.file(imageThree, height: 50.0, width: 100.0,))
     ],);
   }
 
@@ -142,7 +176,7 @@ class ReportState extends State<ReportScreen> {
     return Container(
         padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
         child: TextField(
-          controller: _reportTextFieldController,
+          controller: reportTextFieldController,
           autofocus: true,
           autocorrect: true,
           textCapitalization: TextCapitalization.sentences,
@@ -152,7 +186,7 @@ class ReportState extends State<ReportScreen> {
               border: OutlineInputBorder(),
               labelText: 'Report Details',
               labelStyle: TextStyle(fontSize: 25.0)),
-          onChanged: (value) => this._reportDetails = value,
+          onChanged: (value) => this.reportDetails = value,
         ));
   }
 
