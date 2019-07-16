@@ -16,9 +16,10 @@ export class AddMarkerService {
 
   addMarker(id: string, lat: number, long: number,name:string,park:string){
     var locationData = new firebase.firestore.GeoPoint(lat,long);
-    return this.fireStore.collection('markers').add({
+    var self = this;
+    this.fireStore.collection('markers').add({
       active: true,
-      id: id,
+      id: "",
       location : {
         geopoint: locationData
           
@@ -26,8 +27,21 @@ export class AddMarkerService {
       },
       name: name,
       park: park,
-      points : 1000
+      points : 1000,
 
+
+    }).then(function(docRef){
+      
+      self.fireStore.collection('markers').doc(docRef.id).set({
+        id: docRef.id,
+        name: name,
+        park: park,
+        points : 1000,
+        active:true,
+        location : {
+          geopoint: locationData         
+        },
+      })
     })
 
   }
