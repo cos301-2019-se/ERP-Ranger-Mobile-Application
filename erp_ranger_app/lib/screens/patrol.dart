@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:erp_ranger_app/services/auth.dart';
 import 'package:erp_ranger_app/services/park.dart';
 import 'package:erp_ranger_app/services/tracker.dart';
+import 'package:erp_ranger_app/services/patrolData.dart';
+import 'package:erp_ranger_app/screens/feedback.dart';
 
 class PatrolScreen extends StatefulWidget {
   @override
@@ -12,26 +14,54 @@ class PatrolScreen extends StatefulWidget {
 
 class PatrolState extends State<PatrolScreen> {
 
-  bool isTracking=false;
+  static String _buttonText;
+  static Auth _tempAuth = new Auth();
 
-  static Auth tempAuth = new Auth();
+  void _switchPatrol() async{
+    if(!patrolData.isOnPatrol) {
+      setState(() {
+        _buttonText="End Shift";
+      });
+      String user = await _tempAuth.getUserUid();
+      String park = await Park.getParkId();
+      DocumentReference docRef = await Firestore.instance.collection('patrol')
+          .add({
+        "park": park,
+        "start": new DateTime.now(),
+        "user": user
+      });
+      await patrolData.setPatrolId(docRef.documentID);
+      Tracker.startTracking();
+      patrolData.isOnPatrol=true;
+      setState(() {
 
-  void _startPatrol() async{
-    String user = await tempAuth.getUserUid();
-    String park = await Park.getParkId();
-    await Firestore.instance.collection('patrol').add({
-      "park": park,
-      "start": new DateTime.now(),
-      "user": user
-    });
-    Tracker.startTracking();
+      });
+    }
+    else
+    {
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new FeedbackScreen()));
+      patrolData.isOnPatrol=false;
+    }
+  }
+
+  void _setButtonText()
+  {
+    if(patrolData.isOnPatrol)
+    {
+      _buttonText = "End Patrol";
+    }
+    else
+    {
+      _buttonText = "Start Patrol";
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
-        title: Text("Start Patrol"),
+        title: Text("Patrol"),
         elevation: .1,
         backgroundColor: Color.fromRGBO(18, 27, 65, 1.0),
       ),
@@ -45,7 +75,7 @@ class PatrolState extends State<PatrolScreen> {
             if (i == 0) {
               return new Column(
                 children: <Widget>[
-                  _showStartPatrolButton()
+                  _showPatrolButton()
                 ],
               );
             }
@@ -55,7 +85,8 @@ class PatrolState extends State<PatrolScreen> {
     );
   }
 
-  Widget _showStartPatrolButton() {
+  Widget _showPatrolButton() {
+    _setButtonText();
     return Padding(
         padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
         child: SizedBox(
@@ -67,13 +98,13 @@ class PatrolState extends State<PatrolScreen> {
                     borderRadius: new BorderRadius.circular(30.0)
                 ),
                 child: Text(
-                    'Start Patrol',
+                    _buttonText,
                     style: TextStyle(
                         fontSize: 20.0,
                         color: Colors.white
                     )
                 ),
-                onPressed: _startPatrol
+                onPressed: _switchPatrol
             )
         )
     );

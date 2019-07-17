@@ -2,6 +2,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class patrolData {
 
+  static bool isOnPatrol=false;
+
   static final patrolData _instance = new patrolData._internal();
 
   factory patrolData() {
