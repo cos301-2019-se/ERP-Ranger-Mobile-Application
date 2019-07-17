@@ -32,7 +32,7 @@ class FeedbackState extends State<FeedbackScreen> {
     _now = new DateTime.now();
     await Firestore.instance.collection('feedback').add({
       "patrol": "R0Ns1iCiJ8bfVlPjXVeP",//will get patrolID from user data
-      "report": _feedbackDetails
+      "feedback": _feedbackDetails
     });
     await Firestore.instance.collection('patrol').document('R0Ns1iCiJ8bfVlPjXVeP').updateData({'end': _now});//will get patrolID from app user data
     _feedbackTextFieldController.clear();
