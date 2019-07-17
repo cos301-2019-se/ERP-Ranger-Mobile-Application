@@ -13,6 +13,20 @@ export class ShiftService {
     return this.fireStore.collection("shifts");
   }
 
+
+  getPatrol(id : string){
+    return this.fireStore.collection("patrol").doc(id).ref;
+  }
+
+  getFeedback(){
+    return this.fireStore.collection("feedback");
+  }
+  
+  getFeedbackID(id: string){
+    return this.fireStore.collection("feedback").doc(id).ref;
+  }
+
+
   getUserName(id : string ){    
     var docRef = this.fireStore.collection("users").doc(id).ref;
     return docRef;    

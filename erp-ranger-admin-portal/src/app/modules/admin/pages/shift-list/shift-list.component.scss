@@ -1,31 +1,88 @@
-
 .linkClass{
   color:white;
   text-decoration: none;
 }
 
 .header-views{
-  margin-left: 2.5%;
+  margin-left: 5px;
   margin-top: 20px;
   margin-bottom: 20px;
   text-align: center;  
   zoom:1;
   display: inline-block;
-  width: 30%;  
+  // padding-top: 8px;
+  padding-left: 15px;
+  padding-right:15px;
   height: 40px;
   background-color:#3f51b5;
   border-right: 0px solid black;
-  border-radius: 20px;
+  border-radius: 2px;
   color:white;
   font-size: 1.5em;
-}
-
-.inner-span{
   vertical-align: middle;
 }
 
+.inner-span{
+  display: inline-block;
+  vertical-align:  middle;
+  text-align: center;
+  margin:auto;
+}
+.inner-div{
+  width:100%;
+  height:100%;      
+  position: relative;
+  display: flex;
+
+  
+}
 
 .header-views:hover{
   cursor: pointer;
-  background-color:#5F6dc2;;
+  background-color:#5F6dc2;
+}
+
+.overlay{
+  position: absolute;
+  text-align: center;    
+  left: 30%;
+  top:30%;
+  visibility: hidden; 
+  border-radius: 20px;  
+  border: 5px solid #3f51b5;     
+  z-index: 100;
+  width:40%;
+  height:40%;
+  background-color: rgba(255,255,255, 0.9);
+  display: inline-block;
+}
+.overlay-inner-div{
+    width:100%;
+    height:100%;      
+    position: relative;
+    display: flex;
+
+    
+}
+#overlay-span{
+    display: inline-block;
+    vertical-align:  middle;
+    text-align: center;
+    margin:auto;
+}
+
+.hide-overlay-btn{
+    z-index: 101;
+    position: absolute;
+    border:0px;
+    right:0px;
+    background-color: rgba(255,255,255,1);
+    border-radius: 50px;
+    width: 50px;
+    height:50px;
+}
+.hide-overlay-btn:hover{
+  cursor: pointer;
+  background-color: rgba(235,230,235,1);
+  
 }
