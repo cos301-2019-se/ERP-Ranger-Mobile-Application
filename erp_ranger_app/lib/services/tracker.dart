@@ -9,7 +9,7 @@ class Tracker {
 
   static Timer _timer;
   static bool _isTracking=false;
-  static int _waitTime = 1; //in minutes
+  static int _waitTime = 30; //in seconds
 
   static final Geoflutterfire _geoFlutterFire = Geoflutterfire();
   static Location _location = new Location();
@@ -22,7 +22,7 @@ class Tracker {
     if(!_isTracking) {
       _isTracking=true;
       sendLocation();
-      _timer = Timer.periodic(Duration(minutes: _waitTime), (Timer t) => sendLocation());
+      _timer = Timer.periodic(Duration(seconds: _waitTime), (Timer t) => sendLocation());
     }
   }
 
@@ -35,13 +35,15 @@ class Tracker {
 
   static void sendLocation() async {
     var _userPos = await _location.getLocation();
+    String user = await tempAuth.getUserUid();
+    String park = await Park.getParkId();
     _userPointLocation = _geoFlutterFire.point(latitude: _userPos.latitude, longitude: _userPos.longitude);
     _now = new DateTime.now();
     await Firestore.instance.collection('position').add({
                                                         "time": _now,
                                                         "location": _userPointLocation.data,
-                                                        "user": tempAuth.getUserUid(),
-                                                        "park": Park.getParkId()
+                                                        "user": user,
+                                                        "park": park
                                                       });
   }
 }
