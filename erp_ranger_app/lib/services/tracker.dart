@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
+import 'package:erp_ranger_app/services/auth.dart';
+import 'package:erp_ranger_app/services/park.dart';
 
 class Tracker {
 
@@ -14,6 +16,7 @@ class Tracker {
   static GeoFirePoint _userPointLocation;
   static DateTime _now;
 
+  static Auth tempAuth = new Auth();
 
   static void startTracking() async {
     if(!_isTracking) {
@@ -37,8 +40,8 @@ class Tracker {
     await Firestore.instance.collection('position').add({
                                                         "time": _now,
                                                         "location": _userPointLocation.data,
-                                                        "user": "gQvk9DfM0KSrdSONKfXtnLJ6e0P2",
-                                                        "park": "iwGnWNuDC3m1hRzNNBT5"
+                                                        "user": tempAuth.getUserUid(),
+                                                        "park": Park.getParkId()
                                                       });
   }
 }
