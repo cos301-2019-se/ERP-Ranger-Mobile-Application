@@ -30,11 +30,11 @@ const colors: any = {
 };
 
 @Component({
-  selector: 'app-shift-list',
-  templateUrl: './shift-list.component.html',
-  styleUrls: ['./shift-list.component.scss'],
+  selector: 'app-shift-feedback',
+  templateUrl: './shift-feedback.component.html',
+  styleUrls: ['./shift-feedback.component.scss'],
 })
-export class ShiftListComponent implements OnInit {  
+export class ShiftFeedbackComponent implements OnInit {  
   shiftsAll;
   size = -1;
   temp = 0;
@@ -51,43 +51,65 @@ export class ShiftListComponent implements OnInit {
 
   displayShifts() {
     var i = 0;
-    let observer = this.shifts.getShifts().ref
+    let observer = this.shifts.getFeedback().ref
     .onSnapshot(querySnapshot => {
       querySnapshot.docChanges().forEach(change => {
-        //console.log(change.doc.data());
-        var name :string;        
-        var id = change.doc.id;      
-        var t = new Date(1970,0,1);
-        t.setSeconds(change.doc.data().end.seconds.toString());
-        t.setHours(t.getHours() + 2);
-        var t2 = new Date(1970,0,1);
-        t2.setSeconds(change.doc.data().start.seconds.toString());
-        t2.setHours(t2.getHours() + 2);
-        let docRef = this.shifts.getUserName(change.doc.data().user);        
-        let getUser = docRef.get()
+        var patrolID :string;
+        patrolID = change.doc.data().patrol;
+        var feedBackInfo = change.doc.data().feedback;
+        let docRef = this.shifts.getPatrol(patrolID);        
+        let getPatrol = docRef.get()
         .then(doc => {
           if(!doc.exists){
-            console.log("User not found ");
+            console.log("Patrol not found ");
             
           } else{
-            name = doc.data().name ;
-            let parkRef = this.shifts.getParkName(change.doc.data().park);
-            let getPark = parkRef.get()
-            .then(doc => {
+            var endTime = doc.data().end;
+            var startTime = doc.data().start;
+            var parkID = doc.data().park;
+            var shiftID = doc.data().shift;
+            var userID = doc.data().user;
+            let docRef = this.shifts.getUserName(userID);        
+            let getUser = docRef.get()
+            .then(userDoc => {
               if(!doc.exists){
-                console.log("Park not found ");                
+                console.log("User not found ");
+                
+              } else{     
+                var userName = userDoc.data().name;
+                let docRef = this.shifts.getParkName(parkID);        
+                let getPark = docRef.get()
+                .then(parkDoc => {
+                  if(!doc.exists){
+                    console.log("User not found ");
+                    
+                  } else{     
+
+                    var parkName = parkDoc.data().name;
+                    var start = new Date(1970,0,1);
+                    start.setSeconds(startTime.seconds);
+                    start.setHours(start.getHours() + 2);
+                    var end = new Date(1970,0,1);
+                    end.setSeconds(endTime.seconds);
+                    end.setHours(end.getHours() + 2);
+                    this.addEventP(start,end,change.doc.id,userName,parkName, feedBackInfo);
+                  }
+                })
+                .catch(err => {
+                  console.log("Error getting document");         
+                });
               }
-              else{
-                var park= doc.data().name ;                
-                this.addEventP(t2,t,id, name,park);
-              }
-            })            
+            })
+            .catch(err => {
+              console.log("Error getting document");         
+            });
+
+            
           }
         })
         .catch(err => {
           console.log("Error getting document");         
         });
-        i++;
       });
     });
 
@@ -142,7 +164,6 @@ export class ShiftListComponent implements OnInit {
     }
   }
 
-
   eventTimesChanged({
     event,
     newStart,
@@ -160,21 +181,39 @@ export class ShiftListComponent implements OnInit {
     });
     this.handleEvent('Dropped or resized', event);
   }
-
+  hideOverlay(){
+    document.getElementById("overlay-info").style.visibility = "hidden";
+  }
   handleEvent(action: string, event: CalendarEvent): void {
-    //Do something here when clicking an event    
+    //Do something here when clicking an event   
+    let docRef = this.shifts.getFeedbackID(event.id + "");        
+    let getFB = docRef.get()
+    .then(fDoc => {
+      if(!fDoc.exists){
+        console.log("User not found ");
+        
+      } else{     
+        document.getElementById("overlay-span").innerHTML = fDoc.data().feedback;
+        document.getElementById("overlay-info").style.visibility = "visible";
+        
+        
+      }
+    })
+    .catch(err => {
+      console.log("Error getting document");         
+    });
     this.modalData = { event, action };
     this.modal.open(this.modalContent, { size: 'lg' });
   }
 
-  addEventP( patrolDate: Date, endDate : Date, id, name : string,park : string): void {
+  addEventP( patrolDate: Date, endDate : Date, id, name : string,park : string, info: string): void {
     this.events = [
       ...this.events,
       {
         title:    name + " ( " + patrolDate.getHours() +":"+  patrolDate.getMinutes() + "  -  "+ endDate.getHours() +":"+  endDate.getMinutes() + " ) At " + park ,
         start: startOfDay(patrolDate),
         end: endOfDay(endDate),
-        id : id,
+        id : id,        
         color: colors.blue,
         draggable: false,
         resizable: {
@@ -192,7 +231,6 @@ export class ShiftListComponent implements OnInit {
  
   closeOpenMonthViewDay() {
     this.activeDayIsOpen = false;
-
   }
   
   
