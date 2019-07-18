@@ -55,6 +55,18 @@ class MapState extends State<MapComponent> {
     );
   }
 
+  _animateToPark() async {
+    var pos = await location.getLocation();
+
+    _mapController.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: LatLng(pos.latitude, pos.longitude),
+          zoom: 17.0,
+        )
+    )
+    );
+  }
+
   void _updateMarkers() async {
     QuerySnapshot querySnapshot = await _firestore.collection('markers').getDocuments();
     List<DocumentSnapshot> documentList = querySnapshot.documents;
