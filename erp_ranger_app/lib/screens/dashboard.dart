@@ -6,6 +6,7 @@ import 'package:erp_ranger_app/screens/createShift.dart';
 import 'package:erp_ranger_app/screens/feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:erp_ranger_app/login.dart';
+import 'package:erp_ranger_app/screens/markers.dart';
 import 'package:erp_ranger_app/screens/patrol.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -36,7 +37,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             makeDashboardItem("Reports", Icons.warning),
             makeDashboardItem("Log Feedback", Icons.assignment),
             makeDashboardItem("View Assets", Icons.business_center),
-            makeDashboardItem("Patrol", Icons.visibility)
+            makeDashboardItem("Markers", Icons.map)
+            /*makeDashboardItem("Patrol", Icons.visibility)*/
           ],
         ),
       ),
@@ -56,12 +58,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
       //Navigator.pop(context);
       Navigator.push(context, new MaterialPageRoute(
           builder: (context) => new AssetsScreen(myAssets: false)));
-    } else if(title == "Log Feedback") {
+    } else if (title == "Log Feedback") {
       Navigator.push(context, new MaterialPageRoute(
           builder: (context) => new FeedbackScreen()));
     } else {
       Navigator.push(context, new MaterialPageRoute(
-          builder: (context) => new PatrolScreen()));
+        builder: (context) => new MarkersScreen()));
+      /*Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new PatrolScreen()));*/
     }
   }
 
