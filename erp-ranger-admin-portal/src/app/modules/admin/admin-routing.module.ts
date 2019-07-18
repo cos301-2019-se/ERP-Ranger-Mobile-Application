@@ -25,23 +25,27 @@ const routes: Routes = [
   },
   {
     path: 'shift/feedback',
-    component: ShiftFeedbackComponent,   
+    component: ShiftFeedbackComponent,
   },
   {
-    path: 'user/list',
-    component: UserListComponent,    
+    path: 'users',
+    component: UserListComponent,
   },
   {
-    path: 'add-user',
-    component: AddUserComponent,    
+    path: 'user/add',
+    component: AddUserComponent,
   },
   {
     path: 'positions',
-    component: UserPositionsComponent,    
+    component: UserPositionsComponent,
   },
   {
-    path: 'add-marker',
-    component: AddMarkerComponent,    
+    path: 'markers',
+    component: AddMarkerComponent,
+  },
+  {
+    path: 'marker/:id',
+    component: DashboardComponent,
   },
   {
     path: 'shift/new',
