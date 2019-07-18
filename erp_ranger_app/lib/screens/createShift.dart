@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:erp_ranger_app/services/auth.dart';
 import 'package:erp_ranger_app/services/park.dart';
+import 'package:erp_ranger_app/screens/dashboard.dart';
 
 class CreateShift extends StatefulWidget {
   @override
@@ -20,6 +21,7 @@ class ShiftState extends State<CreateShift> {
   bool endFlag = false;
   bool dateFlag = false;
   bool midnightFlag = false;
+  bool sendingReport = false;
 
   static Firestore db = Firestore.instance;
   static CollectionReference shiftRef = db.collection('shifts');
@@ -27,7 +29,7 @@ class ShiftState extends State<CreateShift> {
 
   Auth tempAuth = new Auth();
 
-  Future<String> user;
+  String user;
   String park;
 
   Future<Null> _selectedDate(BuildContext context) async {
@@ -170,7 +172,7 @@ class ShiftState extends State<CreateShift> {
   }
 
   Future<void> compileData() async {
-    user = tempAuth.getUserUid();
+    user = await tempAuth.getUserUid();
     park = await Park.getParkId();
     Timestamp end;
     if (midnightFlag) {
@@ -186,16 +188,19 @@ class ShiftState extends State<CreateShift> {
       end = new Timestamp.fromDate(selectedEndDateTime);
     }
     Timestamp start = new Timestamp.fromDate(selectedStartDateTime);
-    Firestore.instance
-        .collection('shifts')
-        .add({
+
+    setState(() {
+      this.sendingReport = true;
+    });
+
+    var result = await Firestore.instance.collection('shifts').add({
           "end": end,
           "park": park,
           "start": start,
           "user": user,
         })
         .then((result) => {
-              Navigator.pop(context),
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen())),
             })
         .catchError((err) => print(err));
   }
@@ -229,6 +234,7 @@ class ShiftState extends State<CreateShift> {
             _showDatePicker(),
             _showStartTimePicker(),
             _showEndTimePicker(),
+            this.sendingReport == true ? _showSending() : new Container(),
             _showSendData(),
             _showRepickTimes(),
           ],
@@ -303,6 +309,25 @@ class ShiftState extends State<CreateShift> {
           onTap: () => _selectStartDateTime(context),
         ),
       );
+    } else if(!startFlag){
+      return Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+        child: new TextField(
+          key: Key('Text'),
+          maxLines: 1,
+          enabled: false,
+          maxLength: 1,
+          maxLengthEnforced: true,
+          decoration: new InputDecoration(
+              labelText: 'StartTime',
+              border: OutlineInputBorder(),
+              prefixIcon: new Icon(
+                Icons.watch,
+                color: Colors.grey,
+              )),
+          onTap: () => _selectStartDateTime(context),
+        ),
+      );
     } else {
       return Padding(
         padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
@@ -333,6 +358,25 @@ class ShiftState extends State<CreateShift> {
           key: Key('Text'),
           maxLines: 1,
           enabled: true,
+          maxLength: 1,
+          maxLengthEnforced: true,
+          decoration: new InputDecoration(
+              labelText: 'EndTime',
+              border: OutlineInputBorder(),
+              prefixIcon: new Icon(
+                Icons.watch,
+                color: Colors.grey,
+              )),
+          onTap: () => _selectEndDateTime(context),
+        ),
+      );
+    } else if(!endFlag){
+      return Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+        child: new TextField(
+          key: Key('Text'),
+          maxLines: 1,
+          enabled: false,
           maxLength: 1,
           maxLengthEnforced: true,
           decoration: new InputDecoration(
@@ -398,6 +442,24 @@ class ShiftState extends State<CreateShift> {
                 style: TextStyle(fontSize: 20.0, color: Colors.white)),
             onPressed: () => _resetPickers(context)),
       ),
+    );
+  }
+
+  Widget _showSending() {
+    return Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+        child: Container(
+          alignment: Alignment.center,
+          height: 50.0,
+          width: 50.0,
+          child: SizedBox(
+            child: CircularProgressIndicator(
+              strokeWidth: 3.0,
+            ),
+            height: 50.0,
+            width: 50.0,
+          ),
+        )
     );
   }
 }
