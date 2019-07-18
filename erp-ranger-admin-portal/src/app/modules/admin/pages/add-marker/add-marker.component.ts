@@ -25,6 +25,9 @@ export class AddMarkerComponent implements OnInit {
     this.parkID = "iwGnWNuDC3m1hRzNNBT5";
     this.zoom = 12;
   }
+  setSize(){
+    document.getElementById("map-agm").style.height = (document.body.offsetHeight - 96) + "px";
+  }
 
   setOP(){
     this.lat = -26.884648;
@@ -55,6 +58,7 @@ export class AddMarkerComponent implements OnInit {
   ngOnInit() {
     this.getMarkers();
     this.setRietvlei();
+    this.setSize();
   }
   addMarker(la : number,lo : number){
     var name = prompt("Marker Name:");
