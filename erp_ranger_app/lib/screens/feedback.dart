@@ -1,6 +1,8 @@
 import 'package:erp_ranger_app/components/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:erp_ranger_app/services/patrolData.dart';
+import 'package:erp_ranger_app/services/tracker.dart';
 
 class FeedbackScreen extends StatefulWidget {
   @override
@@ -14,6 +16,7 @@ class FeedbackState extends State<FeedbackScreen> {
   DateTime _start;
   int _points=10;//will get from app user data
   String _feedbackDetails;
+  bool loaded=false;
 
   FeedbackState()
   {
@@ -23,19 +26,27 @@ class FeedbackState extends State<FeedbackScreen> {
   }
 
   Future<DateTime> _getPatrolStart() async {
-    var document = await Firestore.instance.collection('patrol').document('R0Ns1iCiJ8bfVlPjXVeP').get();//will get patrolID from app user data
+    String patrol = await patrolData.getPatrolId();
+    var document = await Firestore.instance.collection('patrol').document(patrol).get();
     _start = document['start'].toDate();
+    setState(() {
+      loaded=true;
+    });
     return _start;
   }
 
   void _performFeedback() async {
+    String patrol = await patrolData.getPatrolId();
     _now = new DateTime.now();
     await Firestore.instance.collection('feedback').add({
-      "patrol": "R0Ns1iCiJ8bfVlPjXVeP",//will get patrolID from user data
-      "report": _feedbackDetails
+      "patrol": patrol,
+      "feedback": _feedbackDetails
     });
-    await Firestore.instance.collection('patrol').document('R0Ns1iCiJ8bfVlPjXVeP').updateData({'end': _now});//will get patrolID from app user data
+    await Firestore.instance.collection('patrol').document(patrol).updateData({'end': _now});
     _feedbackTextFieldController.clear();
+    await patrolData.setPatrolId('');
+    patrolData.isOnPatrol=false;
+    Tracker.stopTracking();
   }
 
   @override
@@ -69,18 +80,44 @@ class FeedbackState extends State<FeedbackScreen> {
 
   Widget _showScore() {
     _now = new DateTime.now();
-    _getPatrolStart();
-    return RichText (
-      text: new TextSpan(
-        style: new TextStyle(
-          fontSize: 20.0,
-          color: Colors.blue
-        ),
-        children: <TextSpan>[
-          new TextSpan(text: 'You scored ' + _points.toString() + ' between ' + _start.hour.toString() + ':' + _start.minute.toString() + ' and ' + _now.hour.toString() + ':' + _now.minute.toString())
-        ]
-      )
-    );
+    if(!loaded)
+    {
+      _getPatrolStart();
+    }
+    if(loaded) {
+      return RichText(
+          text: new TextSpan(
+              style: new TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.blue
+              ),
+              children: <TextSpan>[
+                new TextSpan(
+                    text: 'You scored ' + _points.toString() + ' between ' +
+                        _start.hour.toString() + ':' +
+                        _start.minute.toString() + ' and ' +
+                        _now.hour.toString() + ':' + _now.minute.toString())
+              ]
+          )
+      );
+    }
+    else {
+      return Padding(
+          padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+          child: Container(
+            alignment: Alignment.center,
+            height: 50.0,
+            width: 50.0,
+            child: SizedBox(
+              child: CircularProgressIndicator(
+                strokeWidth: 3.0,
+              ),
+              height: 50.0,
+              width: 50.0,
+            ),
+          )
+      );
+    }
   }
 
   Widget _showFeedbackTextField() {
