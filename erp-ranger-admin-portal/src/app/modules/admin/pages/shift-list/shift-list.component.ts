@@ -81,7 +81,10 @@ export class ShiftListComponent implements OnInit {
                 var park= doc.data().name ;                
                 this.addEventP(t2,t,id, name,park);
               }
-            })            
+            })  
+            .catch(err => {
+              console.log("Error getting document");         
+            })          
           }
         })
         .catch(err => {

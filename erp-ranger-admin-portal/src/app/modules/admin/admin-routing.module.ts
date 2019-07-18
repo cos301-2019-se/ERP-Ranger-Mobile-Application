@@ -10,6 +10,7 @@ import { ReportDetailComponent } from './pages/report-detail/report-detail.compo
 import { ShiftFeedbackComponent } from './pages/shift-feedback/shift-feedback.component';
 import { AddUserComponent } from './pages/add-user/add-user.component';
 import { AddMarkerComponent } from './pages/add-marker/add-marker.component';
+import { UserPositionsComponent } from './pages/user-positions/user-positions.component';
 
 const routes: Routes = [
   {
@@ -28,6 +29,10 @@ const routes: Routes = [
   {
     path: 'add-user',
     component: AddUserComponent,    
+  },
+  {
+    path: 'positions',
+    component: UserPositionsComponent,    
   },
   {
     path: 'add-marker',
