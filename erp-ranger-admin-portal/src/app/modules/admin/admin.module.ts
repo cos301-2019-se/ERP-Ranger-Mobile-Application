@@ -23,6 +23,8 @@ import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { AgmCoreModule } from '@agm/core';
 import { UserPositionsComponent } from './pages/user-positions/user-positions.component';
 
+import { UserListComponent } from './pages/user-list/user-list.component';
+import { MatTableModule } from '@angular/material'
 
 
 
@@ -32,11 +34,12 @@ import { UserPositionsComponent } from './pages/user-positions/user-positions.co
 @NgModule({
 
   declarations: [DashboardComponent, ReportDetailComponent, ShiftFeedbackComponent, 
-    ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, AddMarkerComponent, ReportOverviewComponent,AddUserComponent, UserPositionsComponent],
+    ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, AddMarkerComponent, ReportOverviewComponent,AddUserComponent, UserPositionsComponent,UserListComponent],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    MatTableModule,
     RxReactiveFormsModule,
     AdminRoutingModule,
     MaterialModule,

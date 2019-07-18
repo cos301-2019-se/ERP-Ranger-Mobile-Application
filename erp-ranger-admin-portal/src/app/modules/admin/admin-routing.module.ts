@@ -11,6 +11,7 @@ import { ShiftFeedbackComponent } from './pages/shift-feedback/shift-feedback.co
 import { AddUserComponent } from './pages/add-user/add-user.component';
 import { AddMarkerComponent } from './pages/add-marker/add-marker.component';
 import { UserPositionsComponent } from './pages/user-positions/user-positions.component';
+import { UserListComponent } from './pages/user-list/user-list.component'
 
 const routes: Routes = [
   {
@@ -25,6 +26,10 @@ const routes: Routes = [
   {
     path: 'shift/feedback',
     component: ShiftFeedbackComponent,   
+  },
+  {
+    path: 'user/list',
+    component: UserListComponent,    
   },
   {
     path: 'add-user',
