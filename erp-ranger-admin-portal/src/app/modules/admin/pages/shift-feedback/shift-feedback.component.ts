@@ -41,7 +41,9 @@ export class ShiftFeedbackComponent implements OnInit {
   counter = 0;
   ngOnInit() {
     this.displayShifts();
+    setTimeout(() => this.events = this.events,1800)
   }
+
 
   constructor(private shifts: ShiftService, private modal: NgbModal, private cdr: ChangeDetectorRef) {}
 
@@ -80,18 +82,25 @@ export class ShiftFeedbackComponent implements OnInit {
                 let docRef = this.shifts.getParkName(parkID);        
                 let getPark = docRef.get()
                 .then(parkDoc => {
-                  if(!doc.exists){
+                  if(!parkDoc.exists){
                     console.log("User not found ");
                     
                   } else{     
-
+                    // console.log(change.doc.data());
+                    // console.log(doc.data());
+                    // console.log(parkDoc.data());
+                    
                     var parkName = parkDoc.data().name;
-                    var start = new Date(1970,0,1);
-                    start.setSeconds(startTime.seconds);
-                    start.setHours(start.getHours() + 2);
-                    var end = new Date(1970,0,1);
-                    end.setSeconds(endTime.seconds);
-                    end.setHours(end.getHours() + 2);
+                    var start = startTime.toDate();
+                   
+                    var end = endTime.toDate();
+                    // console.log(start);
+                    // console.log(end);
+                    
+                    // console.log("--------------------");
+                    // console.log(start,end,change.doc.id,userName,parkName, feedBackInfo);
+                    
+                    
                     this.addEventP(start,end,change.doc.id,userName,parkName, feedBackInfo);
                   }
                 })
@@ -222,6 +231,7 @@ export class ShiftFeedbackComponent implements OnInit {
         }
       }
     ];    
+    console.log(this.events,"----------------------------------------------------")
   }
 
   deleteEvent(eventToDelete: CalendarEvent) {
