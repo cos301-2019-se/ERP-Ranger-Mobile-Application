@@ -10,7 +10,7 @@ import { ReportService } from '../../services/report.service';
 export class ReportOverviewComponent implements OnInit {
 
   zoom: number = 13;
-  
+
   lat: number = -25.876910;
   lng: number = 28.273253;
 
@@ -19,6 +19,7 @@ export class ReportOverviewComponent implements OnInit {
   constructor(private reports: ReportService) { }
 
   ngOnInit() {
+    this.setSize();
     this.displayReports();
   }
 
@@ -26,6 +27,10 @@ export class ReportOverviewComponent implements OnInit {
     this.reports.getReports().subscribe(result => {
       this.markers = result;
     });
+  }
+
+  setSize(){
+    document.getElementById("map-agm").style.height = (document.body.offsetHeight - 96) + "px";
   }
 
 }

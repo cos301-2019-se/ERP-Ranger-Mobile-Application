@@ -32,18 +32,23 @@ class ReportState extends State<ReportScreen> {
   File imageThree;
   bool flagThree = false;
   bool reportFlag = false;
+  bool uploading = false;
 
   Auth tempAuth = new Auth();
   String user;
   String park;
 
   void _performReport() async {
+    setState(() {
+      this.uploading = true;
+    });
+
     park = await Park.getParkId();
     user = await tempAuth.getUserUid();
 
     var _userPos = await location.getLocation();
-    userPointLocation = geoFlutterFire.point(latitude: -25.762415, longitude: 28.234624);
-        //latitude: _userPos.latitude, longitude: _userPos.longitude);
+    userPointLocation = geoFlutterFire.point(//latitude: -25.762415, longitude: 28.234624);
+        latitude: _userPos.latitude, longitude: _userPos.longitude);
     now = new DateTime.now();
     DocumentReference result = await Firestore.instance.collection('reports').add({
         "location": userPointLocation.data,
@@ -54,31 +59,34 @@ class ReportState extends State<ReportScreen> {
         "user": user,
       });
 
+    _sendImages(result);
+
+    reportTextFieldController.clear();
+    Navigator.pushReplacement(this.context, MaterialPageRoute(builder: (context) => DashboardScreen()));
+  }
+
+  Future _sendImages(DocumentReference doc) async {
     if(flagOne) {
       StorageReference storageRefOne =
       FirebaseStorage.instance.ref().child(
-          "reports/" + result.documentID + '/1.jpeg');
+          "reports/" + doc.documentID + '/1.jpeg');
       StorageUploadTask uploadTaskOne = storageRefOne.putFile(imageOne);
       StorageTaskSnapshot taskSnapshotOne = await uploadTaskOne.onComplete;
     }
     if(flagTwo) {
       StorageReference storageRefTwo =
       FirebaseStorage.instance.ref().child(
-          "reports/" + result.documentID + '/2.jpeg');
+          "reports/" + doc.documentID + '/2.jpeg');
       StorageUploadTask uploadTaskTwo = storageRefTwo.putFile(imageTwo);
       StorageTaskSnapshot taskSnapshotTwo = await uploadTaskTwo.onComplete;
     }
     if(flagThree) {
       StorageReference storageRefThree =
       FirebaseStorage.instance.ref().child(
-          "reports/" + result.documentID + '/3.jpeg');
+          "reports/" + doc.documentID + '/3.jpeg');
       StorageUploadTask uploadTaskThree = storageRefThree.putFile(imageThree);
       StorageTaskSnapshot taskSnapshotThree = await uploadTaskThree.onComplete;
     }
-
-    reportTextFieldController.clear();
-    //Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text("Report Submitted")));
-    Navigator.pushReplacement(this.context, MaterialPageRoute(builder: (context) => DashboardScreen()));
   }
 
   Future _pickImage(int num) async {
@@ -130,7 +138,8 @@ class ReportState extends State<ReportScreen> {
             _showReportTypeList(),
             _showImagePicker(),
             _showReportTextField(),
-            _showReportButton()
+            _showReportButton(),
+            this.uploading == true ? _showUploading() : new Container(),
           ],
         ),
       ),
@@ -140,8 +149,9 @@ class ReportState extends State<ReportScreen> {
   Widget _showReportTypeList() {
     return Card(
       child: new Padding(
-        padding: EdgeInsets.fromLTRB(85.0, 15.0, 65.0, 0.0),
-        child: DropdownButton<String>(
+        padding: EdgeInsets.fromLTRB(10.0, 15.0, 0.0, 0.0),
+        child: new DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
           value: reportType,
           onChanged: (String value) {
             setState(() {
@@ -160,6 +170,8 @@ class ReportState extends State<ReportScreen> {
             );
           }).toList(),
         ),
+      ),
+
       ),
     );
   }
@@ -202,6 +214,28 @@ class ReportState extends State<ReportScreen> {
                     borderRadius: new BorderRadius.circular(30.0)),
                 child: Text('Report',
                     style: TextStyle(fontSize: 20.0, color: Colors.white)),
-                onPressed: _performReport)));
+                onPressed: (){
+                  if(this.uploading == false){
+                    _performReport();
+                  }
+                  FocusScope.of(context).requestFocus(new FocusNode());},)));
+  }
+
+  Widget _showUploading() {
+    return Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+        child: Container(
+          alignment: Alignment.center,
+          height: 50.0,
+          width: 50.0,
+          child: SizedBox(
+            child: CircularProgressIndicator(
+              strokeWidth: 3.0,
+            ),
+            height: 50.0,
+            width: 50.0,
+          ),
+        )
+    );
   }
 }

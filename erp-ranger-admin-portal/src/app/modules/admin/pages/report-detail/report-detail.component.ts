@@ -26,10 +26,11 @@ export class ReportDetailComponent implements OnInit {
   displayReports() {
     this.reports.readReport(this.route.snapshot.paramMap.get("id")).subscribe(result => {
       this.report = result;
-      this.users.getUser(this.report['user']).subscribe(result => {
-        this.user = result;
+      this.users.getUser(this.report['user']).subscribe(async result => {
+        this.user = (await result.payload.data()).name;
       });
     });
+
   }
 
 }

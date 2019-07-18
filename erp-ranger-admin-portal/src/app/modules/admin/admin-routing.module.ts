@@ -10,6 +10,8 @@ import { ReportDetailComponent } from './pages/report-detail/report-detail.compo
 import { ShiftFeedbackComponent } from './pages/shift-feedback/shift-feedback.component';
 import { AddUserComponent } from './pages/add-user/add-user.component';
 import { AddMarkerComponent } from './pages/add-marker/add-marker.component';
+import { UserPositionsComponent } from './pages/user-positions/user-positions.component';
+import { UserListComponent } from './pages/user-list/user-list.component'
 
 const routes: Routes = [
   {
@@ -23,15 +25,27 @@ const routes: Routes = [
   },
   {
     path: 'shift/feedback',
-    component: ShiftFeedbackComponent,   
+    component: ShiftFeedbackComponent,
   },
   {
-    path: 'add-user',
-    component: AddUserComponent,    
+    path: 'users',
+    component: UserListComponent,
   },
   {
-    path: 'add-marker',
-    component: AddMarkerComponent,    
+    path: 'users/add',
+    component: AddUserComponent,
+  },
+  {
+    path: 'positions',
+    component: UserPositionsComponent,
+  },
+  {
+    path: 'markers',
+    component: AddMarkerComponent,
+  },
+  {
+    path: 'marker/:id',
+    component: DashboardComponent,
   },
   {
     path: 'shift/new',
