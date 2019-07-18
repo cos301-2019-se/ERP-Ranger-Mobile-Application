@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:erp_ranger_app/services/auth.dart';
 
 class MapComponent extends StatefulWidget {
   @override
@@ -29,7 +30,8 @@ class MapState extends State<MapComponent> {
             compassEnabled: true,
             mapType: MapType.hybrid,
             markers: Set<Marker>.of(_markers.values),
-          ),
+
+          )
         ]
     );
   }
@@ -41,7 +43,6 @@ class MapState extends State<MapComponent> {
       _mapController = controller;
     });
   }
-
 
   _animateToUser() async {
     var pos = await location.getLocation();
@@ -65,6 +66,7 @@ class MapState extends State<MapComponent> {
       GeoPoint pos = document.data['location']['geopoint'];
       String name = document.data['name'];
       int points = document.data['points'];
+      String id = document.data['id'];
 
       final String markerIdVal = 'marker_id_$_markerIdCounter';
       _markerIdCounter++;
@@ -74,7 +76,7 @@ class MapState extends State<MapComponent> {
         markerId: markerId,
         position: LatLng(pos.latitude, pos.longitude),
         icon: BitmapDescriptor.defaultMarker,
-        infoWindow: InfoWindow(title: name, snippet: '$points Points'),
+        infoWindow: InfoWindow(title: name, snippet: '$points Points', onTap: (){_onMarkerTapped(id);})
       );
 
       setState(() {
@@ -83,9 +85,75 @@ class MapState extends State<MapComponent> {
     });
   }
 
+  Future<void> _onMarkerTapped(String id) async{
+    switch (await showDialog(context: context,child:
+      SimpleDialog(
+      title: new Text('Activate marker?'),
+      children: <Widget>[
+        new Padding(
+            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+            child: SizedBox(
+                height: 40.0,
+                child: new RaisedButton(
+                    elevation: 5.0,
+                    color: Colors.blue,
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0)
+                    ),
+                    child: Text(
+                        'Yes',
+                        style: TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.white
+                        )
+                    ),
+                    onPressed: (){Navigator.pop(context, 'yes');}
+                )
+            )
+        ),
+        new Padding(
+            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+            child: SizedBox(
+                height: 40.0,
+                child: new RaisedButton(
+                    elevation: 5.0,
+                    color: Colors.blue,
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0)
+                    ),
+                    child: Text(
+                        'No',
+                        style: TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.white
+                        )
+                    ),
+                    onPressed: (){Navigator.pop(context, 'no');}
+                )
+            )
+        )
+      ],
+    ))) {
+      case 'yes':
+        _logMarker(id);
+        break;
+    }
+
+    }
+
+  void _logMarker(String id) async{
+    String user = await Auth().getUserUid();
+    print("sent:" + id);
+    DocumentReference result = await Firestore.instance.collection('marker_log').add({
+      "marker": id,
+      "reward": 0,
+      "time": new DateTime.now(),
+      "user": user,
+    });
+  }
+
   @override
   void dispose() {
     super.dispose();
   }
-
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReportService } from '../../services/report.service';
 import { ActivatedRoute } from "@angular/router";
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-report-detail',
@@ -13,8 +14,9 @@ export class ReportDetailComponent implements OnInit {
   zoom: number = 13;
 
   report;
+  user;
 
-  constructor(private reports: ReportService, private route: ActivatedRoute) { }
+  constructor(private reports: ReportService, private route: ActivatedRoute, private users: UserService) { }
 
   ngOnInit() {
     this.displayReports();
@@ -24,10 +26,11 @@ export class ReportDetailComponent implements OnInit {
   displayReports() {
     this.reports.readReport(this.route.snapshot.paramMap.get("id")).subscribe(result => {
       this.report = result;
+      this.users.getUser(this.report['user']).subscribe(async result => {
+        this.user = (await result.payload.data()).name;
+      });
     });
+
   }
 
-  getUser(id: string) {
-    return "Test user";
-  }
 }

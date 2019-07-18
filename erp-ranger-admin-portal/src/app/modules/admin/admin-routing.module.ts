@@ -8,6 +8,9 @@ import { NavComponent } from './components/nav/nav.component';
 import { ReportOverviewComponent } from './pages/report-overview/report-overview.component';
 import { ReportDetailComponent } from './pages/report-detail/report-detail.component';
 import { ShiftFeedbackComponent } from './pages/shift-feedback/shift-feedback.component';
+import { AddUserComponent } from './pages/add-user/add-user.component';
+import { AddMarkerComponent } from './pages/add-marker/add-marker.component';
+import { UserListComponent } from './pages/user-list/user-list.component'
 
 const routes: Routes = [
   {
@@ -20,12 +23,24 @@ const routes: Routes = [
     component: DashboardComponent
   },
   {
-    path: 'shift/new',
-    component: ShiftNewComponent
+    path: 'shift/feedback',
+    component: ShiftFeedbackComponent,   
   },
   {
-    path: 'shift/feedback',
-    component: ShiftFeedbackComponent
+    path: 'user/list',
+    component: UserListComponent,    
+  },
+  {
+    path: 'add-user',
+    component: AddUserComponent,    
+  },
+  {
+    path: 'add-marker',
+    component: AddMarkerComponent,    
+  },
+  {
+    path: 'shift/new',
+    component: ShiftNewComponent
   },
   {
     path: 'shift/:id',

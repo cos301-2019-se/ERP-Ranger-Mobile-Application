@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { AdminRoutingModule } from './admin-routing.module';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ShiftListComponent } from './pages/shift-list/shift-list.component';
@@ -9,28 +8,37 @@ import { ShiftDetailComponent } from './pages/shift-detail/shift-detail.componen
 import { NavComponent } from './components/nav/nav.component';
 import { MaterialModule } from 'src/app/material.module';
 import { ReportOverviewComponent } from './pages/report-overview/report-overview.component';
-import { FormsModule } from '@angular/forms';
 import { ShiftFeedbackComponent } from './pages/shift-feedback/shift-feedback.component';
 import { ReportDetailComponent } from './pages/report-detail/report-detail.component';
-import { FormsModule } from '@angular/forms';
-          
+import { AddMarkerComponent } from './pages/add-marker/add-marker.component';
+import { BrowserModule } from '@angular/platform-browser';
+import { AddUserComponent } from './pages/add-user/add-user.component';
+import {FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
+import { resolve } from 'dns';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgInitDirective } from './pages/shift-list/shift-list.directive';
+import { AgmCoreModule } from '@agm/core';
+import { UserListComponent } from './pages/user-list/user-list.component';
+import { MatTableModule } from '@angular/material'
 
-import { FlatpickrModule } from 'angularx-flatpickr';
-import { CalendarModule, DateAdapter } from 'angular-calendar';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+
+
+
 
 
 @NgModule({
 
-  declarations: [DashboardComponent, ReportDetailComponent, ShiftFeedbackComponent, ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, ReportOverviewComponent,ngInitDirective],
+  declarations: [DashboardComponent, ReportDetailComponent, ShiftFeedbackComponent, 
+    ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, AddMarkerComponent, ReportOverviewComponent,AddUserComponent, UserListComponent],
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatTableModule,
+    RxReactiveFormsModule,
     AdminRoutingModule,
     MaterialModule,
     AgmCoreModule.forRoot({

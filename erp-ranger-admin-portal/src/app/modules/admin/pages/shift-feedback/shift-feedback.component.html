@@ -6,17 +6,21 @@
   [view]="view"
   [(viewDate)]="viewDate"
   (viewDateChange)="closeOpenMonthViewDay()">
-    <span class="inner-span">
-        Previous
-    </span>
+    <div class="inner-div">
+      <span class="inner-span">
+          <
+      </span>
+    </div>
   </div>
   <div
   class="btn btn-outline-secondary header-views"
   mwlCalendarToday
   [(viewDate)]="viewDate">
-    <span class="inner-span">
-        Today
-    </span>
+    <div class="inner-div">
+      <span class="inner-span">
+          Today
+      </span>
+    </div>
   </div>
   <div
   class="btn btn-primary header-views"
@@ -24,9 +28,11 @@
   [view]="view"
   [(viewDate)]="viewDate"
   (viewDateChange)="closeOpenMonthViewDay()">
-    <span class="inner-span">
-        Next
-    </span>
+    <div class="inner-div">
+      <span class="inner-span">
+          >
+      </span>
+    </div>
   </div>
   <div class="col-md-4">
     <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
@@ -55,10 +61,10 @@
 
 <div id="overlay-info" class="overlay">
   <button class="hide-overlay-btn" (click)=hideOverlay()>
-    Hide
+    X
   </button>
   <div class="overlay-inner-div">
-  <span id="overlay-span">hello</span>  
+  <span id="overlay-span"></span>  
   </div>
 </div>
       
