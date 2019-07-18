@@ -29,11 +29,6 @@ export class AddMarkerComponent implements OnInit {
     document.getElementById("map-agm").style.height = (document.body.offsetHeight - 96) + "px";
   }
 
-  setOP(){
-    this.lat = -26.884648;
-    this.lng = 28.295682; 
-  }
-
   setHighMarker(numberNew: string){
     if (parseInt(numberNew,10) >= this.currentMarker){
       this.currentMarker = parseInt(numberNew,10)+1;
