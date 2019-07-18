@@ -36,7 +36,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             makeDashboardItem("Reports", Icons.warning),
             makeDashboardItem("Log Feedback", Icons.assignment),
             makeDashboardItem("View Assets", Icons.business_center),
-            makeDashboardItem("Start Patrol", Icons.alarm)
+            makeDashboardItem("Patrol", Icons.visibility)
           ],
         ),
       ),
