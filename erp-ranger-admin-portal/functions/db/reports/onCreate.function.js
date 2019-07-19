@@ -1,8 +1,12 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const nodemailer = require('nodemailer');
-const gmailEmail = functions.config().gmail.email;
-const gmailPassword = functions.config().gmail.password;
+
+/*const gmailEmail = functions.config().gmail.email;
+const gmailPassword = functions.config().gmail.password;*/
+
+const gmailEmail = 'erprangers@gmail.com';
+const gmailPassword = '';
 
 const mailTransport = nodemailer.createTransport({
   service: 'gmail',
@@ -17,44 +21,45 @@ const db = admin.firestore();
 
 exports = module.exports = functions.firestore.document('reports/{reportId}').onCreate((eventSnapshot, context) => {
 
-
-  /*const snapshot = change.after;
-  const val = snapshot.val();
-  if (!snapshot.changed('subscribedToMailingList')) {
-    return null;
-  }
-  const mailOptions = {
-    from: '"Spammy Corp." <noreply@firebase.com>',
-    to: val.email,
-  };
-  const subscribed = val.subscribedToMailingList;
-  mailOptions.subject = subscribed ? 'Thanks and Welcome!' : 'Sad to see you go :`(';
-  mailOptions.text = subscribed ?
-      'Thanks you for subscribing to our newsletter. You will receive our next weekly newsletter.' :
-      'I hereby confirm that I will stop sending you the newsletter.';
-
-  try {
-    await mailTransport.sendMail(mailOptions);
-    console.log(`New ${subscribed ? '' : 'un'}subscription confirmation email sent to:`, val.email);
-  } catch(error) {
-    console.error('There was an error while sending the email:', error);
-  }*/
-
-  const reportRef = db.doc('reports/' + eventSnapshot.data().id);
+  console.info(eventSnapshot.data());
+  const reportRef = db.doc('reports/' + eventSnapshot.id);
   reportRef.get()
     .then((report) => {
-      const type = eventSnapshot.data().type;
+      console.info(report.data());
+      const type = report.data().type;
       const typeRef = db.collection('report_types')
-        .where('type', '==', type);
+        .where('type', '==', type)
+        .limit(1);
       typeRef.get()
         .then((type) => {
           const parkRef = db.doc('parks/' + report.data().park);
           parkRef.get()
             .then((park) => {
-              let users = {};
-              if (type.data().methods['email']) email(type, park, users, report);
-              if (type.data().methods['sms']) sms(type, park, users, report);
-              if (type.data().methods['notification']) notify(type, park, users, report);
+              const usersRef = db.collection('report_type_park_user')
+                .where('park', '==', park.id)
+                .where('type', '==', type.docs[0].id);
+              usersRef.get()
+                .then((users) => {
+                  for (let i = 0; i < users.docs.length; i++) {
+                    console.info(users.docs[i].data().user);//can compact and use data from here for email
+                    const userRef = db.doc('users/' + users.docs[i].data().user);
+                    userRef.get()
+                      .then((user) => {
+                        console.info(user.data());
+                        if (type.docs[0].data().methods['email']) email(type, park, user.data().email, report);
+                        if (type.docs[0].data().methods['sms']) sms(type, park, user.data().number, report);
+                        if (type.docs[0].data().methods['notification']) notify(type, park, null, report);
+                      })
+                      .catch((error) => {
+                        console.error('UserRef Error');
+                        console.error(error);
+                      });
+                  }
+                })
+                .catch((error) => {
+                  console.error('UsersRef Error');
+                  console.error(error);
+                });
             })
             .catch((error) => {
               console.error('ParkRef Error');
@@ -75,19 +80,37 @@ exports = module.exports = functions.firestore.document('reports/{reportId}').on
 
 });
 
-const email = (type, park, users, report) => {
+const email = (type, park, user, report) => {
   let options = {}
   options.from = 'erprangers@gmail.com';
-  options.subject = type.data().type + ' - ' + park.data().name;
+  options.subject = type.docs[0].data().type + ' - ' + park.data().name;
+
+  options.to = user;
+
   options.text = 'Park: ' + park.data().name + nl;
-  options.text += '' + nl;
-  options.text += '' + nl;
-  options.text += 'Report: ' + report.data().report + nl;
+  options.text += 'Type: ' + type.docs[0].data().type + nl;
   options.text += nl;
-  options.text += 'Location: (Lat) ' + report.data().location.geopoint.latitude
-  options.text += '(Lng) ' + report.data().location.geopoint.longitude
+  options.text += 'Location: ' + nl;
+  options.text += 'Lat=' + report.data().location.geopoint.latitude + nl;
+  options.text += 'Lng=' + report.data().location.geopoint.longitude + nl;
+  options.text += nl;
+  options.text += 'Link: https://erp-ranger-app.web.app/admin/report/' + report.id + nl;
+  options.text += nl;
+  options.text += 'Report: ' + nl;
+  options.text += '=====================================' + nl;
+  options.text += report.data().report + nl;
+
+  mailTransport.sendMail(options)
+    .then((result) => {
+      console.info('Report email sent successfully:' + options.to);
+    })
+    .catch((error) => {
+      console.error('There was an error while sending the email: ' + error);
+    });
 }
 
 const sms = (type, park, users) => {}
 
 const notify = (type, park, users) => {}
+
+const api = (type, park, users) => {}
