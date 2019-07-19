@@ -16,3 +16,12 @@ agm-map {
   a {
     color: darkblue;
   }
+
+  .container {
+    display: flex;
+  }
+
+  .image img {
+    max-height: 300px;
+    margin: 0.5rem;
+  }
