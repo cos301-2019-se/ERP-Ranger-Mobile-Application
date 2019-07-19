@@ -1,0 +1,74 @@
+
+<div class="row text-center">
+  <div
+  class="btn btn-primary header-views"
+  mwlCalendarPreviousView
+  [view]="view"
+  [(viewDate)]="viewDate"
+  (viewDateChange)="closeOpenMonthViewDay()">
+    <div class="inner-div">
+      <span class="inner-span">
+          <
+      </span>
+    </div>
+  </div>
+  <div
+  class="btn btn-outline-secondary header-views"
+  mwlCalendarToday
+  [(viewDate)]="viewDate">
+    <div class="inner-div">
+      <span class="inner-span">
+          Today
+      </span>
+    </div>
+  </div>
+  <div
+  class="btn btn-primary header-views"
+  mwlCalendarNextView
+  [view]="view"
+  [(viewDate)]="viewDate"
+  (viewDateChange)="closeOpenMonthViewDay()">
+    <div class="inner-div">
+      <span class="inner-span">
+          >
+      </span>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+  </div>
+  <div class="col-md-4">
+    <div class="btn-group">            
+    </div>
+  </div>
+</div>
+<br />
+<div [ngSwitch]="view">
+  <mwl-calendar-month-view
+    *ngSwitchCase="CalendarView.Month"
+    [viewDate]="viewDate"
+    [events]="events"
+    [refresh]="refresh"
+    [activeDayIsOpen]="activeDayIsOpen"
+    (dayClicked)="dayClicked($event.day)"
+    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventTimesChanged)="eventTimesChanged($event)"
+  >
+  </mwl-calendar-month-view>
+  
+</div>
+
+
+<div id="overlay-info" class="overlay">
+  <button class="hide-overlay-btn" (click)=hideOverlay()>
+    X
+  </button>
+  <div class="overlay-inner-div">
+  <span id="overlay-span"></span>  
+  </div>
+</div>
+      
+      
+     
+  
+    
