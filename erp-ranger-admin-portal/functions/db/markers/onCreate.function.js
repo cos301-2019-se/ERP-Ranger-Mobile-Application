@@ -14,7 +14,8 @@ exports = module.exports = functions.firestore.document('markers/{markerId}').on
       markers: result.docs.length
     });
   }).catch((error) => {
-    console.log(error);
+    console.error('Markers Error');
+    console.error(error);
   });
 
   return 0;
