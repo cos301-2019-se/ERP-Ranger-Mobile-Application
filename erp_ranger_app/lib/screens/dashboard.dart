@@ -37,8 +37,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             makeDashboardItem("Reports", Icons.warning),
             makeDashboardItem("Log Feedback", Icons.assignment),
             makeDashboardItem("View Assets", Icons.business_center),
-            makeDashboardItem("Markers", Icons.map)
-            /*makeDashboardItem("Patrol", Icons.visibility)*/
+            makeDashboardItem("Markers", Icons.map),
+            makeDashboardItem("Patrol", Icons.visibility)
           ],
         ),
       ),
@@ -61,11 +61,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } else if (title == "Log Feedback") {
       Navigator.push(context, new MaterialPageRoute(
           builder: (context) => new FeedbackScreen()));
-    } else {
+    } else if (title=="Markers") {
       Navigator.push(context, new MaterialPageRoute(
-        builder: (context) => new MarkersScreen()));
-      /*Navigator.push(context, new MaterialPageRoute(
-          builder: (context) => new PatrolScreen()));*/
+          builder: (context) => new MarkersScreen()));
+    }
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new PatrolScreen()));
     }
   }
 

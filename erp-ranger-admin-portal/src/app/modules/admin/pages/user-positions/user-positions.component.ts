@@ -27,9 +27,12 @@ export class UserPositionsComponent implements OnInit {
     setTimeout(function(){
       this.posArr = this.posArr;
     },1900);
-    setInterval(()=> {
-      this.clearArray(); },this.resetTime * 1000); 
+    setInterval(function(){
       this.posArr = this.posArr;
+    },3500)
+    setInterval(()=> {
+      this.clearArray(); },this.resetTime * 5000); 
+      
     
     
   }
@@ -37,8 +40,9 @@ export class UserPositionsComponent implements OnInit {
     
     var now = new Date();
     for(var i =0;i<this.posArr.length;i++){
-      if((now.getTime() - this.posArr[i].time.getTime()) > (this.resetTime * 1000))
+      if((now.getTime() - this.posArr[i].time.getTime()) > (this.resetTime * 10000))
       {
+        console.log("Deleted at " +this.posArr[i].time.getMinutes()+":"+ this.posArr[i].time.getSeconds() + "  Time is " + now.getMinutes() + ":" + now.getSeconds());
         this.posArr.splice(i);
         i--;
       }
@@ -113,7 +117,8 @@ export class UserPositionsComponent implements OnInit {
                 temp = change.doc.data().time.toDate();
                 
                 var now = new Date();
-                if((now.getTime() - temp.getTime()) < (this.resetTime * 1000000000))
+                console.log((now.getTime() - temp.getTime()) + " NOW= " + now.getMinutes()+":" + now.getSeconds()+ "    Temp= " + temp.getMinutes()+":" + temp.getSeconds());
+                if((now.getTime() - temp.getTime()) < (this.resetTime * 1000))
                 {
                   this.posArr = [...this.posArr,{
                     id:change.doc.id,

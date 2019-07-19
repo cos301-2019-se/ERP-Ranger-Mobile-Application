@@ -41,7 +41,7 @@ export class ShiftFeedbackComponent implements OnInit {
   counter = 0;
   ngOnInit() {
     this.displayShifts();
-    setTimeout(() => this.events = this.events,1800)
+    setInterval(() => this.events = this.events,3000)
   }
 
 
