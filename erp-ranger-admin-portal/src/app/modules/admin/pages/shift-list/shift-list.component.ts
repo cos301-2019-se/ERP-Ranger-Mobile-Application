@@ -41,6 +41,9 @@ export class ShiftListComponent implements OnInit {
   counter = 0;
   ngOnInit() {
     this.displayShifts();
+    setInterval(function(){
+      this.events = this.events;
+    },300)
   }
 
   constructor(private shifts: ShiftService, private modal: NgbModal, private cdr: ChangeDetectorRef) {}

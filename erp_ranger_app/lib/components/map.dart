@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:erp_ranger_app/services/auth.dart';
+import 'package:erp_ranger_app/services/park.dart';
+import 'dart:async';
 
 class MapComponent extends StatefulWidget {
   @override
@@ -10,13 +13,19 @@ class MapComponent extends StatefulWidget {
 
 class MapState extends State<MapComponent> {
 
+  Timer _timer;
+
   GoogleMapController _mapController;
   Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
   int _markerIdCounter = 1;
 
-  Location location = new Location();
-
   Firestore _firestore = Firestore.instance;
+
+  @override
+  void initState(){
+    super.initState();
+    _timer = Timer.periodic(Duration(seconds: 30), (Timer t)=>_updateMarkers());
+  }
 
   @override
   build(context) {
@@ -29,39 +38,29 @@ class MapState extends State<MapComponent> {
             compassEnabled: true,
             mapType: MapType.hybrid,
             markers: Set<Marker>.of(_markers.values),
-          ),
+
+          )
         ]
     );
   }
 
   void _onMapCreated(GoogleMapController controller) {
-    _animateToUser();
+    _animateToPark();
     _updateMarkers();
     setState(() {
       _mapController = controller;
     });
   }
 
-
-  _animateToUser() async {
-    var pos = await location.getLocation();
-
-    _mapController.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target: LatLng(pos.latitude, pos.longitude),
-          zoom: 17.0,
-        )
-    )
-    );
-  }
-
   _animateToPark() async {
-    var pos = await location.getLocation();
+    DocumentSnapshot document = await _firestore.collection('parks').document(await Park.getParkId()).get();
+
+    GeoPoint pos = document.data['center'];
 
     _mapController.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(
           target: LatLng(pos.latitude, pos.longitude),
-          zoom: 17.0,
+          zoom: 13.0,
         )
     )
     );
@@ -77,6 +76,7 @@ class MapState extends State<MapComponent> {
       GeoPoint pos = document.data['location']['geopoint'];
       String name = document.data['name'];
       int points = document.data['points'];
+      String id = document.data['id'];
 
       final String markerIdVal = 'marker_id_$_markerIdCounter';
       _markerIdCounter++;
@@ -86,18 +86,88 @@ class MapState extends State<MapComponent> {
         markerId: markerId,
         position: LatLng(pos.latitude, pos.longitude),
         icon: BitmapDescriptor.defaultMarker,
-        infoWindow: InfoWindow(title: name, snippet: '$points Points'),
+        infoWindow: InfoWindow(title: name, snippet: '$points Points', onTap: (){_onMarkerTapped(id);})
       );
 
       setState(() {
         _markers[markerId] = marker;
       });
+      //Future.delayed(const Duration(seconds: 5), () {
+      //  _updateMarkers();
+      //});
     });
+  }
+
+  Future<void> _onMarkerTapped(String id) async{
+    switch (await showDialog(context: context,child:
+      SimpleDialog(
+      title: new Text('Activate marker?'),
+      children: <Widget>[
+        new Padding(
+            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+            child: SizedBox(
+                height: 40.0,
+                child: new RaisedButton(
+                    elevation: 5.0,
+                    color: Colors.blue,
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0)
+                    ),
+                    child: Text(
+                        'Yes',
+                        style: TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.white
+                        )
+                    ),
+                    onPressed: (){Navigator.pop(context, 'yes');}
+                )
+            )
+        ),
+        new Padding(
+            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+            child: SizedBox(
+                height: 40.0,
+                child: new RaisedButton(
+                    elevation: 5.0,
+                    color: Colors.blue,
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0)
+                    ),
+                    child: Text(
+                        'No',
+                        style: TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.white
+                        )
+                    ),
+                    onPressed: (){Navigator.pop(context, 'no');}
+                )
+            )
+        )
+      ],
+    ))) {
+      case 'yes':
+        _logMarker(id);
+        break;
+    }
+
+    }
+
+  void _logMarker(String id) async{
+    String user = await Auth().getUserUid();
+    await Firestore.instance.collection('marker_log').add({
+      "marker": id,
+      "reward": 0,
+      "time": new DateTime.now(),
+      "user": user,
+    });
+    _updateMarkers();
   }
 
   @override
   void dispose() {
+    _timer.cancel();
     super.dispose();
   }
-
 }

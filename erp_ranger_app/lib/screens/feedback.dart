@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:erp_ranger_app/services/patrolData.dart';
 import 'package:erp_ranger_app/services/tracker.dart';
+import 'package:erp_ranger_app/screens/patrol.dart';
 
 class FeedbackScreen extends StatefulWidget {
   @override
@@ -16,7 +17,8 @@ class FeedbackState extends State<FeedbackScreen> {
   DateTime _start;
   int _points=10;//will get from app user data
   String _feedbackDetails;
-  bool loaded=false;
+  bool _loaded=false;
+  bool _sent=false;
 
   FeedbackState()
   {
@@ -30,7 +32,7 @@ class FeedbackState extends State<FeedbackScreen> {
     var document = await Firestore.instance.collection('patrol').document(patrol).get();
     _start = document['start'].toDate();
     setState(() {
-      loaded=true;
+      _loaded=true;
     });
     return _start;
   }
@@ -45,8 +47,9 @@ class FeedbackState extends State<FeedbackScreen> {
     await Firestore.instance.collection('patrol').document(patrol).updateData({'end': _now});
     _feedbackTextFieldController.clear();
     await patrolData.setPatrolId('');
-    patrolData.isOnPatrol=false;
+    patrolData.setIsOnPatrol(false);
     Tracker.stopTracking();
+    _sent=true;
   }
 
   @override
@@ -69,7 +72,8 @@ class FeedbackState extends State<FeedbackScreen> {
               children: <Widget>[
                 _showScore(),
                 _showFeedbackTextField(),
-                _showFeedbackButton()
+                _showFeedbackButton(),
+                this._sent == true ? _showSentFeedback() : new Container(),
               ],
             );
           }
@@ -80,11 +84,11 @@ class FeedbackState extends State<FeedbackScreen> {
 
   Widget _showScore() {
     _now = new DateTime.now();
-    if(!loaded)
+    if(!_loaded)
     {
       _getPatrolStart();
     }
-    if(loaded) {
+    if(_loaded) {
       return RichText(
           text: new TextSpan(
               style: new TextStyle(
@@ -163,6 +167,21 @@ class FeedbackState extends State<FeedbackScreen> {
                 onPressed: _performFeedback
             )
         )
+    );
+  }
+
+  Widget _showSentFeedback() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+      child: Container(
+        alignment: Alignment.center,
+        child: Text(
+          "Sent Feedback",
+          style: TextStyle(
+              color: Colors.blue
+          ),
+        ),
+      ),
     );
   }
 }

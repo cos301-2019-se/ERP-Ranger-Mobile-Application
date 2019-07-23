@@ -17,6 +17,17 @@
         Geopoints: <strong> Longitude: {{ report.location.geopoint.longitude }} / Latitude: {{ report.location.geopoint.latitude }} </strong>
       </p>
     </mat-card-content>
+      <mat-card-content class="container">
+        <div *ngIf="photo1" class ="image">
+          <img [src]="photo1" alt="">
+        </div> 
+        <div *ngIf="photo2" class ="image">
+            <img [src]="photo2" alt="">
+          </div> 
+          <div *ngIf="photo3" class ="image">
+              <img [src]="photo3" alt="">
+            </div> 
+      </mat-card-content>
   </mat-card>
   <mat-card class="content-card mat-elevation-z8 animated slideInUp">
       <mat-card-content *ngIf="report">
