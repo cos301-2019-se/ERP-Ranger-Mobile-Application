@@ -5,6 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:erp_ranger_app/services/auth.dart';
 import 'package:erp_ranger_app/services/park.dart';
 import 'dart:async';
+import 'dart:math';
+import 'dart:core';
 
 class MapComponent extends StatefulWidget {
   @override
@@ -18,7 +20,7 @@ class MapState extends State<MapComponent> {
   GoogleMapController _mapController;
   Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
   int _markerIdCounter = 1;
-
+  static Location _location = new Location();
   Firestore _firestore = Firestore.instance;
 
   @override
@@ -86,7 +88,7 @@ class MapState extends State<MapComponent> {
         markerId: markerId,
         position: LatLng(pos.latitude, pos.longitude),
         icon: BitmapDescriptor.defaultMarker,
-        infoWindow: InfoWindow(title: name, snippet: '$points Points', onTap: (){_onMarkerTapped(id);})
+        infoWindow: InfoWindow(title: name, snippet: '$points Points', onTap: (){_onMarkerTapped(id,pos);})
       );
 
       setState(() {
@@ -98,7 +100,7 @@ class MapState extends State<MapComponent> {
     });
   }
 
-  Future<void> _onMarkerTapped(String id) async{
+  Future<void> _onMarkerTapped(String id, GeoPoint pos) async{
     switch (await showDialog(context: context,child:
       SimpleDialog(
       title: new Text('Activate marker?'),
@@ -148,21 +150,28 @@ class MapState extends State<MapComponent> {
       ],
     ))) {
       case 'yes':
-        _logMarker(id);
+        _logMarker(id, pos);
         break;
     }
 
     }
 
-  void _logMarker(String id) async{
+  void _logMarker(String id, GeoPoint pos) async{
     String user = await Auth().getUserUid();
-    await Firestore.instance.collection('marker_log').add({
-      "marker": id,
-      "reward": 0,
-      "time": new DateTime.now(),
-      "user": user,
-    });
-    _updateMarkers();
+    var _userPos = await _location.getLocation();
+    var _latAngleDist = (((_userPos.latitude-pos.latitude).abs())/360)*2*pi*6378000;
+    var _longAngleDist = (((_userPos.longitude-pos.longitude).abs())/360)*2*pi*6378000;
+    var _distance = sqrt(pow(_latAngleDist,2)+pow(_longAngleDist,2));
+    if(_distance<=10)
+    {
+      await Firestore.instance.collection('marker_log').add({
+        "marker": id,
+        "reward": 0,
+        "time": new DateTime.now(),
+        "user": user,
+      });
+      _updateMarkers();
+    }
   }
 
   @override
