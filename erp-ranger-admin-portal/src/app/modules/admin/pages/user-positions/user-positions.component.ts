@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SystemJsNgModuleLoader } from '@angular/core';
 import { PositionService } from '../../services/position.service';
 import { PopupService } from '@ng-bootstrap/ng-bootstrap/util/popup';
 import { latitude, longitude } from '@rxweb/reactive-form-validators';
 import { PLATFORM_WORKER_UI_ID } from '@angular/common/src/platform_id';
 import { ShiftService} from '../../services/shift.service';
+import { removeSummaryDuplicates } from '@angular/compiler';
 
 @Component({
   selector: 'app-user-positions',
@@ -30,23 +31,15 @@ export class UserPositionsComponent implements OnInit {
     setInterval(function(){
       this.posArr = this.posArr;
     },3500)
-    setInterval(()=> {
-      this.clearArray(); },this.resetTime * 5000); 
+    // setInterval(()=> {
+    //   this.refreshArray(); },this.resetTime * 1000); 
       
     
     
   }
-  clearArray(){
-    
-    var now = new Date();
-    for(var i =0;i<this.posArr.length;i++){
-      if((now.getTime() - this.posArr[i].time.getTime()) > (this.resetTime * 10000))
-      {
-        console.log("Deleted at " +this.posArr[i].time.getMinutes()+":"+ this.posArr[i].time.getSeconds() + "  Time is " + now.getMinutes() + ":" + now.getSeconds());
-        this.posArr.splice(i);
-        i--;
-      }
-    }
+  refreshArray(){
+    this.posArr = this.posArr;
+   
   }
   setSize(){
     document.getElementById("map-agm").style.height = (document.body.offsetHeight - 96) + "px";
@@ -76,16 +69,64 @@ export class UserPositionsComponent implements OnInit {
     while (!deleted){
       if(this.posArr[i].id == id){
         deleted = true;
-        this.posArr.splice(i);        
+        this.posArr.splice(i,1);        
       }
       i++;
     }
 
     
   }
+
+  arrayContains(uid : String) : boolean{
+    var i = 0;
+    var found = false;
+      while(i<this.posArr.length && !found){
+        if(this.posArr[i].userID == uid){
+          found = true;
+        }
+        i++;
+      }
+      return found;
+
+  }
+
   mapClicked($event: MouseEvent){
     
   }
+  arrContains(uid:String): boolean{
+    var contains = false;
+    var i = 0;
+    while(i< this.posArr.length){
+      if(this.posArr[i].userID == uid){
+        contains = true;
+        i=this.posArr.length;
+      }
+      i++;
+    }
+
+    return contains;
+  }
+  removeDatesWithID(d : Date, uid : String) : boolean{
+    var i = 0;
+    var done = false;
+    if(this.posArr.length <1 || !(this.arrContains(uid))){
+      done = true;
+      i = this.posArr.length;
+    }
+      while(i<this.posArr.length){
+       if(this.posArr[i].userID == uid && d.getTime() > this.posArr[i].time.getDate()){
+          
+          this.posArr.splice(i,1);
+          
+          done = true;
+          
+        }
+        i++;
+      }
+    return done;
+      
+  }
+
   getPositions(){
     var self = this;
     let observer = this.pService.getPositions().ref
@@ -117,19 +158,23 @@ export class UserPositionsComponent implements OnInit {
                 temp = change.doc.data().time.toDate();
                 
                 var now = new Date();
-                console.log((now.getTime() - temp.getTime()) + " NOW= " + now.getMinutes()+":" + now.getSeconds()+ "    Temp= " + temp.getMinutes()+":" + temp.getSeconds());
-                if((now.getTime() - temp.getTime()) < (this.resetTime * 1000))
+                
+                if(this.removeDatesWithID(temp, nameID))
                 {
+                  
+                
                   this.posArr = [...this.posArr,{
                     id:change.doc.id,
                     latitude: change.doc.data().location.geopoint.latitude,
                     longitude:change.doc.data().location.geopoint.longitude,
                     parkName: docPark.data().name,
+                    userID:nameID,
                     userName: doc.data().name,
                     time: temp
           
                   }];
-                  console.log("Success");
+                  this.posArr =this.posArr;
+                  
                 }
               }
             })  
@@ -153,6 +198,7 @@ interface posMarker{
   latitude: number,
   longitude:number,
   parkName: string,
+  userID:string,
   userName: string,
   time: Date
 }

@@ -39,9 +39,10 @@ export class ShiftFeedbackComponent implements OnInit {
   size = -1;
   temp = 0;
   counter = 0;
+  refreshInt;
   ngOnInit() {
     this.displayShifts();
-    setInterval(() => this.events = this.events,3000)
+    this.refreshInt = setInterval(function(){this.events = this.events;},1000);
   }
 
 
@@ -214,7 +215,9 @@ export class ShiftFeedbackComponent implements OnInit {
     this.modalData = { event, action };
     this.modal.open(this.modalContent, { size: 'lg' });
   }
-
+  doSomething(){
+    this.refreshInt=setInterval(function(){this.event= this.events}, 1000);
+  }
   addEventP( patrolDate: Date, endDate : Date, id, name : string,park : string, info: string): void {
     this.events = [
       ...this.events,
@@ -230,8 +233,8 @@ export class ShiftFeedbackComponent implements OnInit {
           afterEnd: false
         }
       }
-    ];    
-    console.log(this.events,"----------------------------------------------------")
+    ];   
+    
   }
 
   deleteEvent(eventToDelete: CalendarEvent) {
