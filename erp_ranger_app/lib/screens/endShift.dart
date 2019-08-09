@@ -45,9 +45,9 @@ class EndOfShift extends State<EndOfShiftScreen> {
                 if (i == 0) {
                   return new Column(
                     children: <Widget>[
-                      _showAssetCheckBoxText(),
-                      _showReturnAssetCheckBox(),
-                      ReturnAssetForm().build(context),
+                      //_showAssetCheckBoxText(),
+                      //_showReturnAssetCheckBox(),
+                      //ReturnAssetForm().build(context),
                       _showFeedbackCheckBoxText(),
                       _showFeedbackCheckBox(),
                       _showFeedbackForm(),
@@ -65,7 +65,7 @@ class EndOfShift extends State<EndOfShiftScreen> {
     );
   }
 
-  Widget _showAssetCheckBoxText() {
+  /*Widget _showAssetCheckBoxText() {
     return Padding(
       padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
       child: new Container(
@@ -82,9 +82,9 @@ class EndOfShift extends State<EndOfShiftScreen> {
         ),
       ),
     );
-  }
+  }*/
 
-  Widget _showReturnAssetCheckBox() {
+  /*Widget _showReturnAssetCheckBox() {
     return Padding(
       padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
       child: new Checkbox(
@@ -99,7 +99,7 @@ class EndOfShift extends State<EndOfShiftScreen> {
             });
           }),
     );
-  }
+  }*/
 
   Widget _showFeedbackCheckBoxText() {
     return Padding(
@@ -175,7 +175,7 @@ class EndOfShift extends State<EndOfShiftScreen> {
   }
 }
 
-class ReturnAssetForm extends StatelessWidget {
+/*class ReturnAssetForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -194,4 +194,4 @@ class ReturnAssetForm extends StatelessWidget {
       ),
     );
   }
-}
+}*/
