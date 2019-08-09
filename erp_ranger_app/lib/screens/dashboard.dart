@@ -61,10 +61,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } else if (title == "Log Feedback") {
       Navigator.push(context, new MaterialPageRoute(
           builder: (context) => new FeedbackScreen()));
-    } else if (title=="Markers") {
+    } else if (title == "Markers") {
       Navigator.push(context, new MaterialPageRoute(
           builder: (context) => new MarkersScreen()));
-    }
+    } else if (title == "Patrol") {
       Navigator.push(context, new MaterialPageRoute(
           builder: (context) => new PatrolScreen()));
     }
