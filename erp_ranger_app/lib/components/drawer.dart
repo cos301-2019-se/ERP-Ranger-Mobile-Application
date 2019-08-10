@@ -1,6 +1,6 @@
 
 import 'package:erp_ranger_app/login.dart';
-import 'package:erp_ranger_app/screens/assets.dart';
+//import 'package:erp_ranger_app/screens/assets.dart';
 import 'package:erp_ranger_app/screens/dashboard.dart';
 import 'package:erp_ranger_app/screens/report.dart';
 import 'package:erp_ranger_app/screens/shifts.dart';
@@ -26,7 +26,7 @@ class CustomDrawerState extends State<CustomDrawer> {
     new DrawerItem("Home", Icons.home),
     new DrawerItem("My Patrol Shifts", Icons.person),
     new DrawerItem("All Patrol Shifts", Icons.timer),
-    new DrawerItem("Park Assets", Icons.build),
+    //new DrawerItem("Park Assets", Icons.build),
     new DrawerItem("Submit a Report", Icons.report_problem),
     new DrawerItem("Logout", Icons.exit_to_app)
   ];
@@ -43,18 +43,19 @@ class CustomDrawerState extends State<CustomDrawer> {
       case 2: // All Patrol Shifts
         Navigator.push(context, MaterialPageRoute(builder: (context) => ShiftsScreen()));
         return;
-      case 3: // Park Assets
-        Navigator.push(context, MaterialPageRoute(builder: (context) => AssetsScreen(myAssets: false)));
-        return;
-      case 4: // Submit a Report
+      case 3: // Submit a Report
         Navigator.push(context, MaterialPageRoute(builder: (context) => ReportScreen()));
         return;
-      case 5:
+      case 4:
         (new Auth()).signOut();
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen(auth: new Auth())));
         return;
       default:
         return;
+
+      /*case 3: // Park Assets
+        Navigator.push(context, MaterialPageRoute(builder: (context) => AssetsScreen(myAssets: false)));
+        return;*/
     }
   }
 
