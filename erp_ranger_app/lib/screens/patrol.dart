@@ -17,10 +17,13 @@ class PatrolState extends State<PatrolScreen> {
   static String _buttonText;
   static Auth _tempAuth = new Auth();
 
+  static bool _loaded=false;
+
   void _switchPatrol() async{
-    if(!patrolData.isOnPatrol) {
+    bool isOnPatrol = await patrolData.getIsOnPatrol();
+    if(!isOnPatrol) {
       setState(() {
-        _buttonText="End Shift";
+        _buttonText="End Patrol";
       });
       String user = await _tempAuth.getUserUid();
       String park = await Park.getParkId();
@@ -32,7 +35,7 @@ class PatrolState extends State<PatrolScreen> {
       });
       await patrolData.setPatrolId(docRef.documentID);
       Tracker.startTracking();
-      patrolData.isOnPatrol=true;
+      patrolData.setIsOnPatrol(true);
       setState(() {
 
       });
@@ -41,13 +44,14 @@ class PatrolState extends State<PatrolScreen> {
     {
       Navigator.push(context, new MaterialPageRoute(
           builder: (context) => new FeedbackScreen()));
-      patrolData.isOnPatrol=false;
+      patrolData.setIsOnPatrol(false);
+      _loaded=false;
     }
   }
 
-  void _setButtonText()
-  {
-    if(patrolData.isOnPatrol)
+  void _setButtonText()  async{
+    bool isOnPatrol = await patrolData.getIsOnPatrol();
+    if(isOnPatrol)
     {
       _buttonText = "End Patrol";
     }
@@ -55,6 +59,9 @@ class PatrolState extends State<PatrolScreen> {
     {
       _buttonText = "Start Patrol";
     }
+    setState(() {
+      _loaded=true;
+    });
   }
 
   @override
@@ -86,27 +93,46 @@ class PatrolState extends State<PatrolScreen> {
   }
 
   Widget _showPatrolButton() {
-    _setButtonText();
-    return Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
-        child: SizedBox(
-            height: 40.0,
-            child: new RaisedButton(
-                elevation: 5.0,
-                color: Colors.blue,
-                shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(30.0)
-                ),
-                child: Text(
-                    _buttonText,
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.white
-                    )
-                ),
-                onPressed: _switchPatrol
-            )
-        )
-    );
+    if(!_loaded) {
+      _setButtonText();
+      return Padding(
+          padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+          child: Container(
+            alignment: Alignment.center,
+            height: 50.0,
+            width: 50.0,
+            child: SizedBox(
+              child: CircularProgressIndicator(
+                strokeWidth: 3.0,
+              ),
+              height: 50.0,
+              width: 50.0,
+            ),
+          )
+      );
+    }
+    else {
+      return Padding(
+          padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+          child: SizedBox(
+              height: 40.0,
+              child: new RaisedButton(
+                  elevation: 5.0,
+                  color: Colors.blue,
+                  shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(30.0)
+                  ),
+                  child: Text(
+                      _buttonText,
+                      style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.white
+                      )
+                  ),
+                  onPressed: _switchPatrol
+              )
+          )
+      );
+    }
   }
 }
