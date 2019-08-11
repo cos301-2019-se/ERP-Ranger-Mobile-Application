@@ -222,11 +222,6 @@ class ShiftState extends State<CreateShift> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: AppBar(
-        title: Text("Book a shift"),
-        elevation: .1,
-        backgroundColor: Color.fromRGBO(18, 27, 65, 1.0),
-      ),
       body: new Container(
         padding: EdgeInsets.all(16.0),
         child: ListView(
