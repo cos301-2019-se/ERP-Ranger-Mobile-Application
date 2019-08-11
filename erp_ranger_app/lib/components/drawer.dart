@@ -7,6 +7,7 @@ import 'package:erp_ranger_app/screens/markers.dart';
 import 'package:erp_ranger_app/screens/patrol.dart';
 import 'package:erp_ranger_app/screens/dashboard.dart';
 import 'package:erp_ranger_app/services/auth.dart';
+//import 'package:erp_ranger_app/screens/assets.dart';
 
 class DrawerItem {
   String title;
@@ -28,6 +29,7 @@ class CustomDrawerState extends State<CustomDrawer> {
     new DrawerItem("Shifts", Icons.assignment_ind),
     new DrawerItem("Reports", Icons.warning),
     new DrawerItem("Log Feedback", Icons.assignment),
+    //new DrawerItem("Park Assets", Icons.build),
     new DrawerItem("Markers", Icons.map),
     new DrawerItem("Patrol", Icons.visibility),
     new DrawerItem("Logout", Icons.exit_to_app)
@@ -51,6 +53,10 @@ class CustomDrawerState extends State<CustomDrawer> {
       Navigator.pop(context);
       Navigator.push(context, new MaterialPageRoute(
           builder: (context) => new FeedbackScreen()));
+    /*} else if (title == "Park Assets") {
+      Navigator.pop(context);
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => AssetsScreen(myAssets: false)));*/
     } else if (title == "Markers") {
       Navigator.pop(context);
       Navigator.push(context, new MaterialPageRoute(
