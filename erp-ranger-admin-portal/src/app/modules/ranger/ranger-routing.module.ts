@@ -10,7 +10,7 @@ const routes: Routes = [
     outlet: 'nav'
   },
   {
-    path: 'profile/:id',
+    path: 'profile',
     component: ProfileComponent
   }
 ];
