@@ -1,11 +1,13 @@
-
-import 'package:erp_ranger_app/login.dart';
-import 'package:erp_ranger_app/screens/assets.dart';
-import 'package:erp_ranger_app/screens/dashboard.dart';
 import 'package:erp_ranger_app/screens/report.dart';
-import 'package:erp_ranger_app/screens/shifts.dart';
-import 'package:erp_ranger_app/services/auth.dart';
+import 'package:erp_ranger_app/screens/createShift.dart';
+import 'package:erp_ranger_app/screens/feedback.dart';
 import 'package:flutter/material.dart';
+import 'package:erp_ranger_app/login.dart';
+import 'package:erp_ranger_app/screens/markers.dart';
+import 'package:erp_ranger_app/screens/patrol.dart';
+import 'package:erp_ranger_app/screens/dashboard.dart';
+import 'package:erp_ranger_app/services/auth.dart';
+//import 'package:erp_ranger_app/screens/assets.dart';
 
 class DrawerItem {
   String title;
@@ -24,37 +26,50 @@ class CustomDrawerState extends State<CustomDrawer> {
 
   final drawerItems = [
     new DrawerItem("Home", Icons.home),
-    new DrawerItem("My Patrol Shifts", Icons.person),
-    new DrawerItem("All Patrol Shifts", Icons.timer),
-    new DrawerItem("Park Assets", Icons.build),
-    new DrawerItem("Submit a Report", Icons.report_problem),
+    new DrawerItem("Shifts", Icons.assignment_ind),
+    new DrawerItem("Reports", Icons.warning),
+    new DrawerItem("Log Feedback", Icons.assignment),
+    //new DrawerItem("Park Assets", Icons.build),
+    new DrawerItem("Markers", Icons.map),
+    new DrawerItem("Patrol", Icons.visibility),
     new DrawerItem("Logout", Icons.exit_to_app)
   ];
 
-  void _getDrawerItemWidget(int pos) {
-    Navigator.pop(context);
-    switch (pos) {
-      case 0: // Home
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
-        return;
-      case 1: // My Patrol Shifts
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ShiftsScreen()));
-        return;
-      case 2: // All Patrol Shifts
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ShiftsScreen()));
-        return;
-      case 3: // Park Assets
-        Navigator.push(context, MaterialPageRoute(builder: (context) => AssetsScreen(myAssets: false)));
-        return;
-      case 4: // Submit a Report
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ReportScreen()));
-        return;
-      case 5:
-        (new Auth()).signOut();
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen(auth: new Auth())));
-        return;
-      default:
-        return;
+  void _getDrawerItemWidget(String title) {
+    if (title == "Home")  {
+      Navigator.pop(context);
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new DashboardScreen()));
+    }
+    else if (title == "Shifts") {
+      Navigator.pop(context);
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new CreateShift()));
+    } else if (title == "Reports"){
+      Navigator.pop(context);
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new ReportScreen()));
+    } else if (title == "Log Feedback") {
+      Navigator.pop(context);
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new FeedbackScreen()));
+    /*} else if (title == "Park Assets") {
+      Navigator.pop(context);
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => AssetsScreen(myAssets: false)));*/
+    } else if (title == "Markers") {
+      Navigator.pop(context);
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new MarkersScreen()));
+    } else if (title == "Patrol") {
+      Navigator.pop(context);
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new PatrolScreen()));
+    } else if (title == "Logout") {
+      Navigator.pop(context);
+      (new Auth()).signOut();
+      Navigator.pushReplacement(context, MaterialPageRoute(
+          builder: (context) => LoginScreen(auth: new Auth())));
     }
   }
 
@@ -68,7 +83,7 @@ class CustomDrawerState extends State<CustomDrawer> {
             leading: new Icon(d.icon),
             title: new Text(d.title),
             //selected: i == _selectedDrawerIndex,
-            onTap: () => this._getDrawerItemWidget(i),
+            onTap: () => this._getDrawerItemWidget(d.title),
           )
       );
     }
