@@ -12,6 +12,8 @@ import { AddUserComponent } from './pages/add-user/add-user.component';
 import { AddMarkerComponent } from './pages/add-marker/add-marker.component';
 import { UserPositionsComponent } from './pages/user-positions/user-positions.component';
 import { UserListComponent } from './pages/user-list/user-list.component'
+import { RewardListComponent } from './pages/reward-list/reward-list.component';
+import { AddRewardComponent } from './pages/add-reward/add-reward.component';
 
 const routes: Routes = [
   {
@@ -34,6 +36,14 @@ const routes: Routes = [
   {
     path: 'users/add',
     component: AddUserComponent,
+  },
+  {
+    path: 'rewards',
+    component: RewardListComponent,
+  },
+  {
+    path: 'rewards/add',
+    component: AddRewardComponent,
   },
   {
     path: 'positions',
