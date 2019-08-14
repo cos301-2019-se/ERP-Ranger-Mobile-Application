@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, ActivatedRoute } from '@angular/router';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ShiftNewComponent } from './pages/shift-new/shift-new.component';
 import { ShiftListComponent } from './pages/shift-list/shift-list.component';
@@ -12,6 +12,7 @@ import { AddUserComponent } from './pages/add-user/add-user.component';
 import { AddMarkerComponent } from './pages/add-marker/add-marker.component';
 import { UserPositionsComponent } from './pages/user-positions/user-positions.component';
 import { UserListComponent } from './pages/user-list/user-list.component'
+import { EditUserComponent } from './pages/edit-user/edit-user.component';
 
 const routes: Routes = [
   {
@@ -30,6 +31,10 @@ const routes: Routes = [
   {
     path: 'users',
     component: UserListComponent,
+  },
+  {
+    path: 'user/:id',    
+    component: EditUserComponent
   },
   {
     path: 'users/add',
@@ -78,4 +83,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AdminRoutingModule { }
+export class AdminRoutingModule {}
