@@ -1,19 +1,161 @@
 import 'package:erp_ranger_app/components/drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:location/location.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:erp_ranger_app/services/auth.dart';
+import 'package:erp_ranger_app/services/park.dart';
+import 'package:erp_ranger_app/screens/dashboard.dart';
+import 'package:compressimage/compressimage.dart';
+import 'package:photo_view/photo_view.dart';
 
 class ReportScreen extends StatefulWidget {
-    @override
-    State<StatefulWidget> createState() => ReportState();
+  @override
+  State<StatefulWidget> createState() => ReportState();
 }
 
 class ReportState extends State<ReportScreen> {
-  final TextEditingController _reportTextFieldController = new TextEditingController();
-  DateTime now;
+  final TextEditingController reportTextFieldController =
+      new TextEditingController();
+  final Geoflutterfire geoFlutterFire = Geoflutterfire();
 
-  void performReport() async {
-    _reportTextFieldController.clear();
+  Location location = new Location();
+  GeoFirePoint userPointLocation;
+  DateTime now = DateTime.now();
+  String reportDetails;
+  String reportType = "Intruder";
+  File imageOne;
+  bool flagOne = false;
+  File imageTwo;
+  bool flagTwo = false;
+  File imageThree;
+  bool flagThree = false;
+  bool reportFlag = false;
+  bool uploading = false;
+
+  Auth tempAuth = new Auth();
+  String user;
+  String park;
+
+  void _performReport() async {
+    setState(() {
+      this.uploading = true;
+    });
+
+    park = await Park.getParkId();
+    user = await tempAuth.getUserUid();
+
+    var _userPos = await location.getLocation();
+    userPointLocation = geoFlutterFire.point(//latitude: -25.762415, longitude: 28.234624);
+        latitude: _userPos.latitude, longitude: _userPos.longitude);
     now = new DateTime.now();
+    DocumentReference result = await Firestore.instance.collection('reports').add({
+        "location": userPointLocation.data,
+        "park": park,
+        "report": reportDetails,
+        "time": now,
+        "type": reportType,
+        "user": user,
+      });
+
+    _sendImages(result);
+
+    reportTextFieldController.clear();
+    Navigator.pushReplacement(this.context, MaterialPageRoute(builder: (context) => DashboardScreen()));
   }
+
+  Future _sendImages(DocumentReference doc) async {
+    if(flagOne) {
+      StorageReference storageRefOne =
+      FirebaseStorage.instance.ref().child(
+          "reports/" + doc.documentID + '/1.jpeg');
+      StorageUploadTask uploadTaskOne = storageRefOne.putFile(imageOne);
+      StorageTaskSnapshot taskSnapshotOne = await uploadTaskOne.onComplete;
+    }
+    if(flagTwo) {
+      StorageReference storageRefTwo =
+      FirebaseStorage.instance.ref().child(
+          "reports/" + doc.documentID + '/2.jpeg');
+      StorageUploadTask uploadTaskTwo = storageRefTwo.putFile(imageTwo);
+      StorageTaskSnapshot taskSnapshotTwo = await uploadTaskTwo.onComplete;
+    }
+    if(flagThree) {
+      StorageReference storageRefThree =
+      FirebaseStorage.instance.ref().child(
+          "reports/" + doc.documentID + '/3.jpeg');
+      StorageUploadTask uploadTaskThree = storageRefThree.putFile(imageThree);
+      StorageTaskSnapshot taskSnapshotThree = await uploadTaskThree.onComplete;
+    }
+  }
+
+  Future _pickImage(int num) async {
+    File image = await ImagePicker.pickImage(
+        source: ImageSource.camera);
+    print("Picking image based on num");
+
+    if(num == 1){
+      setState(() {
+        print("1 picked");
+        imageOne = image;
+        flagOne = true;
+        print(imageOne.toString());
+      });
+      await CompressImage.compress(imageSrc: imageOne.path, desiredQuality: 80);
+      setState(() {
+        imageOne;
+      });
+    }
+    if(num == 2){
+      setState(() {
+        print("2 picked");
+        imageTwo = image;
+        print(imageTwo);
+        flagTwo = true;
+      });
+      await CompressImage.compress(imageSrc: imageTwo.path, desiredQuality: 80);
+      setState(() {
+        imageTwo;
+      });
+    }
+    if(num == 3) {
+      setState(() {
+        print("3 picked");
+        imageThree = image;
+        print(imageThree);
+        flagThree = true;
+      });
+      await CompressImage.compress(imageSrc: imageThree.path, desiredQuality: 80);
+      setState(() {
+        imageThree;
+      });
+    }
+
+  }
+
+  Future _removeImage(int num) async {
+    if(num == 1){
+      setState(() {
+        imageOne = null;
+        flagOne = false;
+      });
+    }
+    if(num == 2){
+      setState(() {
+        imageTwo = null;
+        flagTwo = false;
+      });
+    }
+    if(num == 3){
+      setState(() {
+        imageThree = null;
+        flagThree = false;
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -28,81 +170,120 @@ class ReportState extends State<ReportScreen> {
         padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 0.0),
         child: ListView(
           children: <Widget>[
-            _showReportDetails(),
+            _showReportTypeList(),
+            _showImagePicker(),
+            _showRemoveImage(),
             _showReportTextField(),
-            _showReportButton()
+            _showReportButton(),
+            this.uploading == true ? _showUploading() : new Container(),
           ],
         ),
       ),
     );
   }
 
-  Widget _showReportDetails() {
-    now = new DateTime.now();
-    return RichText (
-      text: new TextSpan(
-        style: new TextStyle(
-          fontSize: 20.0,
-          color: Colors.blue
+  Widget _showReportTypeList() {
+    return Card(
+      child: new Padding(
+        padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+        child: new DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+          value: reportType,
+          onChanged: (String value) {
+            setState(() {
+              reportType = value;
+            });
+          },
+          items: <String>[
+            'Damage to property',
+            'Harmed animal',
+            'Intruder',
+            'Other'
+          ].map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
         ),
-        children: <TextSpan>[
-          /*new TextSpan(text: 'Ranger name:\n'),
-          new TextSpan(text: 'Automatically Retrieved\n',style: new TextStyle(fontSize: 15.0,color: Colors.black)),
-          new TextSpan(text: 'Ranger ID:\n'),
-          new TextSpan(text: 'Automatically Retrieved\n',style: new TextStyle(fontSize: 15.0,color: Colors.black)),*/
-          new TextSpan(text: 'Location:\n'),
-          new TextSpan(text: 'Automatically Retrieved\n',style: new TextStyle(fontSize: 15.0,color: Colors.black)),
-          new TextSpan(text: 'Date:\n'),
-          new TextSpan(text: now.day.toString()+'-'+now.month.toString()+'-'+now.year.toString()+'\n',style: new TextStyle(fontSize: 15.0,color: Colors.black)),
-          new TextSpan(text: 'Time:\n'),
-          new TextSpan(text: now.hour.toString()+':'+now.minute.toString(),style: new TextStyle(fontSize: 15.0,color: Colors.black)),
-        ]
-      )
+      ),
+
+      ),
     );
+  }
+
+  Widget _showImagePicker() {
+    return new Row(children: <Widget>[
+      new Container(padding: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0), width: 110, height: 100, child: imageOne == null ? RaisedButton(child: Icon(Icons.add_a_photo),onPressed: () => _pickImage(1),) : Image.file(imageOne, height: 100.0, width: 110.0,)),
+      new Container(padding: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0), width: 110, height: 100, child: imageTwo == null ? RaisedButton(child: Icon(Icons.add_a_photo),onPressed: () => _pickImage(2),) : Image.file(imageTwo, height: 100.0, width: 110.0,)),
+      new Container(padding: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0), width: 110, height: 100, child: imageThree == null ? RaisedButton(child: Icon(Icons.add_a_photo),onPressed: () => _pickImage(3),) : Image.file(imageThree, height: 100.0, width: 110.0,))
+    ],);
+  }
+
+  Widget _showRemoveImage() {
+    return new Row(children: <Widget>[
+      new Container(padding: EdgeInsets.fromLTRB(20.0, 0.0, 10.0, 0.0),),
+      new Container(padding: EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 0.0), width: 60, height: 30, child: imageOne != null ? RaisedButton(color: Color.fromRGBO(200, 0, 0, 1.0), shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(100)), child: Icon(Icons.close),onPressed: () => _removeImage(1),) : null),
+      new Container(padding: EdgeInsets.fromLTRB(50.0, 0.0, 0.0, 0.0),),
+      new Container(padding: EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 0.0), width: 60, height: 30, child: imageTwo != null ? RaisedButton(color: Color.fromRGBO(200, 0, 0, 1.0), shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(100)), child: Icon(Icons.close),onPressed: () => _removeImage(2),) : null),
+      new Container(padding: EdgeInsets.fromLTRB(50.0, 0.0, 0.0, 0.0),),
+      new Container(padding: EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 0.0), width: 60, height: 30, child: imageThree != null ? RaisedButton(color: Color.fromRGBO(200, 0, 0, 1.0), shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(100)), child: Icon(Icons.close),onPressed: () => _removeImage(3),) : null),
+    ],);
   }
 
   Widget _showReportTextField() {
     return Container(
-      padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
-      child:TextField(
-        controller: _reportTextFieldController,
-        autofocus: true,
-        autocorrect: true,
-        textCapitalization: TextCapitalization.sentences,
-        keyboardType: TextInputType.multiline,
-        maxLines: null,
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'Report Details',
-          labelStyle: TextStyle(
-            fontSize: 25.0
-          )
-        )
-      )
-    );
+        padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+        height: 250,
+        child: TextField(
+          controller: reportTextFieldController,
+          autofocus: true,
+          autocorrect: true,
+          textCapitalization: TextCapitalization.sentences,
+          keyboardType: TextInputType.multiline,
+          maxLines: 8,
+          decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Report Details',
+              labelStyle: TextStyle(fontSize: 25.0)),
+          onChanged: (value) => this.reportDetails = value,
+        ));
   }
 
   Widget _showReportButton() {
     return Padding(
-      padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
-      child: SizedBox(
-        height: 40.0,
-        child: new RaisedButton(
-          elevation: 5.0,
-          color: Colors.red,
-          shape: new RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(30.0)
+        padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+        child: SizedBox(
+            height: 40.0,
+            child: new RaisedButton(
+                elevation: 5.0,
+                color: Color.fromRGBO(18, 27, 65, 1.0),
+                shape: new RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(5.0)),
+                child: Text('Report',
+                    style: TextStyle(fontSize: 20.0, color: Colors.white)),
+                onPressed: (){
+                  if(this.uploading == false){
+                    _performReport();
+                  }
+                  FocusScope.of(context).requestFocus(new FocusNode());},)));
+  }
+
+  Widget _showUploading() {
+    return Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+        child: Container(
+          alignment: Alignment.center,
+          height: 50.0,
+          width: 50.0,
+          child: SizedBox(
+            child: CircularProgressIndicator(
+              strokeWidth: 3.0,
+            ),
+            height: 50.0,
+            width: 50.0,
           ),
-          child: Text(
-            'Report',
-            style: TextStyle(
-              fontSize: 20.0,
-              color: Colors.white
-            )
-          ),
-          onPressed: performReport
         )
-      )
     );
   }
 }

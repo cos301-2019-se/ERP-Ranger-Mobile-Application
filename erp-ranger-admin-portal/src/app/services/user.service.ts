@@ -13,4 +13,8 @@ export class UserService {
     return this.fireStore.doc<User>(`users/${uid}`).snapshotChanges();
   }
 
+  getUsers(){
+    return this.fireStore.collection("users");
+  }
+
 }

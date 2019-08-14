@@ -1,10 +1,10 @@
-mat-drawer-container, mat-drawer, mat-drawer-content, main {
+mat-drawer-container, mat-drawer, mat-drawer-content {
   height: 100%;
   background-color: #fafafa;
 }
 
 mat-drawer {
-  min-width: 200px; 
+  min-width: 230px; 
 }
 
 mat-toolbar {
@@ -27,7 +27,7 @@ mat-toolbar {
 
 .drawer-logo {
   margin-top: 10px;
-  width: 120px;
+  width: 140px;
 }
 
 .main-container {
@@ -63,4 +63,8 @@ a:active {
 router-outlet ~ * {
   position: absolute;
   /*height: 100%;*/
+}
+
+.nav {
+  width: 100%;
 }

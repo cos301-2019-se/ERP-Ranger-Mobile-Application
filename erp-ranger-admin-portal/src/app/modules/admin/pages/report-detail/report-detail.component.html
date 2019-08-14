@@ -1,0 +1,56 @@
+<!--Report detail page used for displaying more info of current incidents in the reserve-->
+<div class="page-container">
+  <mat-card class="content-card mat-elevation-z8 animated slideInUp">
+    <!--Card container generated only if there are more info to show of an exisitng report-->
+    <mat-card-content *ngIf="report&&user">
+      <!--Info based on exisiting report selected on the Report Overview screen's map-->
+      <p>
+       <!--some string: {{report.location.geopoint.latitude}} -->
+        Type of report: <strong> {{ report.type }} </strong>
+        <br>
+        Time of report: <strong> {{ report.time.toDate() | date:'dd/MM/yyyy @ HH:mm:ss' }} </strong>
+        <br>
+        Reported by: <strong> {{ user }} </strong>
+        <br>
+        Incident: <strong> {{ report.report }} </strong>
+        <br>
+        Geopoints: <strong> Longitude: {{ report.location.geopoint.longitude }} / Latitude: {{ report.location.geopoint.latitude }} </strong>
+      </p>
+    </mat-card-content>
+      <mat-card-content class="container">
+        <div *ngIf="photo1" class ="image">
+          <img [src]="photo1" alt="">
+        </div> 
+        <div *ngIf="photo2" class ="image">
+            <img [src]="photo2" alt="">
+          </div> 
+          <div *ngIf="photo3" class ="image">
+              <img [src]="photo3" alt="">
+            </div> 
+      </mat-card-content>
+  </mat-card>
+  <mat-card class="content-card mat-elevation-z8 animated slideInUp">
+      <mat-card-content *ngIf="report">
+        <!--Map generated to display the location of the reported incident by making use of a marker-->
+          <agm-map 
+          [latitude]="report.location.geopoint.latitude"
+          [longitude]="report.location.geopoint.longitude"
+          [zoom]="zoom"
+          [disableDefaultUI]="false"
+          [zoomControl]="false">
+        
+          <agm-marker 
+              [latitude]="report.location.geopoint.latitude"
+              [longitude]="report.location.geopoint.longitude"
+              [label]="R">
+              
+            <agm-info-window>
+              {{ report.type }} - {{ report.report }}
+            </agm-info-window>
+            
+          </agm-marker>
+          
+        </agm-map>
+      </mat-card-content>
+    </mat-card>
+</div>

@@ -1,24 +1,17 @@
 <mat-drawer-container class="" [hasBackdrop]="false">
-  <mat-drawer #drawer mode="side" [opened]="loggedIn">
+  <mat-drawer #drawer mode="side" [opened]="true" *ngIf="loggedIn">
     <div class="drawer-container">
       <img src="assets/images/erplogo_trans.png" alt="ERP Logo" class="drawer-logo">
-      <ul>
-        <li>
-          Dashboard
-        </li>
-        <li>
-          Rangers
-        </li>
-      </ul>
+      <router-outlet class="nav" name="nav"></router-outlet>
     </div>
   </mat-drawer>
   <mat-drawer-content>
     <mat-toolbar color="primary" *ngIf="loggedIn">
-      <div>
+      <!--<div>
         <button mat-icon-button (click)="drawer.toggle()">
-            <mat-icon>menu</mat-icon>
+          <mat-icon>menu</mat-icon>
         </button>
-      </div>
+      </div>-->
       <div>
         <a>
           ERP Ranger Admin Portal
