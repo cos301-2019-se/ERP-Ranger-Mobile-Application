@@ -24,7 +24,8 @@ import { AgmCoreModule } from '@agm/core';
 import { UserPositionsComponent } from './pages/user-positions/user-positions.component';
 
 import { UserListComponent } from './pages/user-list/user-list.component';
-import { MatTableModule } from '@angular/material'
+import { MatTableModule } from '@angular/material';
+import { EditUserComponent } from './pages/edit-user/edit-user.component'
 
 
 
@@ -34,7 +35,7 @@ import { MatTableModule } from '@angular/material'
 @NgModule({
 
   declarations: [DashboardComponent, ReportDetailComponent, ShiftFeedbackComponent, 
-    ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, AddMarkerComponent, ReportOverviewComponent,AddUserComponent, UserPositionsComponent,UserListComponent],
+    ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, AddMarkerComponent, ReportOverviewComponent,AddUserComponent, UserPositionsComponent,UserListComponent, EditUserComponent],
   imports: [
     CommonModule,
     FormsModule,
