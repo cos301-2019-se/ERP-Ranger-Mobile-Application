@@ -22,10 +22,11 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { AgmCoreModule } from '@agm/core';
 import { UserPositionsComponent } from './pages/user-positions/user-positions.component';
-
 import { UserListComponent } from './pages/user-list/user-list.component';
 import { MatTableModule } from '@angular/material';
-import { EditUserComponent } from './pages/edit-user/edit-user.component'
+import { RewardListComponent } from './pages/reward-list/reward-list.component';
+import { AddRewardComponent } from './pages/add-reward/add-reward.component';
+import { EditUserComponent } from './pages/edit-user/edit-user.component;
 
 
 
@@ -35,7 +36,8 @@ import { EditUserComponent } from './pages/edit-user/edit-user.component'
 @NgModule({
 
   declarations: [DashboardComponent, ReportDetailComponent, ShiftFeedbackComponent, 
-    ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, AddMarkerComponent, ReportOverviewComponent,AddUserComponent, UserPositionsComponent,UserListComponent, EditUserComponent],
+    ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, AddMarkerComponent, ReportOverviewComponent,AddUserComponent, UserPositionsComponent,UserListComponent, RewardListComponent, AddRewardComponent, EditUserComponent],
+
   imports: [
     CommonModule,
     FormsModule,
