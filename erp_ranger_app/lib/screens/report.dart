@@ -9,6 +9,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:erp_ranger_app/services/auth.dart';
 import 'package:erp_ranger_app/services/park.dart';
 import 'package:erp_ranger_app/screens/dashboard.dart';
+import 'package:compressimage/compressimage.dart';
+import 'package:photo_view/photo_view.dart';
 
 class ReportScreen extends StatefulWidget {
   @override
@@ -95,12 +97,16 @@ class ReportState extends State<ReportScreen> {
     print("Picking image based on num");
 
     if(num == 1){
-    setState(() {
-      print("1 picked");
-      imageOne = image;
-      flagOne = true;
-      print(imageOne.toString());
-    });
+      setState(() {
+        print("1 picked");
+        imageOne = image;
+        flagOne = true;
+        print(imageOne.toString());
+      });
+      await CompressImage.compress(imageSrc: imageOne.path, desiredQuality: 80);
+      setState(() {
+        imageOne;
+      });
     }
     if(num == 2){
       setState(() {
@@ -108,6 +114,10 @@ class ReportState extends State<ReportScreen> {
         imageTwo = image;
         print(imageTwo);
         flagTwo = true;
+      });
+      await CompressImage.compress(imageSrc: imageTwo.path, desiredQuality: 80);
+      setState(() {
+        imageTwo;
       });
     }
     if(num == 3) {
@@ -117,8 +127,33 @@ class ReportState extends State<ReportScreen> {
         print(imageThree);
         flagThree = true;
       });
+      await CompressImage.compress(imageSrc: imageThree.path, desiredQuality: 80);
+      setState(() {
+        imageThree;
+      });
     }
 
+  }
+
+  Future _removeImage(int num) async {
+    if(num == 1){
+      setState(() {
+        imageOne = null;
+        flagOne = false;
+      });
+    }
+    if(num == 2){
+      setState(() {
+        imageTwo = null;
+        flagTwo = false;
+      });
+    }
+    if(num == 3){
+      setState(() {
+        imageThree = null;
+        flagThree = false;
+      });
+    }
   }
 
 
@@ -137,6 +172,7 @@ class ReportState extends State<ReportScreen> {
           children: <Widget>[
             _showReportTypeList(),
             _showImagePicker(),
+            _showRemoveImage(),
             _showReportTextField(),
             _showReportButton(),
             this.uploading == true ? _showUploading() : new Container(),
@@ -149,7 +185,7 @@ class ReportState extends State<ReportScreen> {
   Widget _showReportTypeList() {
     return Card(
       child: new Padding(
-        padding: EdgeInsets.fromLTRB(10.0, 15.0, 0.0, 0.0),
+        padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
         child: new DropdownButtonHideUnderline(
           child: DropdownButton<String>(
           value: reportType,
@@ -178,22 +214,34 @@ class ReportState extends State<ReportScreen> {
 
   Widget _showImagePicker() {
     return new Row(children: <Widget>[
-      new Container(padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0), child: imageOne == null ? RaisedButton(child: Icon(Icons.add_a_photo),onPressed: () => _pickImage(1),) : Image.file(imageOne, height: 50.0, width: 100.0,)),
-      new Container(padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0), child: imageTwo == null ? RaisedButton(child: Icon(Icons.add_a_photo),onPressed: () => _pickImage(2),) : Image.file(imageTwo, height: 50.0, width: 100.0,)),
-      new Container(padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0), child: imageThree == null ? RaisedButton(child: Icon(Icons.add_a_photo),onPressed: () => _pickImage(3),) : Image.file(imageThree, height: 50.0, width: 100.0,))
+      new Container(padding: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0), width: 110, height: 100, child: imageOne == null ? RaisedButton(child: Icon(Icons.add_a_photo),onPressed: () => _pickImage(1),) : Image.file(imageOne, height: 100.0, width: 110.0,)),
+      new Container(padding: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0), width: 110, height: 100, child: imageTwo == null ? RaisedButton(child: Icon(Icons.add_a_photo),onPressed: () => _pickImage(2),) : Image.file(imageTwo, height: 100.0, width: 110.0,)),
+      new Container(padding: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0), width: 110, height: 100, child: imageThree == null ? RaisedButton(child: Icon(Icons.add_a_photo),onPressed: () => _pickImage(3),) : Image.file(imageThree, height: 100.0, width: 110.0,))
+    ],);
+  }
+
+  Widget _showRemoveImage() {
+    return new Row(children: <Widget>[
+      new Container(padding: EdgeInsets.fromLTRB(20.0, 0.0, 10.0, 0.0),),
+      new Container(padding: EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 0.0), width: 60, height: 30, child: imageOne != null ? RaisedButton(color: Color.fromRGBO(200, 0, 0, 1.0), shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(100)), child: Icon(Icons.close),onPressed: () => _removeImage(1),) : null),
+      new Container(padding: EdgeInsets.fromLTRB(50.0, 0.0, 0.0, 0.0),),
+      new Container(padding: EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 0.0), width: 60, height: 30, child: imageTwo != null ? RaisedButton(color: Color.fromRGBO(200, 0, 0, 1.0), shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(100)), child: Icon(Icons.close),onPressed: () => _removeImage(2),) : null),
+      new Container(padding: EdgeInsets.fromLTRB(50.0, 0.0, 0.0, 0.0),),
+      new Container(padding: EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 0.0), width: 60, height: 30, child: imageThree != null ? RaisedButton(color: Color.fromRGBO(200, 0, 0, 1.0), shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(100)), child: Icon(Icons.close),onPressed: () => _removeImage(3),) : null),
     ],);
   }
 
   Widget _showReportTextField() {
     return Container(
-        padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+        padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+        height: 250,
         child: TextField(
           controller: reportTextFieldController,
           autofocus: true,
           autocorrect: true,
           textCapitalization: TextCapitalization.sentences,
           keyboardType: TextInputType.multiline,
-          maxLines: null,
+          maxLines: 8,
           decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Report Details',
@@ -204,14 +252,14 @@ class ReportState extends State<ReportScreen> {
 
   Widget _showReportButton() {
     return Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+        padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
         child: SizedBox(
             height: 40.0,
             child: new RaisedButton(
                 elevation: 5.0,
                 color: Color.fromRGBO(18, 27, 65, 1.0),
                 shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(30.0)),
+                    borderRadius: new BorderRadius.circular(5.0)),
                 child: Text('Report',
                     style: TextStyle(fontSize: 20.0, color: Colors.white)),
                 onPressed: (){

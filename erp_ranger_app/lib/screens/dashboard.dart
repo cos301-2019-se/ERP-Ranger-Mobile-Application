@@ -36,9 +36,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             makeDashboardItem("Shifts", Icons.assignment_ind),
             makeDashboardItem("Reports", Icons.warning),
             makeDashboardItem("Log Feedback", Icons.assignment),
-            makeDashboardItem("View Assets", Icons.business_center),
-            makeDashboardItem("Markers", Icons.map)
-            /*makeDashboardItem("Patrol", Icons.visibility)*/
+            //makeDashboardItem("View Assets", Icons.business_center),
+            makeDashboardItem("Markers", Icons.map),
+            makeDashboardItem("Patrol", Icons.visibility)
           ],
         ),
       ),
@@ -54,18 +54,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
       //Navigator.pop(context);
       Navigator.push(context, new MaterialPageRoute(
           builder: (context) => new ReportScreen()));
-    } else if (title == "View Assets") {
+    /*} else if (title == "View Assets") {
       //Navigator.pop(context);
       Navigator.push(context, new MaterialPageRoute(
-          builder: (context) => new AssetsScreen(myAssets: false)));
+          builder: (context) => new AssetsScreen(myAssets: false)));*/
     } else if (title == "Log Feedback") {
       Navigator.push(context, new MaterialPageRoute(
           builder: (context) => new FeedbackScreen()));
-    } else {
+    } else if (title == "Markers") {
       Navigator.push(context, new MaterialPageRoute(
-        builder: (context) => new MarkersScreen()));
-      /*Navigator.push(context, new MaterialPageRoute(
-          builder: (context) => new PatrolScreen()));*/
+          builder: (context) => new MarkersScreen()));
+    } else if (title == "Patrol") {
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new PatrolScreen()));
     }
   }
 

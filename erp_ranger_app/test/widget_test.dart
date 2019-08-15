@@ -16,8 +16,8 @@ void main() {
     dashboard_test.main();
     report_test.main();
     shifts_test.main();
-    asset_test.main();
-    assets_test.main();
+    //asset_test.main();
+    //assets_test.main();
     end_shift_test.main();
   });
 
