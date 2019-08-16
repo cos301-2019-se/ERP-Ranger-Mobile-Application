@@ -12,6 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:erp_ranger_app/services/auth.dart';
 import 'package:erp_ranger_app/services/userData.dart';
+import 'package:erp_ranger_app/screens/leaderboard.dart';
 
 class DrawerItem {
   String title;
@@ -39,6 +40,7 @@ class CustomDrawerState extends State<CustomDrawer> {
     //new DrawerItem("Park Assets", Icons.build),
     new DrawerItem("Markers", Icons.map),
     new DrawerItem("Patrol", Icons.visibility),
+    new DrawerItem("Leaderboard", Icons.stars),
     new DrawerItem("Logout", Icons.exit_to_app)
   ];
 
@@ -72,6 +74,11 @@ class CustomDrawerState extends State<CustomDrawer> {
       Navigator.pop(context);
       Navigator.push(context, new MaterialPageRoute(
           builder: (context) => new PatrolScreen()));
+    } else if (title == "Leaderboard") {
+      Navigator.pop(context);
+      (new Auth()).signOut();
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new LeaderboardScreen()));
     } else if (title == "Logout") {
       Navigator.pop(context);
       (new Auth()).signOut();

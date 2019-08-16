@@ -58,7 +58,7 @@ class userData {
     else {
       Auth _tempAuth = new Auth();
       String user = await _tempAuth.getUserUid();
-      var ref = FirebaseStorage.instance.ref().child('users/'+user+'/'+user+'.jpg');
+      var ref = FirebaseStorage.instance.ref().child('users/'+user+'/'+user);
       var url = await ref.getDownloadURL();
       _image = NetworkImage(url);
       return _image;
