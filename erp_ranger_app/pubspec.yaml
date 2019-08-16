@@ -33,6 +33,7 @@ dependencies:
   #geolocator: 4.0.1
   image_picker:
   firebase_storage: ^2.0.0
+  table_calendar: ^2.0.0  
   compressimage: ^0.1.1
   photo_view:
 
