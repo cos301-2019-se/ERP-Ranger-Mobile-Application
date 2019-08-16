@@ -38,11 +38,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
               //padding: EdgeInsets.all(3.0),
               children: <Widget>[
                 // TODO rename
-                makeDashboardItem("Shifts", Icons.assignment_ind),
-                makeDashboardItem("Reports", Icons.warning),
+                //makeDashboardItem("Shifts", Icons.assignment_ind),
+                //makeDashboardItem("Reports", Icons.warning),
                 makeDashboardItem("Log Feedback", Icons.assignment),
                 //makeDashboardItem("View Assets", Icons.business_center),
-                makeDashboardItem("Markers", Icons.map),
+                //makeDashboardItem("Markers", Icons.map),
                 makeDashboardItem("Patrol", Icons.visibility),
                 makeDashboardItem("Leaderboard", Icons.stars)
               ]
@@ -50,8 +50,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         //]
       //),
-      /*bottomNavigationBar: BottomAppBar(
-        color: Colors.brown,
+      bottomNavigationBar: BottomAppBar(
+        color: Color.fromRGBO(154, 126, 97, 1),
         /*child: new Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -108,13 +108,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         _openScreen("Report");
                       }),
                   IconButton(
-                      icon: Icon(Icons.assignment),
+                      icon: Icon(Icons.map),
                       onPressed: () {
-                        _openScreen("Log Feedback");
+                        _openScreen("Markers");
                       }),
+                  /*IconButton(
+                      icon: Icon(Icons.business_center),
+                      onPressed: () {
+                        _openScreen("View Assets");
+                      })*/
                 ]
               ),
-              new Row(
+              /*new Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -177,7 +182,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                       )
                   ]
-                  )
+                  )*/
                 ],
               )
       ),
@@ -233,7 +238,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           )
         ],
         onTap: _onItemTapped,
-      ),*/*/
+      ),*/
     );
   }
 
