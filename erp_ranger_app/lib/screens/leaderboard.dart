@@ -82,10 +82,20 @@ class LeaderboardState extends State<LeaderboardScreen> {
     var pos = 1;
 
     for(DocumentSnapshot document in documentList)/*documentList.forEach((DocumentSnapshot document)*/ {
+      print('users/'+document.data['uid']+'/'+document.data['uid']);
       if(document.data['role']=='Ranger')
       {
-        var ref = FirebaseStorage.instance.ref().child('users/'+document.data['uid']+'/'+document.data['uid']+'.jpg');
-        var url = await ref.getDownloadURL();
+        var ref = FirebaseStorage.instance.ref().child('users/'+document.data['uid']+'/'+document.data['uid']);
+        var url;
+        try
+        {
+          url =  await ref.getDownloadURL();
+        }
+        catch(e)
+        {
+            ref = FirebaseStorage.instance.ref().child('users/default/default.png');// + document.data['uid'] + '/' + document.data['uid'] + '.jpg');
+            url = await ref.getDownloadURL();
+        }
         if(alternate) {
           entries.add(
               Card(
