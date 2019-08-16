@@ -1,0 +1,75 @@
+.page-container {
+    min-width: 100%;
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+.img-icon{
+  position: relative;
+  width:40%;
+  top: 2%;
+  left:60%;
+}
+
+.img-icon img{
+  position: relative;
+  width: 100%;
+  
+}
+
+.header-div{
+  position: relative;
+  padding-bottom: 20px;
+  width:100%;
+  min-height: 80px;
+  overflow: hidden;
+}
+.header-text{
+  position: fixed;
+}
+  
+  .content-card {
+    margin-top: 20px;
+    width: 400px;
+    max-width: 80%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .login-logo {
+    width: 200px;
+    margin-bottom: 15px;
+  }
+  
+  h3 {
+    width: 100%;
+    text-align: center;
+  }
+  
+  mat-card-content {
+    width: 100%;
+  }
+  
+  form {
+    /*width: 400px;*/
+    min-width: 100%;
+  }
+  
+  .form-group {
+    width: 100%;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+  
+  mat-form-field mat-icon {
+    margin-right: 10px;
+  }
+  
+  .login-button {
+    width: 100%;
+  }

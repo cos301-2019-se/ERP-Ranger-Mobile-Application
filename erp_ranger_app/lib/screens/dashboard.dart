@@ -2,7 +2,7 @@ import 'package:erp_ranger_app/components/drawer.dart';
 import 'package:erp_ranger_app/screens/assets.dart';
 import 'package:erp_ranger_app/screens/endShift.dart';
 import 'package:erp_ranger_app/screens/report.dart';
-import 'package:erp_ranger_app/screens/createShift.dart';
+import 'package:erp_ranger_app/screens/shifts.dart';
 import 'package:erp_ranger_app/screens/feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:erp_ranger_app/login.dart';
@@ -36,7 +36,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             makeDashboardItem("Shifts", Icons.assignment_ind),
             makeDashboardItem("Reports", Icons.warning),
             makeDashboardItem("Log Feedback", Icons.assignment),
-            makeDashboardItem("View Assets", Icons.business_center),
+            //makeDashboardItem("View Assets", Icons.business_center),
             makeDashboardItem("Markers", Icons.map),
             makeDashboardItem("Patrol", Icons.visibility)
           ],
@@ -49,15 +49,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (title == "Shifts") {
       //Navigator.pop(context);
       Navigator.push(context, new MaterialPageRoute(
-          builder: (context) => new CreateShift()));
+          builder: (context) => new ShiftsScreen()));
     } else if (title == "Reports"){
       //Navigator.pop(context);
       Navigator.push(context, new MaterialPageRoute(
           builder: (context) => new ReportScreen()));
-    } else if (title == "View Assets") {
+    /*} else if (title == "View Assets") {
       //Navigator.pop(context);
       Navigator.push(context, new MaterialPageRoute(
-          builder: (context) => new AssetsScreen(myAssets: false)));
+          builder: (context) => new AssetsScreen(myAssets: false)));*/
     } else if (title == "Log Feedback") {
       Navigator.push(context, new MaterialPageRoute(
           builder: (context) => new FeedbackScreen()));
