@@ -50,7 +50,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         //]
       //),
-      bottomNavigationBar: BottomAppBar(
+      /*bottomNavigationBar: BottomAppBar(
         color: Colors.brown,
         /*child: new Row(
           mainAxisSize: MainAxisSize.max,
@@ -233,7 +233,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           )
         ],
         onTap: _onItemTapped,
-      ),*/
+      ),*/*/
     );
   }
 
