@@ -9,7 +9,7 @@ exports = module.exports = functions.firestore.document('markers/{markerId}').on
     .where('park', '==', eventSnapshot.data().park)
     .where('active', '==', true);
 
-  markers.get().then((result) => {
+  return markers.get().then((result) => {
     db.doc('parks/' + eventSnapshot.data().park).update({
       markers: result.docs.length
     });
@@ -17,7 +17,5 @@ exports = module.exports = functions.firestore.document('markers/{markerId}').on
     console.error('Markers Error');
     console.error(error);
   });
-
-  return 0;
 
 });

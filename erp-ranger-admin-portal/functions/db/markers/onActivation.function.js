@@ -7,7 +7,7 @@ exports = module.exports = functions.firestore.document('marker_log/{logId}').on
 
   console.info(eventSnapshot.data());
   const markerRef = db.doc('markers/' + eventSnapshot.data().marker);
-  markerRef.get()
+  return markerRef.get()
     .then((marker) => {
       const score = marker.data().points;
       if (score > 0) {
@@ -83,7 +83,5 @@ exports = module.exports = functions.firestore.document('marker_log/{logId}').on
       console.error('MarkerRef Error');
       console.error(error);
     });
-
-  return 0;
 
 });
