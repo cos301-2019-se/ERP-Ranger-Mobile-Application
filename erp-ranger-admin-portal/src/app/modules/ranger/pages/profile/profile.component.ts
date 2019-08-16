@@ -11,7 +11,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-
+  id;
   report;
 
   constructor(private profile: ProfileService, private route: ActivatedRoute, private users: UserService, private storage: AngularFireStorage, private angularFireAuth: AngularFireAuth) { }
@@ -21,7 +21,8 @@ export class ProfileComponent implements OnInit {
   }
 
   displayDetails() {
-    this.profile.getUserDetails(this.angularFireAuth.auth.currentUser.uid).subscribe(result => {
+    this.id = this.angularFireAuth.auth.currentUser.uid;
+    this.profile.getUserDetails(this.id).subscribe(result => {
       this.report = result;
     });
   }
