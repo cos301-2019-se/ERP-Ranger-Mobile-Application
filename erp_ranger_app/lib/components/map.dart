@@ -23,6 +23,8 @@ class MapState extends State<MapComponent> {
   static Location _location = new Location();
   Firestore _firestore = Firestore.instance;
 
+  MapType _defaultMapType = MapType.normal;
+
   @override
   void initState(){
     super.initState();
@@ -38,12 +40,34 @@ class MapState extends State<MapComponent> {
             onMapCreated: _onMapCreated,
             myLocationEnabled: true, // Add little blue dot for device location, requires permission from user
             compassEnabled: true,
-            mapType: MapType.hybrid,
+            mapType: _defaultMapType,//MapType.hybrid,
             markers: Set<Marker>.of(_markers.values),
 
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 80, right: 10),
+            alignment: Alignment.topRight,
+            child: Column(
+              children: <Widget>[
+                FloatingActionButton(
+                  child: Icon(Icons.layers),
+                  elevation: 5,
+                  backgroundColor: Colors.blue,
+                  onPressed: () {
+                    _changeMapType();
+                  }
+                ),
+              ]
+            ),
           )
         ]
     );
+  }
+
+  void _changeMapType() {
+    setState(() {
+      _defaultMapType = _defaultMapType == MapType.normal ? MapType.hybrid : MapType.normal;
+    });
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -87,7 +111,7 @@ class MapState extends State<MapComponent> {
       final Marker marker = Marker(
         markerId: markerId,
         position: LatLng(pos.latitude, pos.longitude),
-        icon: BitmapDescriptor.defaultMarker,
+        icon: BitmapDescriptor.fromAsset("assets/images/markers.png"),
         infoWindow: InfoWindow(title: name, snippet: '$points Points', onTap: (){_onMarkerTapped(id,pos);})
       );
 

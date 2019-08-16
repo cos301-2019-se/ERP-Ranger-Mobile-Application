@@ -1,13 +1,18 @@
 import 'package:erp_ranger_app/screens/report.dart';
 import 'package:erp_ranger_app/screens/createShift.dart';
+import 'package:erp_ranger_app/screens/viewShift.dart';
 import 'package:erp_ranger_app/screens/feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:erp_ranger_app/login.dart';
 import 'package:erp_ranger_app/screens/markers.dart';
 import 'package:erp_ranger_app/screens/patrol.dart';
 import 'package:erp_ranger_app/screens/dashboard.dart';
-import 'package:erp_ranger_app/services/auth.dart';
 //import 'package:erp_ranger_app/screens/assets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:erp_ranger_app/services/auth.dart';
+import 'package:erp_ranger_app/services/userData.dart';
+import 'package:erp_ranger_app/screens/leaderboard.dart';
 
 class DrawerItem {
   String title;
@@ -24,6 +29,9 @@ class CustomDrawer extends StatefulWidget {
 
 class CustomDrawerState extends State<CustomDrawer> {
 
+  bool _loaded=false;
+  Widget _userDetails;
+
   final drawerItems = [
     new DrawerItem("Home", Icons.home),
     new DrawerItem("Shifts", Icons.assignment_ind),
@@ -32,6 +40,7 @@ class CustomDrawerState extends State<CustomDrawer> {
     //new DrawerItem("Park Assets", Icons.build),
     new DrawerItem("Markers", Icons.map),
     new DrawerItem("Patrol", Icons.visibility),
+    new DrawerItem("Leaderboard", Icons.stars),
     new DrawerItem("Logout", Icons.exit_to_app)
   ];
 
@@ -65,6 +74,11 @@ class CustomDrawerState extends State<CustomDrawer> {
       Navigator.pop(context);
       Navigator.push(context, new MaterialPageRoute(
           builder: (context) => new PatrolScreen()));
+    } else if (title == "Leaderboard") {
+      Navigator.pop(context);
+      (new Auth()).signOut();
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new LeaderboardScreen()));
     } else if (title == "Logout") {
       Navigator.pop(context);
       (new Auth()).signOut();
@@ -92,12 +106,7 @@ class CustomDrawerState extends State<CustomDrawer> {
       child: new Column(
         children: <Widget>[
           new DrawerHeader(
-            child: new Column(
-              children: <Widget>[
-                new Text("User's Name Here"),
-                new Text("Additional Information Here")
-              ],
-            ),
+            child: _showDetails(),
           ),
           new Column(
             children: drawerOptions,
@@ -105,6 +114,58 @@ class CustomDrawerState extends State<CustomDrawer> {
         ],
       ),
     );
+  }
+
+  Widget _showDetails() {
+    if(!_loaded)
+    {
+      _getDetails();
+    }
+    if(_loaded) {
+      return _userDetails;
+    }
+    else {
+      return Padding(
+          padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+          child: Container(
+            alignment: Alignment.center,
+            height: 50.0,
+            width: 50.0,
+            child: SizedBox(
+              child: CircularProgressIndicator(
+                strokeWidth: 3.0,
+              ),
+              height: 50.0,
+              width: 50.0,
+            ),
+          )
+      );
+    }
+  }
+
+  void _getDetails() async {
+    /*String user = await _tempAuth.getUserUid();
+    var document = await Firestore.instance.collection('users').document(user).get();
+    String userName = document['name'];
+    String userEmail = document['email'];
+    var ref = FirebaseStorage.instance.ref().child('users/'+user+'/'+user+'.jpg');
+    var url = await ref.getDownloadURL();*/
+
+    Widget details = new Column(
+                      children: <Widget>[
+                        new CircleAvatar(
+                          backgroundImage: await userData.getUserImage(),//NetworkImage(url),
+                          backgroundColor: Colors.transparent,
+                        ),
+                        new Text(await userData.getUserName()),
+                        new Text(await userData.getUserEmail())
+                      ],
+                    );
+
+    setState(() {
+      _userDetails=details;
+      _loaded=true;
+    });
   }
 
 }
