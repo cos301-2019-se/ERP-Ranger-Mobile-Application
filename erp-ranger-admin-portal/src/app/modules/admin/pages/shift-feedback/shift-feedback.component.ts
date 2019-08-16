@@ -39,9 +39,12 @@ export class ShiftFeedbackComponent implements OnInit {
   size = -1;
   temp = 0;
   counter = 0;
+  refreshInt;
   ngOnInit() {
     this.displayShifts();
+    this.refreshInt = setInterval(function(){this.events = this.events;},1000);
   }
+
 
   constructor(private shifts: ShiftService, private modal: NgbModal, private cdr: ChangeDetectorRef) {}
 
@@ -80,18 +83,25 @@ export class ShiftFeedbackComponent implements OnInit {
                 let docRef = this.shifts.getParkName(parkID);        
                 let getPark = docRef.get()
                 .then(parkDoc => {
-                  if(!doc.exists){
+                  if(!parkDoc.exists){
                     console.log("User not found ");
                     
                   } else{     
-
+                    // console.log(change.doc.data());
+                    // console.log(doc.data());
+                    // console.log(parkDoc.data());
+                    
                     var parkName = parkDoc.data().name;
-                    var start = new Date(1970,0,1);
-                    start.setSeconds(startTime.seconds);
-                    start.setHours(start.getHours() + 2);
-                    var end = new Date(1970,0,1);
-                    end.setSeconds(endTime.seconds);
-                    end.setHours(end.getHours() + 2);
+                    var start = startTime.toDate();
+                   
+                    var end = endTime.toDate();
+                    // console.log(start);
+                    // console.log(end);
+                    
+                    // console.log("--------------------");
+                    // console.log(start,end,change.doc.id,userName,parkName, feedBackInfo);
+                    
+                    
                     this.addEventP(start,end,change.doc.id,userName,parkName, feedBackInfo);
                   }
                 })
@@ -205,7 +215,9 @@ export class ShiftFeedbackComponent implements OnInit {
     this.modalData = { event, action };
     this.modal.open(this.modalContent, { size: 'lg' });
   }
-
+  doSomething(){
+    this.refreshInt=setInterval(function(){this.event= this.events}, 1000);
+  }
   addEventP( patrolDate: Date, endDate : Date, id, name : string,park : string, info: string): void {
     this.events = [
       ...this.events,
@@ -221,7 +233,8 @@ export class ShiftFeedbackComponent implements OnInit {
           afterEnd: false
         }
       }
-    ];    
+    ];   
+    
   }
 
   deleteEvent(eventToDelete: CalendarEvent) {
