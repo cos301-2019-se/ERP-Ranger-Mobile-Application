@@ -75,6 +75,7 @@ class LeaderboardState extends State<LeaderboardScreen> {
     List<DocumentSnapshot> documentList = querySnapshot.documents;
     
     documentList.removeWhere((a)=>a.data['role']=='Admin');
+    documentList.removeWhere((a)=>a.data['points']==null);
     documentList.sort((a,b)=>(b.data['points'].compareTo(a.data['points'])));
     
     bool alternate = true;
