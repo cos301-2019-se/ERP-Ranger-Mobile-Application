@@ -4,6 +4,8 @@ import 'package:location/location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:erp_ranger_app/services/auth.dart';
 import 'package:erp_ranger_app/services/park.dart';
+import 'package:erp_ranger_app/services/markersData.dart';
+import 'package:erp_ranger_app/services/patrolData.dart';
 import 'dart:async';
 import 'dart:math';
 import 'dart:core';
@@ -52,7 +54,7 @@ class MapState extends State<MapComponent> {
                 FloatingActionButton(
                   child: Icon(Icons.layers),
                   elevation: 5,
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Color.fromRGBO(18, 27, 65, 1.0),
                   onPressed: () {
                     _changeMapType();
                   }
@@ -124,61 +126,78 @@ class MapState extends State<MapComponent> {
     });
   }
 
-  Future<void> _onMarkerTapped(String id, GeoPoint pos) async{
-    switch (await showDialog(context: context,child:
+  Future<void> _onMarkerTapped(String id, GeoPoint pos) async {
+    if (await patrolData.getIsOnPatrol()) {
+      switch (await showDialog(context: context, child:
       SimpleDialog(
-      title: new Text('Activate marker?'),
-      children: <Widget>[
-        new Padding(
-            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
-            child: SizedBox(
-                height: 40.0,
-                child: new RaisedButton(
-                    elevation: 5.0,
-                    color: Colors.blue,
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(30.0)
-                    ),
-                    child: Text(
-                        'Yes',
-                        style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.white
-                        )
-                    ),
-                    onPressed: (){Navigator.pop(context, 'yes');}
+        title: new Text('Activate marker?'),
+        children: <Widget>[
+          new Padding(
+              padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+              child: SizedBox(
+                  height: 40.0,
+                  child: new RaisedButton(
+                      elevation: 5.0,
+                      color: Color.fromRGBO(18, 27, 65, 1.0),
+                      shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(5.0)
+                      ),
+                      child: Text(
+                          'Yes',
+                          style: TextStyle(
+                              fontSize: 20.0,
+                              color: Colors.white
+                          )
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context, 'yes');
+                      }
+                  )
+              )
+          ),
+          new Padding(
+              padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+              child: SizedBox(
+                  height: 40.0,
+                  child: new RaisedButton(
+                      elevation: 5.0,
+                      color: Color.fromRGBO(18, 27, 65, 1.0),
+                      shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(5.0)
+                      ),
+                      child: Text(
+                          'No',
+                          style: TextStyle(
+                              fontSize: 20.0,
+                              color: Colors.white
+                          )
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context, 'no');
+                      }
+                  )
+              )
+          )
+        ],
+      ))) {
+        case 'yes':
+          _logMarker(id, pos);
+          break;
+      }
+    }
+    else{
+      showDialog(context: context, child:
+        SimpleDialog(
+            title: new Text(
+                'You must be on patrol',
+                style: TextStyle(
+                    color: Colors.red
                 )
-            )
-        ),
-        new Padding(
-            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
-            child: SizedBox(
-                height: 40.0,
-                child: new RaisedButton(
-                    elevation: 5.0,
-                    color: Colors.blue,
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(30.0)
-                    ),
-                    child: Text(
-                        'No',
-                        style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.white
-                        )
-                    ),
-                    onPressed: (){Navigator.pop(context, 'no');}
-                )
-            )
+            ),
         )
-      ],
-    ))) {
-      case 'yes':
-        _logMarker(id, pos);
-        break;
+      );
     }
-
-    }
+  }
 
   void _logMarker(String id, GeoPoint pos) async{
     String user = await Auth().getUserUid();
@@ -194,7 +213,20 @@ class MapState extends State<MapComponent> {
         "time": new DateTime.now(),
         "user": user,
       });
+      //markersData.addMarker(id);
       _updateMarkers();
+    }
+    else {
+      showDialog(context: context, child:
+      SimpleDialog(
+        title: new Text(
+            'You must be within 10m of the marker',
+            style: TextStyle(
+                color: Colors.red
+            )
+        ),
+      )
+      );
     }
   }
 
