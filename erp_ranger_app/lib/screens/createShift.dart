@@ -25,7 +25,6 @@ class ShiftState extends State<CreateShift> {
 
   static Firestore db = Firestore.instance;
   static CollectionReference shiftRef = db.collection('shifts');
-  DocumentReference parkRef = shiftRef.document('c0PvLdUAgLX9wtkoA4Ca');
 
   Auth tempAuth = new Auth();
 
