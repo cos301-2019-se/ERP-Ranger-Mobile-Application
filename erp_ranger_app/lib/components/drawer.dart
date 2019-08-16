@@ -1,6 +1,4 @@
 import 'package:erp_ranger_app/screens/report.dart';
-import 'package:erp_ranger_app/screens/createShift.dart';
-import 'package:erp_ranger_app/screens/viewShift.dart';
 import 'package:erp_ranger_app/screens/feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:erp_ranger_app/login.dart';
@@ -8,11 +6,10 @@ import 'package:erp_ranger_app/screens/markers.dart';
 import 'package:erp_ranger_app/screens/patrol.dart';
 import 'package:erp_ranger_app/screens/dashboard.dart';
 //import 'package:erp_ranger_app/screens/assets.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:erp_ranger_app/services/auth.dart';
 import 'package:erp_ranger_app/services/userData.dart';
 import 'package:erp_ranger_app/screens/leaderboard.dart';
+import 'package:erp_ranger_app/screens/shifts.dart';
 
 class DrawerItem {
   String title;
@@ -41,7 +38,7 @@ class CustomDrawerState extends State<CustomDrawer> {
     new DrawerItem("Markers", Icons.map),
     new DrawerItem("Patrol", Icons.visibility),
     new DrawerItem("Leaderboard", Icons.stars),
-    new DrawerItem("Logout", Icons.exit_to_app)
+    new DrawerItem("Logout", Icons.exit_to_app),
   ];
 
   void _getDrawerItemWidget(String title) {
@@ -53,7 +50,7 @@ class CustomDrawerState extends State<CustomDrawer> {
     else if (title == "Shifts") {
       Navigator.pop(context);
       Navigator.push(context, new MaterialPageRoute(
-          builder: (context) => new CreateShift()));
+          builder: (context) => new ShiftsScreen()));
     } else if (title == "Reports"){
       Navigator.pop(context);
       Navigator.push(context, new MaterialPageRoute(
@@ -90,6 +87,13 @@ class CustomDrawerState extends State<CustomDrawer> {
   @override
   Widget build(BuildContext context) {
     List<Widget> drawerOptions = [];
+
+    drawerOptions.add(
+        new DrawerHeader(
+          child: _showDetails(),
+        )
+    );
+
     for (var i = 0; i < drawerItems.length; i++) {
       var d = drawerItems[i];
       drawerOptions.add(
@@ -103,15 +107,8 @@ class CustomDrawerState extends State<CustomDrawer> {
     }
 
     return new Drawer(
-      child: new Column(
-        children: <Widget>[
-          new DrawerHeader(
-            child: _showDetails(),
-          ),
-          new Column(
-            children: drawerOptions,
-          )
-        ],
+      child: new ListView(
+        children: drawerOptions,
       ),
     );
   }
@@ -144,13 +141,6 @@ class CustomDrawerState extends State<CustomDrawer> {
   }
 
   void _getDetails() async {
-    /*String user = await _tempAuth.getUserUid();
-    var document = await Firestore.instance.collection('users').document(user).get();
-    String userName = document['name'];
-    String userEmail = document['email'];
-    var ref = FirebaseStorage.instance.ref().child('users/'+user+'/'+user+'.jpg');
-    var url = await ref.getDownloadURL();*/
-
     Widget details = new Column(
                       children: <Widget>[
                         new CircleAvatar(
@@ -161,7 +151,6 @@ class CustomDrawerState extends State<CustomDrawer> {
                         new Text(await userData.getUserEmail())
                       ],
                     );
-
     setState(() {
       _userDetails=details;
       _loaded=true;
