@@ -13,6 +13,21 @@ export class UserService {
     return this.fireStore.doc<User>(`users/${uid}`).snapshotChanges();
   }
 
+  setUser(uid:string, email:String, name:String, number: String, active:boolean, role: String ){
+    this.fireStore.collection("users").doc(uid).set({
+      active: active,
+      email: email,
+      name: name,
+      number:number,
+      role: role,
+      uid: uid
+    })
+  }
+
+  getUserByID(uid: string) {
+    let doc = this.fireStore.collection("users").doc(uid);
+  }
+
   getUsers(){
     return this.fireStore.collection("users");
   }

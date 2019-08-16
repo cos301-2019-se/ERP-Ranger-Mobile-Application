@@ -2,7 +2,7 @@ import 'package:erp_ranger_app/components/drawer.dart';
 import 'package:erp_ranger_app/screens/assets.dart';
 import 'package:erp_ranger_app/screens/endShift.dart';
 import 'package:erp_ranger_app/screens/report.dart';
-import 'package:erp_ranger_app/screens/createShift.dart';
+import 'package:erp_ranger_app/screens/shifts.dart';
 import 'package:erp_ranger_app/screens/feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:erp_ranger_app/login.dart';
