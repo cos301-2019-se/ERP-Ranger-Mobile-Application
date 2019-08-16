@@ -14,6 +14,7 @@
   <mat-card class="content-card mat-elevation-z8 animated slideInUp">
     <mat-card-content>
       <agm-map 
+        id="map-agm"
         [latitude]="lat"
         [longitude]="lng"
         [zoom]="zoom"
@@ -39,13 +40,7 @@
           </div>
         </agm-marker>
         
-        <agm-circle [latitude]="lat" [longitude]="lng" 
-            [radius]="2000"
-            [fillColor]="'red'"
-            [circleDraggable]="false"
-            [editable]="true">
-        </agm-circle>
-
+      
       </agm-map>
     </mat-card-content>
   </mat-card>

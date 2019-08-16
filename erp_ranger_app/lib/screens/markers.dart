@@ -12,6 +12,11 @@ class MarkersState extends State<MarkersScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      appBar: AppBar(
+        title: Text("Markers"),
+        elevation: .1,
+        backgroundColor: Color.fromRGBO(18, 27, 65, 1.0),
+      ),
       drawer: new CustomDrawer(),
       body: new MapComponent(),
     );

@@ -13,6 +13,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { elementStart } from '@angular/core/src/render3';
 import { CalendarDayViewEventComponent } from 'angular-calendar/modules/day/calendar-day-view-event.component';
 import { google } from '@agm/core/services/google-maps-types';
+import { TimeInterval } from 'rxjs/internal/operators/timeInterval';
 
 const colors: any = {
   red: {
@@ -39,8 +40,10 @@ export class ShiftListComponent implements OnInit {
   size = -1;
   temp = 0;
   counter = 0;
+  refreshInt;
   ngOnInit() {
-    this.displayShifts();
+    this.displayShifts();    
+    this.refreshInt = setInterval(function(){this.events = this.events},1000);
   }
 
   constructor(private shifts: ShiftService, private modal: NgbModal, private cdr: ChangeDetectorRef) {}
@@ -80,8 +83,12 @@ export class ShiftListComponent implements OnInit {
               else{
                 var park= doc.data().name ;                
                 this.addEventP(t2,t,id, name,park);
+                
               }
-            })            
+            })  
+            .catch(err => {
+              console.log("Error getting document");         
+            })          
           }
         })
         .catch(err => {
@@ -183,6 +190,8 @@ export class ShiftListComponent implements OnInit {
         }
       }
     ];    
+    
+    
   }
 
   deleteEvent(eventToDelete: CalendarEvent) {

@@ -21,9 +21,7 @@ export class AddMarkerService {
       active: true,
       id: "",
       location : {
-        geopoint: locationData
-          
-        
+        geopoint: locationData        
       },
       name: name,
       park: park,
@@ -36,7 +34,7 @@ export class AddMarkerService {
         id: docRef.id,
         name: name,
         park: park,
-        points : 1000,
+        points : 200,
         active:true,
         location : {
           geopoint: locationData         

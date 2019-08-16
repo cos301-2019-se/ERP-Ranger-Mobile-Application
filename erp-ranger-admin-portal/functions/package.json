@@ -5,7 +5,8 @@
     "camelcase": "^5.3.1",
     "firebase-admin": "^8.2.0",
     "firebase-functions": "^3.1.0",
-    "glob": "^7.1.4"
+    "glob": "^7.1.4",
+    "nodemailer": "^6.3.0"
   },
   "engines": {
     "node": "8"
