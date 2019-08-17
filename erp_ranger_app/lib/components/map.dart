@@ -30,7 +30,7 @@ class MapState extends State<MapComponent> {
   @override
   void initState(){
     super.initState();
-    _timer = Timer.periodic(Duration(seconds: 30), (Timer t)=>_updateMarkers());
+    _timer = Timer.periodic(Duration(seconds: 300), (Timer t)=>_updateMarkers());
   }
 
   @override
@@ -109,12 +109,16 @@ class MapState extends State<MapComponent> {
       final String markerIdVal = 'marker_id_$_markerIdCounter';
       _markerIdCounter++;
       final MarkerId markerId = MarkerId(markerIdVal);
-
       final Marker marker = Marker(
         markerId: markerId,
         position: LatLng(pos.latitude, pos.longitude),
         icon: BitmapDescriptor.fromAsset("assets/images/markers.png"),
-        infoWindow: InfoWindow(title: name, snippet: '$points Points', onTap: (){_onMarkerTapped(id,pos);})
+        onTap: (){_onMarkerTapped(id,name,points,pos);}
+        /*infoWindow: InfoWindow(
+              title: name,
+              snippet: '$points Points',
+              onTap: (){_onMarkerTapped(id,pos);}
+            )*/
       );
 
       setState(() {
@@ -126,101 +130,127 @@ class MapState extends State<MapComponent> {
     });
   }
 
-  Future<void> _onMarkerTapped(String id, GeoPoint pos) async {
-    if (await patrolData.getIsOnPatrol()) {
-      switch (await showDialog(context: context, child:
-      SimpleDialog(
-        title: new Text('Activate marker?'),
-        children: <Widget>[
+  Future<void> _onMarkerTapped(String id, String name, int points, GeoPoint pos) async {
+    switch (await showDialog(context: context, child:
+    SimpleDialog(
+      title: new Text(name),
+      children: <Widget>[
           new Padding(
-              padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
-              child: SizedBox(
-                  height: 40.0,
-                  child: new RaisedButton(
-                      elevation: 5.0,
-                      color: Color.fromRGBO(18, 27, 65, 1.0),
-                      shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(5.0)
-                      ),
-                      child: Text(
-                          'Yes',
-                          style: TextStyle(
-                              fontSize: 20.0,
-                              color: Colors.white
-                          )
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context, 'yes');
-                      }
-                  )
-              )
-          ),
-          new Padding(
-              padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
-              child: SizedBox(
-                  height: 40.0,
-                  child: new RaisedButton(
-                      elevation: 5.0,
-                      color: Color.fromRGBO(18, 27, 65, 1.0),
-                      shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(5.0)
-                      ),
-                      child: Text(
-                          'No',
-                          style: TextStyle(
-                              fontSize: 20.0,
-                              color: Colors.white
-                          )
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context, 'no');
-                      }
-                  )
-              )
-          )
-        ],
-      ))) {
-        case 'yes':
-          _logMarker(id, pos);
-          break;
-      }
-    }
-    else{
-      showDialog(context: context, child:
-        SimpleDialog(
-            title: new Text(
-                'You must be on patrol',
-                style: TextStyle(
-                    color: Colors.red
+            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+            child: SizedBox(
+                height: 40.0,
+                child: new Text(
+                    'Points: '+points.toString(),
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.black
+                    )
                 )
-            ),
+            )
+        ),
+        new Padding(
+            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+            child: SizedBox(
+                height: 40.0,
+                child: new Text(
+                    'Activate marker?',
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.black
+                    )
+                )
+            )
+        ),
+        new Padding(
+            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+            child: SizedBox(
+                height: 40.0,
+                child: new RaisedButton(
+                    elevation: 5.0,
+                    color: Color.fromRGBO(18, 27, 65, 1.0),
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(5.0)
+                    ),
+                    child: Text(
+                        'Yes',
+                        style: TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.white
+                        )
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context, 'yes');
+                    }
+                )
+            )
+        ),
+        new Padding(
+            padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+            child: SizedBox(
+                height: 40.0,
+                child: new RaisedButton(
+                    elevation: 5.0,
+                    color: Color.fromRGBO(18, 27, 65, 1.0),
+                    shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(5.0)
+                    ),
+                    child: Text(
+                        'No',
+                        style: TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.white
+                        )
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context, 'no');
+                    }
+                )
+            )
         )
-      );
+      ],
+    ))) {
+      case 'yes':
+        _logMarker(id, pos);
+        break;
     }
   }
 
   void _logMarker(String id, GeoPoint pos) async{
-    String user = await Auth().getUserUid();
-    var _userPos = await _location.getLocation();
-    var _latAngleDist = (((_userPos.latitude-pos.latitude).abs())/360)*2*pi*6378000;
-    var _longAngleDist = (((_userPos.longitude-pos.longitude).abs())/360)*2*pi*6378000;
-    var _distance = sqrt(pow(_latAngleDist,2)+pow(_longAngleDist,2));
-    if(_distance<=10)
-    {
-      await Firestore.instance.collection('marker_log').add({
-        "marker": id,
-        "reward": 0,
-        "time": new DateTime.now(),
-        "user": user,
-      });
-      //markersData.addMarker(id);
-      _updateMarkers();
+    if(await patrolData.getIsOnPatrol()) {
+      String user = await Auth().getUserUid();
+      var _userPos = await _location.getLocation();
+      var _latAngleDist = (((_userPos.latitude-pos.latitude).abs())/360)*2*pi*6378000;
+      var _longAngleDist = (((_userPos.longitude-pos.longitude).abs())/360)*2*pi*6378000;
+      var _distance = sqrt(pow(_latAngleDist,2)+pow(_longAngleDist,2));
+      if(_distance<=10)
+      {
+        await Firestore.instance.collection('marker_log').add({
+          "marker": id,
+          "reward": 0,
+          "time": new DateTime.now(),
+          "user": user,
+        });
+        //markersData.addMarker(id);
+        _updateMarkers();
+      }
+      else {
+        showDialog(context: context, child:
+        SimpleDialog(
+          title: new Text(
+              'You must be within 10m of the marker',
+              style: TextStyle(
+                  color: Colors.red
+              )
+          ),
+        )
+        );
+      }
     }
-    else {
+    else  {
       showDialog(context: context, child:
       SimpleDialog(
         title: new Text(
-            'You must be within 10m of the marker',
+            'You must be on patrol',
             style: TextStyle(
                 color: Colors.red
             )
@@ -228,6 +258,7 @@ class MapState extends State<MapComponent> {
       )
       );
     }
+
   }
 
   @override
