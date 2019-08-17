@@ -174,11 +174,18 @@ export class ShiftListComponent implements OnInit {
     this.modal.open(this.modalContent, { size: 'lg' });
   }
 
+  getTimeFormat(time : string) : String{
+    if(time.length == 1){
+      return "0" + time;
+    }
+    return time;
+  }
+
   addEventP( patrolDate: Date, endDate : Date, id, name : string,park : string): void {
     this.events = [
       ...this.events,
       {
-        title:    name + " ( " + patrolDate.getHours() +":"+  patrolDate.getMinutes() + "  -  "+ endDate.getHours() +":"+  endDate.getMinutes() + " ) At " + park ,
+        title:    name + " ( " + this.getTimeFormat(patrolDate.getHours()+"") +":"+  this.getTimeFormat(patrolDate.getMinutes() + "") + "  -  "+ this.getTimeFormat(endDate.getHours()+"") +":"+  this.getTimeFormat(endDate.getMinutes()+"") + " ) At " + park ,
         start: startOfDay(patrolDate),
         end: endOfDay(endDate),
         id : id,
