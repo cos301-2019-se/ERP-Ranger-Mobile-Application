@@ -9,6 +9,7 @@ import 'package:erp_ranger_app/screens/dashboard.dart';
 import 'package:erp_ranger_app/services/auth.dart';
 import 'package:erp_ranger_app/services/userData.dart';
 import 'package:erp_ranger_app/screens/leaderboard.dart';
+import 'package:erp_ranger_app/screens/ranger.dart';
 import 'package:erp_ranger_app/screens/shifts.dart';
 
 class DrawerItem {
@@ -68,7 +69,7 @@ class CustomDrawerState extends State<CustomDrawer> {
       Navigator.pop(context);
       (new Auth()).signOut();
       Navigator.push(context, new MaterialPageRoute(
-          builder: (context) => new LeaderboardScreen()));
+          builder: (context) => new RangersScreen()));
     } else if (title == "Logout") {
       Navigator.pop(context);
       (new Auth()).signOut();
