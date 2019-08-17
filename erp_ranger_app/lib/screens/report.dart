@@ -5,6 +5,7 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'dart:async';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:erp_ranger_app/services/auth.dart';
 import 'package:erp_ranger_app/services/park.dart';
@@ -23,19 +24,21 @@ class ReportState extends State<ReportScreen> {
       new TextEditingController();
   final Geoflutterfire geoFlutterFire = Geoflutterfire();
 
-  Location _location = new Location();
-  GeoFirePoint _userPointLocation;
-  DateTime _now = DateTime.now();
-  String _reportDetails;
-  String _reportType = "Intruder";
-  File _imageOne;
-  bool _flagOne = false;
-  File _imageTwo;
-  bool _flagTwo = false;
-  File _imageThree;
-  bool _flagThree = false;
-  bool _reportFlag = false;
-  bool _uploading = false;
+  Location location = new Location();
+  GeoFirePoint userPointLocation;
+  DateTime now = DateTime.now();
+  String reportDetails;
+  String reportType = "Intruder";
+  File imageOne;
+  bool flagOne = false;
+  File imageTwo;
+  bool flagTwo = false;
+  File imageThree;
+  bool flagThree = false;
+  bool reportFlag = false;
+  bool uploading = false;
+  Duration delayTime = new Duration(seconds: 2);
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Auth tempAuth = new Auth();
   String user;
@@ -64,12 +67,14 @@ class ReportState extends State<ReportScreen> {
         "time": _now,
         "type": _reportType,
         "user": user,
-      });
+      }).then((result) => {
+        _sendImages(result),
+        reportTextFieldController.clear(),
+        _scaffoldKey.currentState.showSnackBar(new SnackBar(content: new Text('Success'))),
+        Timer(this.delayTime, () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen()));})
+    });
 
-    _sendImages(result);
 
-    reportTextFieldController.clear();
-    Navigator.pushReplacement(this.context, MaterialPageRoute(builder: (context) => DashboardScreen()));
   }
 
   //Sends the images taken by the user.
@@ -168,6 +173,7 @@ class ReportState extends State<ReportScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      key: _scaffoldKey,
       appBar: new AppBar(
         title: Text("ERP Ranger Mobile App"),
         elevation: .1,
