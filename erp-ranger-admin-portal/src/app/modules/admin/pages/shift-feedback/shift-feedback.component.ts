@@ -13,6 +13,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { elementStart } from '@angular/core/src/render3';
 import { CalendarDayViewEventComponent } from 'angular-calendar/modules/day/calendar-day-view-event.component';
 import { google } from '@agm/core/services/google-maps-types';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 const colors: any = {
   red: {
@@ -46,7 +47,7 @@ export class ShiftFeedbackComponent implements OnInit {
   }
 
 
-  constructor(private shifts: ShiftService, private modal: NgbModal, private cdr: ChangeDetectorRef) {}
+  constructor(private shifts: ShiftService, private modal: NgbModal, private cdr: ChangeDetectorRef, private storage: AngularFireStorage) {}
 
   
   
@@ -60,6 +61,7 @@ export class ShiftFeedbackComponent implements OnInit {
         var patrolID :string;
         patrolID = change.doc.data().patrol;
         var feedBackInfo = change.doc.data().feedback;
+        console.log("Try here ->"+ patrolID);
         let docRef = this.shifts.getPatrol(patrolID);        
         let getPatrol = docRef.get()
         .then(doc => {
@@ -84,7 +86,7 @@ export class ShiftFeedbackComponent implements OnInit {
                 let getPark = docRef.get()
                 .then(parkDoc => {
                   if(!parkDoc.exists){
-                    console.log("User not found ");
+                    console.log("Park not found ");
                     
                   } else{     
                     // console.log(change.doc.data());
@@ -102,7 +104,7 @@ export class ShiftFeedbackComponent implements OnInit {
                     // console.log(start,end,change.doc.id,userName,parkName, feedBackInfo);
                     
                     
-                    this.addEventP(start,end,change.doc.id,userName,parkName, feedBackInfo);
+                    this.addEventP(start,end,change.doc.id+ "," + userDoc.data().uid,userName,parkName, feedBackInfo);
                   }
                 })
                 .catch(err => {
@@ -119,7 +121,7 @@ export class ShiftFeedbackComponent implements OnInit {
         })
         .catch(err => {
           console.log("Error getting document");         
-        });
+        })
       });
     });
 
@@ -196,14 +198,29 @@ export class ShiftFeedbackComponent implements OnInit {
   }
   handleEvent(action: string, event: CalendarEvent): void {
     //Do something here when clicking an event   
-    let docRef = this.shifts.getFeedbackID(event.id + "");        
+    var fid =  event.id.toString().substring(0,event.id.toString().indexOf(","));
+    var uid = event.id.toString().substring(event.id.toString().indexOf(",")+1);
+    let docRef = this.shifts.getFeedbackID(fid + ""); 
+      
+      console.log(fid ,"  ",uid);
+
     let getFB = docRef.get()
     .then(fDoc => {
       if(!fDoc.exists){
-        console.log("User not found ");
+        console.log("Feedback doc not found ");
         
       } else{     
+        var id = event.id.toString().substring(event.id.toString().indexOf(","));
+        console.log(id);
+        this.storage.ref('users/' + uid + '/'+  uid).getDownloadURL().subscribe( result => {
+          var profilePic = result;
+          document.getElementById("prof-pic").style.backgroundImage = "url(" + profilePic+ ")";
+        },(err)=> {
+          var profilePic = "https://firebasestorage.googleapis.com/v0/b/erp-ranger-app.appspot.com/o/users%2Fdefault%2Fdefault.png?alt=media&token=fa61e670-6070-49b8-ac82-4dbb9161b39f";
+          document.getElementById("prof-pic").style.backgroundImage = "url(" + profilePic+ ")";
+        });
         document.getElementById("overlay-span").innerHTML = fDoc.data().feedback;
+        document.getElementById("ranger-subtitle").innerHTML = event.title;
         document.getElementById("overlay-info").style.visibility = "visible";
         
         
