@@ -106,7 +106,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children:<Widget>[
-          this._loadedPatrol == true ? Card(
+
+          //type 1
+          /*this._loadedPatrol == true ? Card(
               color: Color.fromRGBO(154, 126, 97, 1),
               child: new RaisedButton(
                 elevation: 5.0,
@@ -233,14 +235,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 _openScreen("Leaderboard");
               },
             ),
-          ),
+          ),*/
 
-          /*Expanded(
+          Expanded(
             child:Container(
               alignment: Alignment.center,
               decoration: new BoxDecoration(
                 image: new DecorationImage(
-                  image: new AssetImage('assets/images/stopwatch.png'),
+                  image: new AssetImage('assets/images/2.png'),
                   fit: BoxFit.contain,
                 ),
               ),
@@ -257,6 +259,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           style: new TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 48.0,
+                            color: Colors.white,
                           )
                         ),
                         this._loadedPatrol == true ? SizedBox(
@@ -349,7 +352,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ]
             ),
-          ),*/
+          ),
         ]
                 /*child:Padding(
                     padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
@@ -376,8 +379,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           //),
 
 
-      /*bottomNavigationBar: BottomAppBar(
-        color: Color.fromRGBO(154, 126, 97, 1),
+      bottomNavigationBar: BottomAppBar(
+        //color: Color.fromRGBO(154, 126, 97, 1), //brown
+        color: Color.fromRGBO(18, 27, 65, 1.0), //blue
         /*child: new Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -429,10 +433,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       IconButton(
                         icon: Icon(Icons.date_range),
                         iconSize: 48.0,
+                        color: Colors.white,
                         onPressed: () {
                           _openScreen("Shifts");
                         }),
-                      Text('Shifts',style:TextStyle(fontSize: 15.0))
+                      Text('Shifts',style:TextStyle(fontSize: 15.0,color: Colors.white))
                     ],
                   ),
                   Column(
@@ -441,10 +446,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       IconButton(
                           icon: Icon(Icons.stars),
                           iconSize: 48.0,
+                          color: Colors.white,
                           onPressed: () {
                             _openScreen("Leaderboard");
                           }),
-                      Text('Leaderboard',style:TextStyle(fontSize: 15.0))
+                      Text('Leaderboard',style:TextStyle(fontSize: 15.0,color: Colors.white))
                     ],
                   ),
                   Column(
@@ -453,10 +459,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       IconButton(
                         icon: Icon(Icons.directions_walk),
                         iconSize: 48.0,
+                        color: Colors.white,
                         onPressed: () {
                           _openScreen("Rangers");
                         }),
-                      Text('Rangers',style:TextStyle(fontSize: 15.0))
+                      Text('Rangers',style:TextStyle(fontSize: 15.0,color: Colors.white))
                     ],
                   ),
                   /*IconButton(
@@ -532,7 +539,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   )*/
                 ],
               )
-      ),*/
+      ),
       /*BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
