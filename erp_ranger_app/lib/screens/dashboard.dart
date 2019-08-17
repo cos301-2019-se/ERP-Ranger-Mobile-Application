@@ -269,12 +269,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             shape: new RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(5.0)
                             ),
-                            color: Color.fromRGBO(18, 27, 65, 1.0),
+                            color: Colors.white,
                             child: Text(
                               _patrolButtonText,
                               style: TextStyle(
                                   fontSize: 20.0,
-                                  color: Colors.white
+                                  color: Color.fromRGBO(18, 27, 65, 1.0)
                               )
                             ),
                             onPressed: _activatePatrolButton,
