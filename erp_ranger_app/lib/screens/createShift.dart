@@ -197,8 +197,7 @@ class ShiftState extends State<CreateShift> {
           "park": park,
           "start": start,
           "user": user,
-        })
-        .then((result) => {
+        }).then((result) => {
               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen())),
             })
         .catchError((err) => print(err));
