@@ -22,6 +22,7 @@ class ShiftState extends State<CreateShift> {
   bool dateFlag = false;
   bool midnightFlag = false;
   bool sendingReport = false;
+  Duration delayTime = new Duration(seconds: 2);
 
   static Firestore db = Firestore.instance;
   static CollectionReference shiftRef = db.collection('shifts');
@@ -198,7 +199,8 @@ class ShiftState extends State<CreateShift> {
           "start": start,
           "user": user,
         }).then((result) => {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen())),
+              Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Success'))),
+              Timer(this.delayTime, () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen()));}),
             })
         .catchError((err) => print(err));
   }
