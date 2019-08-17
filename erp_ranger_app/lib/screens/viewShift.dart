@@ -24,7 +24,7 @@ class ViewShiftState extends State<ViewShift> {
   List<DocumentSnapshot> shiftListFuture = new List<DocumentSnapshot>();
   int shiftsToday = -1;
   int shiftsFuture = -1;
-  bool bannerFlag = false;
+  bool fetching = true;
 
   void initialFunctions(BuildContext context){
     getDocs();
@@ -71,7 +71,7 @@ class ViewShiftState extends State<ViewShift> {
     }
 
     setState(() {
-
+      this.fetching = false;
     });
   }
 
@@ -81,6 +81,7 @@ class ViewShiftState extends State<ViewShift> {
       body: new Column(
         children: <Widget>[
           _showTodayBanner(),
+          this.fetching == true ? _showFetching() : new Container(),
           new Expanded(
             child: new ListView.builder(
               itemCount: shiftListToday.length,
@@ -90,6 +91,7 @@ class ViewShiftState extends State<ViewShift> {
             ),
           ),
           _showFutureBanner(),
+        this.fetching == true ? _showFetching() : new Container(),
           new Expanded(
             child: new ListView.builder(
                 itemCount: shiftListFuture.length,
@@ -187,6 +189,8 @@ class ViewShiftState extends State<ViewShift> {
 
   Widget displayShiftFuture(){
     shiftsFuture++;
+    print('shift list today length: ' + shiftListToday.length.toString());
+    print('shifts today: ' + shiftsToday.toString());
     if(shiftsFuture%2 == 0 && shiftListFuture.elementAt(shiftsFuture).data['start'].compareTo(Timestamp.fromDate(DateTime.now())) >= 0) {
       return new Card(
           elevation: 1.0,
@@ -272,4 +276,21 @@ class ViewShiftState extends State<ViewShift> {
     );
   }
 
+  Widget _showFetching() {
+    return Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+        child: Container(
+          alignment: Alignment.center,
+          height: 50.0,
+          width: 50.0,
+          child: SizedBox(
+            child: CircularProgressIndicator(
+              strokeWidth: 3.0,
+            ),
+            height: 50.0,
+            width: 50.0,
+          ),
+        )
+    );
+  }
 }
