@@ -112,23 +112,42 @@ class ShiftState extends State<CreateShift> {
       if (selectedDate.year == DateTime.now().year &&
           selectedDate.month == DateTime.now().month &&
           selectedDate.day == DateTime.now().day) {
-        if (startFlag && selectedStartDateTime.hour < DateTime.now().hour) {
+        if (startFlag && selectedStartDateTime.hour < DateTime
+            .now()
+            .hour) {
+          Scaffold.of(this.context).showSnackBar(new SnackBar(
+              content: new Text('Selected start time has passed.')));
           return false;
-        } else if (startFlag && selectedStartDateTime.hour == DateTime.now().hour &&
-            selectedStartDateTime.minute < DateTime.now().minute - 5) {
+        } else if (startFlag && selectedStartDateTime.hour == DateTime
+            .now()
+            .hour &&
+            selectedStartDateTime.minute < DateTime
+                .now()
+                .minute - 5) {
+          Scaffold.of(this.context).showSnackBar(new SnackBar(
+              content: new Text('Selected start time has passed.')));
           return false;
-        } else if (endFlag && selectedEndDateTime.hour < selectedStartDateTime.hour &&
+        } else
+        if (endFlag && selectedEndDateTime.hour < selectedStartDateTime.hour &&
             (((24 - selectedStartDateTime.hour) + selectedEndDateTime.hour) <=
                 MAX_SHIFT_LENGTH)) {
           midnightFlag = true;
           return true;
+        } else if(endFlag && selectedEndDateTime.hour < selectedStartDateTime.hour &&
+            (((24 - selectedStartDateTime.hour) + selectedEndDateTime.hour) >=
+                MAX_SHIFT_LENGTH)){
+          Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Maximum shift length of 8 hours.')));
+          return false;
         } else if (endFlag && selectedEndDateTime.hour == selectedStartDateTime.hour &&
             selectedEndDateTime.minute < selectedStartDateTime.minute) {
+          Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Selected end time after selected start time.')));
           return false;
         } else if (endFlag && selectedEndDateTime.hour < DateTime.now().hour) {
+          Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Selected end time has passed.')));
           return false;
         } else if (endFlag && selectedEndDateTime.hour == DateTime.now().hour &&
             selectedEndDateTime.minute < DateTime.now().minute - 5) {
+          Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Selected end time has passed.')));
           return false;
         } else {
           return true;
@@ -139,14 +158,21 @@ class ShiftState extends State<CreateShift> {
                 MAX_SHIFT_LENGTH)) {
           midnightFlag = true;
           return true;
-        } else if (endFlag && selectedStartDateTime.hour == selectedEndDateTime.hour &&
+        } else if(endFlag && selectedEndDateTime.hour < selectedStartDateTime.hour &&
+            (((24 - selectedStartDateTime.hour) + selectedEndDateTime.hour) >=
+                MAX_SHIFT_LENGTH)){
+          Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Maximum shift length of 8 hours.')));
+          return false;
+        }else if (endFlag && selectedStartDateTime.hour == selectedEndDateTime.hour &&
             selectedStartDateTime.minute < selectedEndDateTime.minute) {
+          Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Selected time has passed')));
           return false;
         } else {
           return true;
         }
       }
     } else {
+      Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('No chosen Date')));
       return false;
     }
   }
