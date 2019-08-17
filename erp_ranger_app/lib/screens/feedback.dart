@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:erp_ranger_app/services/patrolData.dart';
 import 'package:erp_ranger_app/services/tracker.dart';
+import 'package:erp_ranger_app/screens/patrol.dart';
+import 'package:erp_ranger_app/services/auth.dart';
 
 class FeedbackScreen extends StatefulWidget {
   @override
@@ -14,9 +16,10 @@ class FeedbackState extends State<FeedbackScreen> {
   final TextEditingController _feedbackTextFieldController = new TextEditingController();
   DateTime _now;
   DateTime _start;
-  int _points=10;//will get from app user data
+  int _points=0;//will get from app user data
   String _feedbackDetails;
-  bool loaded=false;
+  bool _loaded=false;
+  bool _sent=false;
 
   FeedbackState()
   {
@@ -25,14 +28,42 @@ class FeedbackState extends State<FeedbackScreen> {
     }));
   }
 
+  String _displayDateTime(DateTime t) {
+    if (t != null) {
+      if (t.minute == 0) {
+        return t.hour.toString() + ":00";
+      } else if (t.minute < 10) {
+        return t.hour.toString() + ":0" + t.minute.toString();
+      } else {
+        return t.hour.toString() + ":" + t.minute.toString();
+      }
+    } else {
+      return "";
+    }
+  }
+
   Future<DateTime> _getPatrolStart() async {
     String patrol = await patrolData.getPatrolId();
     var document = await Firestore.instance.collection('patrol').document(patrol).get();
     _start = document['start'].toDate();
+    await _getPatrolPoints();
     setState(() {
-      loaded=true;
+      _loaded=true;
     });
     return _start;
+  }
+
+  Future<void> _getPatrolPoints() async {
+    String user = await Auth().getUserUid();
+    QuerySnapshot querySnapshot = await Firestore.instance.collection('marker_log').where('time', isGreaterThanOrEqualTo: _start).getDocuments();
+    List<DocumentSnapshot> documentList = querySnapshot.documents;
+    int count=0;
+    documentList.forEach((DocumentSnapshot document){
+      if(document['user']==user) {
+        count += document['reward'];
+      }
+    });
+    _points=count;
   }
 
   void _performFeedback() async {
@@ -45,8 +76,11 @@ class FeedbackState extends State<FeedbackScreen> {
     await Firestore.instance.collection('patrol').document(patrol).updateData({'end': _now});
     _feedbackTextFieldController.clear();
     await patrolData.setPatrolId('');
-    patrolData.isOnPatrol=false;
+    patrolData.setIsOnPatrol(false);
     Tracker.stopTracking();
+    setState(() {
+      _sent=true;
+    });
   }
 
   @override
@@ -67,9 +101,10 @@ class FeedbackState extends State<FeedbackScreen> {
           if (i == 0) {
             return new Column(
               children: <Widget>[
-                _showScore(),
-                _showFeedbackTextField(),
-                _showFeedbackButton()
+                this._sent == false ? _showScore() : new Container(),
+                this._sent == false ? _showFeedbackTextField() : new Container(),
+                this._sent == false ? _showFeedbackButton() : new Container(),
+                this._sent == true ? _showSentFeedback() : new Container(),
               ],
             );
           }
@@ -80,23 +115,21 @@ class FeedbackState extends State<FeedbackScreen> {
 
   Widget _showScore() {
     _now = new DateTime.now();
-    if(!loaded)
+    if(!_loaded)
     {
       _getPatrolStart();
     }
-    if(loaded) {
+    if(_loaded) {
       return RichText(
           text: new TextSpan(
               style: new TextStyle(
                   fontSize: 20.0,
-                  color: Colors.blue
+                  color: Colors.black
               ),
               children: <TextSpan>[
                 new TextSpan(
                     text: 'You scored ' + _points.toString() + ' between ' +
-                        _start.hour.toString() + ':' +
-                        _start.minute.toString() + ' and ' +
-                        _now.hour.toString() + ':' + _now.minute.toString())
+                        _displayDateTime(_start) + ' and ' + _displayDateTime(_now))
               ]
           )
       );
@@ -149,10 +182,9 @@ class FeedbackState extends State<FeedbackScreen> {
             height: 40.0,
             child: new RaisedButton(
                 elevation: 5.0,
-                color: Colors.blue,
                 shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(30.0)
-                ),
+                    borderRadius: new BorderRadius.circular(5.0)),
+                color: Color.fromRGBO(18, 27, 65, 1.0),
                 child: Text(
                     'Send Feedback',
                     style: TextStyle(
@@ -164,5 +196,22 @@ class FeedbackState extends State<FeedbackScreen> {
             )
         )
     );
+  }
+
+  Widget _showSentFeedback() {
+    Widget sentFeedback = Padding(
+      padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+      child: Container(
+        alignment: Alignment.center,
+        child: Text(
+          "Sent Feedback",
+          style: TextStyle(
+              fontSize: 20.0,
+              color: Colors.black
+          ),
+        ),
+      ),
+    );
+    return sentFeedback;
   }
 }

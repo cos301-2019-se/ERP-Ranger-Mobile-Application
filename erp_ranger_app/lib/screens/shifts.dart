@@ -1,10 +1,8 @@
 
 import 'package:erp_ranger_app/components/drawer.dart';
 import 'package:flutter/material.dart';
-
-import './ShiftsScreens/allShifts.dart';
-import './ShiftsScreens/myShifts.dart';
-
+import 'package:erp_ranger_app/screens/createShift.dart';
+import 'package:erp_ranger_app/screens/viewShift.dart';
 
 class ShiftsScreen extends StatefulWidget {
 
@@ -30,15 +28,15 @@ class ShiftsState extends State<ShiftsScreen> {
         child: new Scaffold(
           appBar: TabBar(
             tabs: [
-              Tab(text: 'My Shifts'),
-              Tab(text: 'All Shifts')
+              Tab(text: 'Book a Shift'),
+              Tab(text: 'My Shifts')
             ]
           ),
           backgroundColor: Color.fromRGBO(18, 27, 65, 1.0),
           body: TabBarView(
             children: [
-              MyShifts(),
-              AllShifts()
+              CreateShift(),
+              ViewShift()
             ],
           ),
         )

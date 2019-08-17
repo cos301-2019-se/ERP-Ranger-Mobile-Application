@@ -9,7 +9,7 @@ import { UserService } from '../../../../services/user.service';
 })
 export class UserListComponent implements OnInit {
   userArr: User[] =[];
-  displayedColumns: string[] = ['id','name','number','email','active','role'];
+  displayedColumns: string[] = ['id','name','number','email','active','role','edit'];
   constructor(private userService : UserService) { }
 
   ngOnInit() {
@@ -40,5 +40,6 @@ interface User{
   number:string,
   email:string,
   active:boolean,
-  role:string
+  role:string,
+  edit?
 }
