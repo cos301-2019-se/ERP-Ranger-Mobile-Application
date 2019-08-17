@@ -10,6 +10,7 @@ import 'package:erp_ranger_app/screens/markers.dart';
 import 'package:erp_ranger_app/screens/patrol.dart';
 import 'package:erp_ranger_app/screens/shifts.dart';
 import 'package:erp_ranger_app/screens/leaderboard.dart';
+import 'package:erp_ranger_app/screens/ranger.dart';
 import 'dart:async';
 import 'package:erp_ranger_app/services/patrolData.dart';
 
@@ -242,7 +243,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               alignment: Alignment.center,
               decoration: new BoxDecoration(
                 image: new DecorationImage(
-                  image: new AssetImage('assets/images/2.png'),
+                  image: new AssetImage('assets/images/stopwatch.png'),
                   fit: BoxFit.contain,
                 ),
               ),
@@ -339,7 +340,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           icon: Icon(Icons.message,color: Colors.white),
                           iconSize: 48.0,
                           onPressed: () {
-                            _openScreen("Report");
+                            _openScreen("Reports");
                           }),
                       Text('Reports',style:TextStyle(fontSize: 20.0,color: Colors.white))
                     ],
@@ -625,31 +626,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }*/
 
   void _openScreen(String title) {
-    if (title == "Shifts") {
-      //Navigator.pop(context);
-      Navigator.push(context, new MaterialPageRoute(
-          builder: (context) => new ShiftsScreen()));
-    } else if (title == "Reports"){
-      //Navigator.pop(context);
-      Navigator.push(context, new MaterialPageRoute(
-          builder: (context) => new ReportScreen()));
-    /*} else if (title == "View Assets") {
-      //Navigator.pop(context);
-      Navigator.push(context, new MaterialPageRoute(
-          builder: (context) => new AssetsScreen(myAssets: false)));*/
-    } else if (title == "Log Feedback") {
-      Navigator.push(context, new MaterialPageRoute(
-          builder: (context) => new FeedbackScreen()));
-    } else if (title == "Markers") {
+    if (title == "Markers") {
       Navigator.push(context, new MaterialPageRoute(
           builder: (context) => new MarkersScreen()));
-    } else if (title == "Patrol") {
+    } else if (title == "Reports"){
       Navigator.push(context, new MaterialPageRoute(
-          builder: (context) => new PatrolScreen()));
+          builder: (context) => new ReportScreen()));
+    } else if (title == "Shifts") {
+      Navigator.push(context, new MaterialPageRoute(
+      builder: (context) => new ShiftsScreen()));
     } else if (title == "Leaderboard") {
       Navigator.push(context, new MaterialPageRoute(
           builder: (context) => new LeaderboardScreen()));
-    }
+    } else if (title == "Rangers") {
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new RangersScreen()));
+    }/* else if (title == "Patrol") {
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new PatrolScreen()));
+      } else if (title == "View Assets") {
+      //Navigator.pop(context);
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new AssetsScreen(myAssets: false)));
+      } else if (title == "Log Feedback") {
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new FeedbackScreen()));
+      }*/
   }
 
   /*Card makeDashboardItem(String title, IconData icon) {

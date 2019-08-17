@@ -86,18 +86,15 @@ class RangersState extends State<RangersScreen> {
     List<Widget> entries = new List<Widget>();
     QuerySnapshot userQuerySnapshot = await _firestore.collection('users').getDocuments();
     List<DocumentSnapshot> userDocumentList = userQuerySnapshot.documents;
+    userDocumentList.removeWhere((a)=>a.data['role']=='Admin');
+    userDocumentList.removeWhere((a)=>a.data['points']==null);
+    userDocumentList.sort((a,b)=>(b.data['points'].compareTo(a.data['points'])));
 
     QuerySnapshot patrolQuerySnapshot = await Firestore.instance.collection('patrol').where('park', isEqualTo: await Park.getParkId()).getDocuments();
     List<DocumentSnapshot> patrolDocumentList = patrolQuerySnapshot.documents;
     patrolDocumentList.removeWhere((a)=>a.data['end']!=null);
 
-    print('user:'+userDocumentList.length.toString());
-    print('patrol:'+patrolDocumentList.length.toString());
-
     bool alternate = true;
-    patrolDocumentList.forEach((document)=>{
-      print(document.data['end'])
-    });
 
     for(DocumentSnapshot userDocument in userDocumentList) {
       if(patrolDocumentList.firstWhere((patrol)=>patrol.data['user']==userDocument.data['uid'], orElse: () => null)!=null)
