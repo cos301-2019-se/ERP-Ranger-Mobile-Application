@@ -8,6 +8,7 @@
           <div> <h2 id="titlename"></h2></div>
           </div>
           <div id="image-div" class="img-icon" ><img (onload)="showImg()" id="picture" src="" style="display:hidden;">
+            <label for="img-input" class="custom-upload"><mat-icon>cloud_upload</mat-icon>Upload Picture</label>
             <input  type="file" id="img-input" accept="image/" (change)="onFileSelected($event)">
           </div>
         </div>
@@ -32,6 +33,7 @@
           </div>
           <div class="form-group">
             <mat-form-field appearance="outline">
+              <mat-icon matPrefix>phone</mat-icon>
               <mat-label>Number</mat-label>
               <input matInput placeholder="Number" type="text" id="number" class="form-control" formControlName="number" required>
               <mat-error *ngIf="editForm.get('name').hasError('required')">Number is required.</mat-error>
@@ -57,7 +59,7 @@
           </div>
 
         </div>
-        <button mat-raised-button color="primary" type="submit" class="button" [disabled]="editForm.invalid" class="register-button">Apply Changes</button>
+        <button mat-raised-button color="primary" class="large" type="submit" class="button" [disabled]="editForm.invalid" class="register-button">Apply Changes</button>
         
         
       </form>

@@ -7,10 +7,55 @@
   }
   
 .img-icon{
+  display: inline-block;
   position: relative;
-  width:40%;
+  width:20%;
   top: 2%;
   left:60%;
+}
+
+#img-input{
+  display: none;
+}
+.custom-upload mat-icon{
+  padding-right: 5px;
+  color: #121B42;
+}
+.custom-upload{
+  border:1px solid #ccc;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  cursor: pointer;
+
+}
+
+mat-card.content-card.mat-elevation-z8{
+  width: 80%
+
+}
+
+mat-card .form-group mat-label{
+  font-size: 20px;
+}
+
+mat-card .form-group input{
+  font-size: 23px;
+  color:rgba(0,0,0, 0.7)
+}
+
+.raised-button{
+  padding:15px;
+  font-size:20px;
+  background-color: #121B42;
+  color:white;
+  border:0px;
+  border-radius: 7px;
+}
+
+.right-button{
+
 }
 
 .img-icon img{
@@ -23,11 +68,16 @@
   position: relative;
   padding-bottom: 20px;
   width:100%;
-  min-height: 80px;
+  min-height: 200px;  
   overflow: hidden;
 }
 .header-text{
-  position: fixed;
+  // position: fixed;
+  position: relative;
+  top: 0px;
+  width:20%;
+  vertical-align: top;
+  display: inline-block;
 }
   
   .content-card {
@@ -42,6 +92,9 @@
   .login-logo {
     width: 200px;
     margin-bottom: 15px;
+  }
+  h2{
+    font-size: 30px;
   }
   
   h3 {
