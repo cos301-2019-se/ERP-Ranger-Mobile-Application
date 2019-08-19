@@ -32,4 +32,8 @@ export class UserService {
     return this.fireStore.collection("users");
   }
 
+  getUserLeaderboardData() {
+    return this.fireStore.collection("users").snapshotChanges();
+  }
+
 }
