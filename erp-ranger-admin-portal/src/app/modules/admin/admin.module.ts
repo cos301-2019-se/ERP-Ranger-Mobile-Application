@@ -27,17 +27,17 @@ import { MatTableModule } from '@angular/material';
 import { RewardListComponent } from './pages/reward-list/reward-list.component';
 import { AddRewardComponent } from './pages/add-reward/add-reward.component';
 import { EditUserComponent } from './pages/edit-user/edit-user.component';
-
-
-
-
-
+import { NotificationListComponent } from './pages/notification-list/notification-list.component';
+import { ReportTypeNewComponent } from './pages/report-type-new/report-type-new.component';
+import { ReportTypeUpdateComponent } from './pages/report-type-update/report-type-update.component';
 
 @NgModule({
 
-  declarations: [DashboardComponent, ReportDetailComponent, ShiftFeedbackComponent, 
-    ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, AddMarkerComponent, ReportOverviewComponent,AddUserComponent, UserPositionsComponent,UserListComponent, RewardListComponent, AddRewardComponent, EditUserComponent],
-
+  declarations: [DashboardComponent, ReportDetailComponent, ShiftFeedbackComponent,
+    ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, AddMarkerComponent,
+    ReportOverviewComponent, AddUserComponent, UserPositionsComponent, UserListComponent, RewardListComponent,
+    AddRewardComponent, EditUserComponent, NotificationListComponent, ReportTypeNewComponent, ReportTypeUpdateComponent
+  ],
   imports: [
     CommonModule,
     FormsModule,

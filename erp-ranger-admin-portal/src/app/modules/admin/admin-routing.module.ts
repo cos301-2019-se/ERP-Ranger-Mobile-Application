@@ -15,6 +15,9 @@ import { UserListComponent } from './pages/user-list/user-list.component'
 import { RewardListComponent } from './pages/reward-list/reward-list.component';
 import { AddRewardComponent } from './pages/add-reward/add-reward.component';
 import { EditUserComponent } from './pages/edit-user/edit-user.component';
+import { NotificationListComponent } from './pages/notification-list/notification-list.component';
+import { ReportTypeNewComponent } from './pages/report-type-new/report-type-new.component';
+import { ReportTypeUpdateComponent } from './pages/report-type-update/report-type-update.component';
 
 
 const routes: Routes = [
@@ -36,7 +39,7 @@ const routes: Routes = [
     component: UserListComponent,
   },
   {
-    path: 'user/:id',    
+    path: 'user/:id',
     component: EditUserComponent
   },
   {
@@ -82,6 +85,18 @@ const routes: Routes = [
   {
     path: 'report/:id',
     component: ReportDetailComponent
+  },
+  {
+    path: 'notifications',
+    component: NotificationListComponent
+  },
+  {
+    path: 'type/new',
+    component: ReportTypeNewComponent
+  },
+  {
+    path: 'type/:id',
+    component: ReportTypeUpdateComponent
   },
   {
     path: 'dashboard',

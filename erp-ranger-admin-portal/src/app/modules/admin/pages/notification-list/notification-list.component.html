@@ -1,0 +1,95 @@
+<mat-tab-group mat-stretch-tabs class="example-stretched-tabs mat-elevation-z4">
+  <mat-tab label="Report Types">
+    <div class="content">
+      <div *ngIf="reportTypes">
+        <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+          <!-- Importance Column -->
+          <ng-container matColumnDef="importance">
+            <mat-header-cell *matHeaderCellDef>Importance</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.importance }}
+            </mat-cell>
+          </ng-container>
+
+          <!-- Type Column -->
+          <ng-container matColumnDef="type">
+            <mat-header-cell *matHeaderCellDef>Type</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.type }}
+            </mat-cell>
+          </ng-container>
+
+          <!-- Email Column -->
+          <ng-container matColumnDef="email">
+            <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <mat-icon *ngIf="element.methods['email']">check</mat-icon>
+              <mat-icon *ngIf="!element.methods['email']">close</mat-icon>
+            </mat-cell>
+          </ng-container>
+
+          <!-- SMS Column -->
+          <ng-container matColumnDef="sms">
+            <mat-header-cell *matHeaderCellDef>SMS</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <mat-icon *ngIf="element.methods['sms']">check</mat-icon>
+              <mat-icon *ngIf="!element.methods['sms']">close</mat-icon>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Web Column -->
+          <ng-container matColumnDef="web">
+            <mat-header-cell *matHeaderCellDef>Web</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <mat-icon *ngIf="element.methods['web']">check</mat-icon>
+              <mat-icon *ngIf="!element.methods['web']">close</mat-icon>
+            </mat-cell>
+          </ng-container>
+
+          <!-- API Column -->
+          <ng-container matColumnDef="api">
+            <mat-header-cell *matHeaderCellDef>API</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <mat-icon *ngIf="element.methods['api']">check</mat-icon>
+              <mat-icon *ngIf="!element.methods['api']">close</mat-icon>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Edit Column -->
+          <ng-container matColumnDef="edit">
+            <mat-header-cell *matHeaderCellDef>Edit</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <a routerLink="/admin/type/{{ element.id }}">
+                <button mat-raised-button color="primary" class="edit-button">Edit</button>
+              </a>
+              <button mat-raised-button color="warn" (click)="deleteReportType(element.id)">Delete</button>
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+      </div>
+    </div>
+    <div class="fab-button">
+      <a routerLink="/admin/type/new">
+        <button mat-fab color="primary">
+          <mat-icon>add</mat-icon>
+        </button>
+      </a>
+    </div>
+  </mat-tab>
+  <mat-tab label="Report Recipients">
+    <div>
+
+    </div>
+    <div class="fab-button">
+      <a routerLink="/admin/">
+        <button mat-fab color="primary">
+          <mat-icon>add</mat-icon>
+        </button>
+      </a>
+    </div>
+  </mat-tab>
+</mat-tab-group>
