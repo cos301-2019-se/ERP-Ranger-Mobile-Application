@@ -1,0 +1,9 @@
+<div class="page-container">
+    <mat-card class="content-card mat-elevation-z8 animated slideInUp">
+      <mat-card-content>
+        <li *ngFor="let r of report">
+          {{ r.payload.doc.data().points }}
+        </li>
+      </mat-card-content>
+    </mat-card>
+</div>
