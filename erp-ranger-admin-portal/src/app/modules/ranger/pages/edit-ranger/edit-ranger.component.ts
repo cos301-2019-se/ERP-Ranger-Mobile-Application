@@ -3,6 +3,12 @@ import { ActivatedRoute } from "@angular/router";
 import { UserService } from 'src/app/services/user.service';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { FirebaseStorage } from '@angular/fire';
+import * as firebase from 'firebase';
+import { FormGroupExtension, RxFormBuilder } from '@rxweb/reactive-form-validators';
+import { formDirectiveProvider } from '@angular/forms/src/directives/ng_form';
+import { fromRef } from '@angular/fire/firestore';
+
 import { AngularFireAuth } from '@angular/fire/auth';
 
 @Component({

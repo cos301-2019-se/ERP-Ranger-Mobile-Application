@@ -7,6 +7,9 @@ import { NavComponent } from './components/nav/nav.component';
 import { MatTableModule } from '@angular/material';
 import { MaterialModule } from 'src/app/material.module';
 import { EditRangerComponent } from './pages/edit-ranger/edit-ranger.component';
+import {FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
 
 @NgModule({
   declarations: [ProfileComponent, NavComponent, EditRangerComponent],
@@ -14,7 +17,11 @@ import { EditRangerComponent } from './pages/edit-ranger/edit-ranger.component';
     CommonModule,
     RangerRoutingModule,
     MatTableModule,
-    MaterialModule
+    MaterialModule,
+    FormsModule,
+    NgbModalModule,
+    ReactiveFormsModule,
+    RxReactiveFormsModule
   ]
 })
 export class RangerModule { }
