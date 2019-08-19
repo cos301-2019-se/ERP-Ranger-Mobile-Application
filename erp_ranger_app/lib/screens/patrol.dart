@@ -68,7 +68,7 @@ class PatrolState extends State<PatrolScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
-        title: Text("Patrol"),
+        title: Text("ERP Ranger Mobile App"),
         elevation: .1,
         backgroundColor: Color.fromRGBO(18, 27, 65, 1.0),
       ),
