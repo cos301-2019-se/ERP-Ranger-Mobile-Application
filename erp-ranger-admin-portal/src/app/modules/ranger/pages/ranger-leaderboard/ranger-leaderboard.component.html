@@ -1,9 +1,18 @@
 <div class="page-container">
     <mat-card class="content-card mat-elevation-z8 animated slideInUp">
       <mat-card-content>
-        <li *ngFor="let r of report">
-          {{ r.payload.doc.data().points }}
-        </li>
-      </mat-card-content>
-    </mat-card>
+<div class="leaderboard">
+    <ol>
+        <ng-container *ngFor="let r of report">
+            <li *ngIf="r.role == 'Ranger'">
+             <mark> {{ r.name }} </mark> 
+             <small> {{ r.points }} </small>
+            </li>
+    </ng-container>
+      </ol>
+  </div>
+</mat-card-content>
+</mat-card>
 </div>
+  
+  

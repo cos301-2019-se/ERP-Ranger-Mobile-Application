@@ -33,7 +33,7 @@ export class UserService {
   }
 
   getUserLeaderboardData() {
-    return this.fireStore.collection("users").snapshotChanges();
+    return this.fireStore.collection("users").valueChanges();
   }
 
 }

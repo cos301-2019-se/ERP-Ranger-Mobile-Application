@@ -22,7 +22,6 @@ export class RangerLeaderboardComponent implements OnInit {
   displayDetails() {
     this.users.getUserLeaderboardData().subscribe(result => {
       this.report = result;
-      console.log(this.report);
     });
   }
 }
