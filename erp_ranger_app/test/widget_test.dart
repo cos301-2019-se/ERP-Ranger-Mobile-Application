@@ -8,6 +8,7 @@ import 'widget/login_test.dart' as login_test;
 import 'widget/dashboard_test.dart' as dashboard_test;
 import 'widget/report_test.dart' as report_test;
 import 'widget/shifts_test.dart' as shifts_test;
+import 'widget/feedback_test.dart' as feedback_test;
 
 void main() {
 
@@ -19,6 +20,7 @@ void main() {
     //asset_test.main();
     //assets_test.main();
     end_shift_test.main();
+    feedback_test.main();
   });
 
 }
