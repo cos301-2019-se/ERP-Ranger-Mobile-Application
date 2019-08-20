@@ -28,8 +28,16 @@ export class UserService {
     let doc = this.fireStore.collection("users").doc(uid);
   }
 
+
+  // Get all users stored in the database
   getUsers(){
     return this.fireStore.collection("users");
+  }
+
+
+  // Get all users from the database and sort the result according to points earned by each ranger
+  getUserLeaderboardData() {
+    return this.fireStore.collection("users", ref => ref.orderBy("points")).valueChanges();
   }
 
 }

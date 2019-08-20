@@ -58,8 +58,15 @@ class userData {
     else {
       Auth _tempAuth = new Auth();
       String user = await _tempAuth.getUserUid();
-      var ref = FirebaseStorage.instance.ref().child('users/'+user+'/'+user+'.jpg');
-      var url = await ref.getDownloadURL();
+      var ref = FirebaseStorage.instance.ref().child('users/'+user+'/'+user);
+      var url;
+      try{
+        url = await ref.getDownloadURL();
+      }
+      catch(e){
+        ref = FirebaseStorage.instance.ref().child('users/default/default.png');// + document.data['uid'] + '/' + document.data['uid'] + '.jpg');
+        url = await ref.getDownloadURL();
+      }
       _image = NetworkImage(url);
       return _image;
     }

@@ -26,7 +26,7 @@ import { UserListComponent } from './pages/user-list/user-list.component';
 import { MatTableModule } from '@angular/material';
 import { RewardListComponent } from './pages/reward-list/reward-list.component';
 import { AddRewardComponent } from './pages/add-reward/add-reward.component';
-import { EditUserComponent } from './pages/edit-user/edit-user.component;
+import { EditUserComponent } from './pages/edit-user/edit-user.component';
 
 
 

@@ -10,6 +10,7 @@ import 'package:erp_ranger_app/services/auth.dart';
 import 'package:erp_ranger_app/services/park.dart';
 import 'package:erp_ranger_app/screens/dashboard.dart';
 import 'package:compressimage/compressimage.dart';
+import 'package:erp_ranger_app/services/auth.dart';
 
 class LeaderboardScreen extends StatefulWidget {
   @override
@@ -70,106 +71,101 @@ class LeaderboardState extends State<LeaderboardScreen> {
   }
 
   void _fetchLeaderboardEntries() async {
+    String user = await Auth().getUserUid();
     List<Widget> entries = new List<Widget>();
     QuerySnapshot querySnapshot = await _firestore.collection('users').getDocuments();
     List<DocumentSnapshot> documentList = querySnapshot.documents;
     
     documentList.removeWhere((a)=>a.data['role']=='Admin');
+    documentList.removeWhere((a)=>a.data['points']==null);
     documentList.sort((a,b)=>(b.data['points'].compareTo(a.data['points'])));
     
     bool alternate = true;
     var pos = 1;
 
     for(DocumentSnapshot document in documentList)/*documentList.forEach((DocumentSnapshot document)*/ {
+      print('users/'+document.data['uid']+'/'+document.data['uid']);
       if(document.data['role']=='Ranger')
       {
-        var ref = FirebaseStorage.instance.ref().child('users/'+document.data['uid']+'/'+document.data['uid']+'.jpg');
-        var url = await ref.getDownloadURL();
-        if(alternate) {
-          entries.add(
-              Card(
-                  color: Color.fromRGBO(154, 126, 97, 1),
-                  child: ListTile(
-                    leading: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Padding(
-                              padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-                              child: Text(
-                                  pos.toString(),
-                                  style: TextStyle(
-                                      fontSize: 30
-                                  )
-                              )
-                          ),
-                          Padding(
-                              padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                              child: CircleAvatar(
-                                backgroundImage: NetworkImage(url),
-                                backgroundColor: Colors.transparent,
-                              )
-                          ),
-                        ]
-                    ),
-                    title: new Text(
-                      document.data['name'],
-                      style: TextStyle(
-                          fontSize: 20
-                      ),
-                    ),
-                    trailing: new Text(
-                      document.data['points'].toString(),
-                      style: TextStyle(
-                          fontSize: 20
-                      ),
-                    ),
-                  )
-              )
-          );
-          alternate=false;
-        } else {
-          entries.add(
-              Card(
-                  color: Color.fromRGBO(184, 156, 127, 1),
-                  child: ListTile(
-                    leading: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Padding(
-                              padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-                              child: Text(
-                                  pos.toString(),
-                                  style: TextStyle(
-                                      fontSize: 30
-                                  )
-                              )
-                          ),
-                          Padding(
-                              padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                              child: CircleAvatar(
-                                backgroundImage: NetworkImage(url),
-                                backgroundColor: Colors.transparent,
-                              )
-                          ),
-                        ]
-                    ),
-                    title: new Text(
-                      document.data['name'],
-                      style: TextStyle(
-                          fontSize: 20
-                      ),
-                    ),
-                    trailing: new Text(
-                      document.data['points'].toString(),
-                      style: TextStyle(
-                          fontSize: 20
-                      ),
-                    ),
-                  )
-              )
-          );
-          alternate=true;
+        var ref = FirebaseStorage.instance.ref().child('users/'+document.data['uid']+'/'+document.data['uid']);
+        var url;
+        try
+        {
+          url =  await ref.getDownloadURL();
         }
+        catch(e)
+        {
+            ref = FirebaseStorage.instance.ref().child('users/default/default.png');// + document.data['uid'] + '/' + document.data['uid'] + '.jpg');
+            url = await ref.getDownloadURL();
+        }
+        var image = NetworkImage(url);
+
+        var backColor;
+        var textColor;
+        if(document.data['uid']!=user){
+          if(alternate) {
+            backColor = Color.fromRGBO(154, 126, 97, 1);
+            textColor = Colors.black;
+            alternate=false;
+          }else {
+            backColor = Color.fromRGBO(184, 156, 127, 1);
+            textColor = Colors.black;
+            alternate=true;
+          }
+        }
+        else{
+          backColor = Color.fromRGBO(18, 27, 65, 1.0);
+          textColor = Colors.white;
+          alternate=(!alternate);
+        }
+        entries.add(
+            Card(
+                color: backColor,
+                child: ListTile(
+                  leading: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                            child: Text(
+                                pos.toString(),
+                                style: TextStyle(
+                                    fontSize: 30,
+                                    color: textColor
+                                )
+                            )
+                        ),
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                            child: GestureDetector(
+                              child: CircleAvatar(
+                                backgroundImage: image,
+                                backgroundColor: Colors.transparent,
+                              ),
+                              onTap: (){
+                                _displayImage(image,document.data['name']);
+                              },
+                            )
+                        ),
+                      ]
+                  ),
+                  title: new Text(
+                    document.data['name'],
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: textColor
+                    ),
+                  ),
+                  trailing: new Text(
+                    document.data['points'].toString(),
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: textColor
+                    ),
+                  ),
+                )
+            )
+        );
         pos++;
       }
     };
@@ -179,5 +175,23 @@ class LeaderboardState extends State<LeaderboardScreen> {
     );
       _loaded=true;
     });
+  }
+
+  void _displayImage(NetworkImage image,String user) async{
+    double width = MediaQuery.of(context).size.width;
+    showDialog(context: context, child:
+      SimpleDialog(
+        title: Text(
+          user,
+          style: TextStyle(
+            fontSize: 20.0,
+            color: Colors.black
+          )
+        ),
+        children: <Widget>[
+          Image(image: image)//,height: width/1.5,width: width/1.5,)
+        ],
+      )
+    );
   }
 }
