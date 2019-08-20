@@ -1,0 +1,33 @@
+<div class="page-container">
+  <mat-card class="content-card mat-elevation-z8 animated slideInUp">
+      <mat-card-content *ngIf="report">
+      <h1>
+        Ranger Details:  
+      </h1>
+      <br>
+      Ranger : {{ report.name }}
+      <br>
+      Number : {{ report.number }}
+      <br>
+      Email Address: {{ report.email }}
+      <br>
+      Point Balance : {{ report.points }}
+      <br>
+    <strong>  Has the following rewards available: </strong>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="content-card mat-elevation-z8 animated slideInUp">
+      <mat-card-content>
+        <ng-container *ngFor="let r of rewards">
+          <li>
+            Reward  Name: {{ r.payload.doc.data().name }}
+            <br>
+            Reward Cost: {{ r.payload.doc.data().cost }}
+            <br>
+            Reward URL : {{ r.payload.doc.data().url }}
+          </li>
+        </ng-container>
+      </mat-card-content>
+    </mat-card>
+</div>
