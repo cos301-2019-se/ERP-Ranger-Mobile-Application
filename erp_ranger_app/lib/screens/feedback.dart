@@ -76,7 +76,7 @@ class FeedbackState extends State<FeedbackScreen> {
     await Firestore.instance.collection('patrol').document(patrol).updateData({'end': _now});
     _feedbackTextFieldController.clear();
     await patrolData.setPatrolId('');
-    patrolData.setIsOnPatrol(false);
+    await patrolData.setIsOnPatrol(false);
     Tracker.stopTracking();
     setState(() {
       _sent=true;
