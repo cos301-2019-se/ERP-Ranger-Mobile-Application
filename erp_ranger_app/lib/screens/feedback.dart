@@ -1,3 +1,4 @@
+//displays the required field for the ranger to send feedback
 import 'package:erp_ranger_app/components/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -28,6 +29,7 @@ class FeedbackState extends State<FeedbackScreen> {
     }));
   }
 
+  //formats a string for time from a DateTime object
   String _displayDateTime(DateTime t) {
     if (t != null) {
       if (t.minute == 0) {
@@ -42,6 +44,7 @@ class FeedbackState extends State<FeedbackScreen> {
     }
   }
 
+  //fetches the patrol start time from firebase
   Future<DateTime> _getPatrolStart() async {
     String patrol = await patrolData.getPatrolId();
     var document = await Firestore.instance.collection('patrol').document(patrol).get();
@@ -53,6 +56,7 @@ class FeedbackState extends State<FeedbackScreen> {
     return _start;
   }
 
+  //fetches the patrol points from firebase
   Future<void> _getPatrolPoints() async {
     String user = await Auth().getUserUid();
     QuerySnapshot querySnapshot = await Firestore.instance.collection('marker_log').where('time', isGreaterThanOrEqualTo: _start).getDocuments();
@@ -66,6 +70,7 @@ class FeedbackState extends State<FeedbackScreen> {
     _points=count;
   }
 
+  //send feedback to firebase
   void _performFeedback() async {
     String patrol = await patrolData.getPatrolId();
     _now = new DateTime.now();
@@ -83,6 +88,7 @@ class FeedbackState extends State<FeedbackScreen> {
     });
   }
 
+  //creates feedback screen
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -113,6 +119,7 @@ class FeedbackState extends State<FeedbackScreen> {
     );
   }
 
+  //shows the rangers current score
   Widget _showScore() {
     _now = new DateTime.now();
     if(!_loaded)
@@ -153,6 +160,7 @@ class FeedbackState extends State<FeedbackScreen> {
     }
   }
 
+  //shows a text field for the feedback
   Widget _showFeedbackTextField() {
     return Container(
         padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
@@ -175,6 +183,7 @@ class FeedbackState extends State<FeedbackScreen> {
     );
   }
 
+  //shows a button to submit feedback
   Widget _showFeedbackButton() {
     return Padding(
         padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
@@ -198,6 +207,7 @@ class FeedbackState extends State<FeedbackScreen> {
     );
   }
 
+  //displays a confirmation message
   Widget _showSentFeedback() {
     Widget sentFeedback = Padding(
       padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
