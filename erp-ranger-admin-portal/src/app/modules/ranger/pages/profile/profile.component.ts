@@ -20,6 +20,8 @@ export class ProfileComponent implements OnInit {
     this.displayDetails();
   }
 
+
+  // Retrieve all user data for the user currently logged into their account
   displayDetails() {
     this.id = this.angularFireAuth.auth.currentUser.uid;
     this.profile.getUserDetails(this.id).subscribe(result => {
