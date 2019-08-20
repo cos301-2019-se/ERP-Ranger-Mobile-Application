@@ -1,3 +1,4 @@
+//The leaderboard displays a list of rangers ordered by their points
 import 'package:erp_ranger_app/components/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,6 +24,7 @@ class LeaderboardState extends State<LeaderboardScreen> {
   bool _loaded=false;
   ListView _leaderboard;
 
+  //creates the leaderboard screen
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -39,6 +41,7 @@ class LeaderboardState extends State<LeaderboardScreen> {
     );
   }
 
+  //shows the list of rangers
   Widget _showLeaderboard() {
     if(!_loaded)
     {
@@ -70,6 +73,7 @@ class LeaderboardState extends State<LeaderboardScreen> {
     }
   }
 
+  //fetches the data from firebase and creates listtiles for each ranger
   void _fetchLeaderboardEntries() async {
     String user = await Auth().getUserUid();
     List<Widget> entries = new List<Widget>();
@@ -177,6 +181,7 @@ class LeaderboardState extends State<LeaderboardScreen> {
     });
   }
 
+  //displays the image of the ranger
   void _displayImage(NetworkImage image,String user) async{
     double width = MediaQuery.of(context).size.width;
     showDialog(context: context, child:

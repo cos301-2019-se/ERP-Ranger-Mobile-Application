@@ -1,3 +1,4 @@
+//The map component displays a map with markers on it to show the different point
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -33,6 +34,7 @@ class MapState extends State<MapComponent> {
     _timer = Timer.periodic(Duration(seconds: 300), (Timer t)=>_updateMarkers());
   }
 
+  //creates the Map component
   @override
   build(context) {
     return Stack(
@@ -66,6 +68,7 @@ class MapState extends State<MapComponent> {
     );
   }
 
+  //A function to swap the map type
   void _changeMapType() {
     setState(() {
       _defaultMapType = _defaultMapType == MapType.normal ? MapType.hybrid : MapType.normal;
@@ -80,6 +83,7 @@ class MapState extends State<MapComponent> {
     });
   }
 
+  //moves the view to the location of the park
   _animateToPark() async {
     DocumentSnapshot document = await _firestore.collection('parks').document(await Park.getParkId()).get();
 
@@ -94,6 +98,7 @@ class MapState extends State<MapComponent> {
     );
   }
 
+  //updates the markers and adds them to the map
   void _updateMarkers() async {
     QuerySnapshot querySnapshot = await _firestore.collection('markers').getDocuments();
     List<DocumentSnapshot> documentList = querySnapshot.documents;
@@ -130,6 +135,7 @@ class MapState extends State<MapComponent> {
     });
   }
 
+  //opens a dialog screen allowing for the activation of a marker
   Future<void> _onMarkerTapped(String id, String name, int points, GeoPoint pos) async {
     switch (await showDialog(context: context, child:
     SimpleDialog(
@@ -215,6 +221,7 @@ class MapState extends State<MapComponent> {
     }
   }
 
+  //adsd the marker points to firebase
   void _logMarker(String id, GeoPoint pos) async{
     if(await patrolData.getIsOnPatrol()) {
       String user = await Auth().getUserUid();

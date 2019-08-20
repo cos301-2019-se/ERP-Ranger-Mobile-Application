@@ -10,14 +10,25 @@ import { RewardService } from '../../services/reward.service';
 })
 export class RewardListComponent implements OnInit {
   rewardArr: Reward[] =[];
+  refresher;
   displayedColumns: string[] = ['id','name','cost','url'];
   constructor(private rewardService : RewardService) { }
 
   ngOnInit() {
+    this.startRefresh();
     this.getUsers();
   }
 
+  startRefresh(){
+    this.refresher = setInterval(function(){this.userArr = this.userArr;},1000)
+  }
+
+  stopRefresh(){
+    this.refresher = clearInterval();
+  }
+
   getUsers(){
+    this.stopRefresh();
     let observer = this.rewardService.getRewards().ref
     .onSnapshot(querySnapshot => {
       querySnapshot.docChanges().forEach(change => {
@@ -29,6 +40,7 @@ export class RewardListComponent implements OnInit {
         }]
       })
     });
+    this.startRefresh();
   }
 
 }
