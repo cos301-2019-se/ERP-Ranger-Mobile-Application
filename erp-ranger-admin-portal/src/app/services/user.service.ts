@@ -48,6 +48,10 @@ export class UserService {
   }
 
   deleteUser(id : string){
+    this.fireStore.collection("users").doc(id).update({
+      active: false
+    })
+  }
      
 
     // var user = admin.auth().deleteUser(id)
@@ -58,6 +62,6 @@ export class UserService {
     //   console.log('Error deleting user:', error);
     // });
 
-  }
+  
 
 }

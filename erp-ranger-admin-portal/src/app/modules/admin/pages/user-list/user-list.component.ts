@@ -12,7 +12,7 @@ export class UserListComponent implements OnInit {
   userToDel;
   refresher;
   displayedColumns: string[] = ['id','name','number','email','active','role','points','remaining','edit',
-  //'delete'
+  'delete'
   ];
   constructor(private userService : UserService) { }
 
@@ -44,9 +44,10 @@ export class UserListComponent implements OnInit {
 
   deleteConfirm(user){
     this.userToDel = user;
-    console.log(this.findUserWithID(this.userToDel));
+    
     document.getElementById("overlay-confirm-delete").style.visibility = "visible";
     document.getElementById("delete-user").innerHTML=this.findUserWithID(this.userToDel)
+    
 
   }
 
@@ -57,6 +58,9 @@ export class UserListComponent implements OnInit {
 
   confirmedDelete(){
     this.userService.deleteUser(this.userToDel);
+    this.hideOverlay();
+    this.userArr= [];
+    this.getUsers();
   }
 
 
