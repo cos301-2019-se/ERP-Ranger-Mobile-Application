@@ -1,5 +1,6 @@
 
 export interface User {
+  remaining?: number;
   active: boolean;
   email: string;
   name: string;
