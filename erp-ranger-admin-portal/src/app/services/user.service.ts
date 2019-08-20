@@ -33,7 +33,7 @@ export class UserService {
   }
 
   getUserLeaderboardData() {
-    return this.fireStore.collection("users").valueChanges();
+    return this.fireStore.collection("users", ref => ref.orderBy("points")).valueChanges();
   }
 
 }
