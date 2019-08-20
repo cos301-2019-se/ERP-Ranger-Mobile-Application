@@ -81,7 +81,7 @@ class FeedbackState extends State<FeedbackScreen> {
     await Firestore.instance.collection('patrol').document(patrol).updateData({'end': _now});
     _feedbackTextFieldController.clear();
     await patrolData.setPatrolId('');
-    patrolData.setIsOnPatrol(false);
+    await patrolData.setIsOnPatrol(false);
     Tracker.stopTracking();
     setState(() {
       _sent=true;
@@ -93,7 +93,7 @@ class FeedbackState extends State<FeedbackScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: AppBar(
-        title: Text("Feedback"),
+        title: Text("ERP Ranger Mobile App"),
     elevation: .1,
     backgroundColor: Color.fromRGBO(18, 27, 65, 1.0),
     ),
