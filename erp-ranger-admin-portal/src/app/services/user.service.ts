@@ -43,20 +43,17 @@ export class UserService {
     let doc = this.fireStore.collection("users").doc(uid);
   }
 
+
+  // Get all users stored in the database
   getUsers(){
     return this.fireStore.collection("users");
   }
 
-  deleteUser(id : string){
-     
 
-    // var user = admin.auth().deleteUser(id)
-    // .then(function() {
-    //   console.log('Successfully deleted user');
-    // })
-    // .catch(function(error) {
-    //   console.log('Error deleting user:', error);
-    // });
+
+  // Get all users from the database and sort the result according to points earned by each ranger
+  getUserLeaderboardData() {
+    return this.fireStore.collection("users", ref => ref.orderBy("points")).valueChanges();
 
   }
 
