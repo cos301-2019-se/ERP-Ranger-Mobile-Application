@@ -1,3 +1,6 @@
+/*
+    The drawer component contains user details and links to all other screens
+ */
 import 'package:erp_ranger_app/screens/report.dart';
 import 'package:erp_ranger_app/screens/feedback.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +33,7 @@ class CustomDrawerState extends State<CustomDrawer> {
   bool _loaded=false;
   Widget _userDetails;
 
+  //and array describing the links to other screens that is used when creating their list tiles
   final drawerItems = [
     new DrawerItem("Home", Icons.home),
     new DrawerItem("Map", Icons.map),
@@ -43,6 +47,7 @@ class CustomDrawerState extends State<CustomDrawer> {
     //new DrawerItem("Patrol", Icons.visibility),
   ];
 
+  //used to select a screen to go to after clicking a link
   void _getDrawerItemWidget(String title) {
     if (title == "Home")  {
       Navigator.pop(context);
@@ -91,6 +96,7 @@ class CustomDrawerState extends State<CustomDrawer> {
       }*/
   }
 
+  //Creates the drawer widget
   @override
   Widget build(BuildContext context) {
     List<Widget> drawerOptions = [];
@@ -101,6 +107,7 @@ class CustomDrawerState extends State<CustomDrawer> {
         )
     );
 
+    //declares the list tiles for the links to other screens
     for (var i = 0; i < drawerItems.length; i++) {
       var d = drawerItems[i];
       drawerOptions.add(
@@ -113,6 +120,7 @@ class CustomDrawerState extends State<CustomDrawer> {
       );
     }
 
+    //declares and returns a drawer
     return new Drawer(
       child: new ListView(
         children: drawerOptions,
@@ -120,6 +128,7 @@ class CustomDrawerState extends State<CustomDrawer> {
     );
   }
 
+  //shows the users details or a loading circle
   Widget _showDetails() {
     if(!_loaded)
     {
@@ -148,6 +157,7 @@ class CustomDrawerState extends State<CustomDrawer> {
     }
   }
 
+  //fetches the user details
   void _getDetails() async {
     double width = MediaQuery.of(context).size.width;
     Widget details = new Column(
@@ -172,6 +182,7 @@ class CustomDrawerState extends State<CustomDrawer> {
     });
   }
 
+  //displays the a larger user image in a dialog when the user details are clicked
   void _displayImage() async{
     double width = MediaQuery.of(context).size.width;
     showDialog(context: context, child:
