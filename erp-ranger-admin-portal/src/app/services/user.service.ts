@@ -43,6 +43,8 @@ export class UserService {
     let doc = this.fireStore.collection("users").doc(uid);
   }
 
+
+  // Get all users stored in the database
   getUsers(){
     return this.fireStore.collection("users");
   }
@@ -54,13 +56,6 @@ export class UserService {
   }
      
 
-    // var user = admin.auth().deleteUser(id)
-    // .then(function() {
-    //   console.log('Successfully deleted user');
-    // })
-    // .catch(function(error) {
-    //   console.log('Error deleting user:', error);
-    // });
 
   
 
