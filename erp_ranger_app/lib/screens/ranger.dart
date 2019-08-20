@@ -1,3 +1,4 @@
+//The rangers screen displays a list of rangers currently in the park
 import 'package:erp_ranger_app/components/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,6 +23,7 @@ class RangersState extends State<RangersScreen> {
   bool _loaded=false;
   ListView _rangers;
 
+  //Creates ranger screen
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -50,6 +52,7 @@ class RangersState extends State<RangersScreen> {
     );
   }
 
+  //shows the list of rangers or a loading circle
   Widget _showRangers() {
     if(!_loaded)
     {
@@ -81,6 +84,7 @@ class RangersState extends State<RangersScreen> {
     }
   }
 
+  //Fetches the rangers from firebase and creates list tiles for them
   void _fetchRangersEntries() async {
     String user = await Auth().getUserUid();
     List<Widget> entries = new List<Widget>();
@@ -181,6 +185,7 @@ class RangersState extends State<RangersScreen> {
     });
   }
 
+  //Displays the profile image of the rangers
   void _displayImage(NetworkImage image,String user) async{
     showDialog(context: context, child:
     SimpleDialog(
