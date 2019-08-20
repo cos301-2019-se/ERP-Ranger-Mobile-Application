@@ -1,0 +1,21 @@
+<div class="page-container">
+  <mat-card class="content-card mat-elevation-z8 animated slideInUp">
+    <mat-card-content>
+      <div class="leaderboard">
+        <h1>
+          Ranger Leaderboard
+        </h1>
+        <ol>
+          <ng-container *ngFor="let r of report">
+            <li style="list-style-type: none" *ngIf="r.role == 'Ranger'">
+              <mark> {{ r.name }} </mark> 
+              <small> {{ r.points }} </small>
+            </li>
+          </ng-container>
+        </ol>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+  
+  

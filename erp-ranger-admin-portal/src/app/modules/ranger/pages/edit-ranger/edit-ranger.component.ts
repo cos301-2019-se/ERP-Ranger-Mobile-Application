@@ -30,6 +30,7 @@ export class EditRangerComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private users : UserService, private storage: AngularFireStorage, private angularFireAuth: AngularFireAuth) { }
 
+  // Construct an edit form to input new, updated data for the current user logged in
   ngOnInit() {
     this.editForm = new FormGroup({
       'email': new FormControl('', [

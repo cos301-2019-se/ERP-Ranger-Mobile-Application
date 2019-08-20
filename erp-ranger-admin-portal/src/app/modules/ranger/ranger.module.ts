@@ -10,9 +10,10 @@ import { EditRangerComponent } from './pages/edit-ranger/edit-ranger.component';
 import {FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
+import { RangerLeaderboardComponent } from './pages/ranger-leaderboard/ranger-leaderboard.component';
 
 @NgModule({
-  declarations: [ProfileComponent, NavComponent, EditRangerComponent],
+  declarations: [ProfileComponent, NavComponent, EditRangerComponent, RangerLeaderboardComponent],
   imports: [
     CommonModule,
     RangerRoutingModule,

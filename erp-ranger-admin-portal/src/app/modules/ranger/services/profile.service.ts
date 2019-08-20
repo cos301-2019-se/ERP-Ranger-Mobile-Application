@@ -13,6 +13,7 @@ export class ProfileService {
     return docRef;
   }
 
+  // Get all user data based on specific id
   getUserDetails(id: string) {
     return this.fireStore.collection('users').doc(id).valueChanges();
   }
