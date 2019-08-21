@@ -67,7 +67,6 @@ export class NotificationListComponent implements OnInit {
     this.reportReceiverService.getReportReceivers(park).subscribe((results) => {
       this.reportReceivers = [];
       for (let i = 0; i < results.length; i++) {
-        console.log(results[i].payload.doc.id);
         this.reportTypeService.readReportType(results[i].payload.doc.data()['type']).subscribe((result) => {
           this.reportReceivers[i] = {
             id: String(results[i].payload.doc.id),

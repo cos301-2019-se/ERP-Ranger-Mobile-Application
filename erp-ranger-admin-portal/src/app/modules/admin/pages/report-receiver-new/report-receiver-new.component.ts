@@ -113,7 +113,6 @@ export class ReportReceiverNewComponent implements OnInit {
   setDocId(event: MatOptionSelectionChange, key, id) {
     if (event.isUserInput) {
       this.docIds[key] = id;
-      console.log(id);
     }
   }
 
