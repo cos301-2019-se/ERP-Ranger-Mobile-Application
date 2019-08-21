@@ -17,7 +17,7 @@ export class AddUserComponent implements OnInit {
 
   constructor(private auth: CreateUserService) { }
 
-
+  //The formgroup is set with all different formcontrol types and validator requirements
   ngOnInit() {
     this.regForm = new FormGroup({
       'email': new FormControl('', [
@@ -40,7 +40,7 @@ export class AddUserComponent implements OnInit {
     
   }
 
-
+  //When the register button is clicked, calls the register createUser service to create a user
   register(){
     this.auth.register(
       this.regForm.get('email').value,

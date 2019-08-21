@@ -11,7 +11,12 @@ import { removeSummaryDuplicates } from '@angular/compiler';
   templateUrl: './user-positions.component.html',
   styleUrls: ['./user-positions.component.scss']
 })
+
+
+
+
 export class UserPositionsComponent implements OnInit {
+  
   lat : number = 0;
   lng : number =0  
   zoom: number= 12;
@@ -132,12 +137,16 @@ export class UserPositionsComponent implements OnInit {
     let observer = this.pService.getPositions().ref
     .onSnapshot(querySnapshot => {
         querySnapshot.docChanges().forEach(change => {
+          
         if(this.hasPos(change.doc.id)){
           this.deleteById(change.doc.id);
         }
         var nameID = change.doc.data().user;
         var parkID = change.doc.data().park;
-
+        if(nameID==null){
+          
+        }
+        else{
         let docRef = this.shifts.getUserName(nameID);     
         let getUser = docRef.get()
         .then(doc => {
@@ -188,7 +197,7 @@ export class UserPositionsComponent implements OnInit {
         });
 
 
-      })
+      }})
     })
   }
 }
@@ -199,6 +208,7 @@ interface posMarker{
   longitude:number,
   parkName: string,
   userID:string,
+  icon?:string,
   userName: string,
   time: Date
 }

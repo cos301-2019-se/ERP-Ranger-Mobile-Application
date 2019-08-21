@@ -29,7 +29,7 @@ export class UserService {
     });
     }
     else{
-      this.fireStore.collection("users").doc(uid).update({
+      this.fireStore.collection("users").doc(uid).set({
         active: active,
         email: email,
         name: name,
@@ -67,6 +67,8 @@ export class UserService {
   deleteUser(id : string){
     this.fireStore.collection("users").doc(id).update({
       active: false
+    }).then(function(){
+      location.reload();
     })
   }
      
