@@ -25,6 +25,8 @@ export class EditRangerComponent implements OnInit {
   number;
   role;
   active;
+  points;
+  remaining;
   imgFile = null;
   @ViewChild('formDir') formRef;
 
@@ -51,9 +53,20 @@ export class EditRangerComponent implements OnInit {
       'role': new FormControl('', [
         Validators.required,
       ]),
+      'points': new FormControl('', [
+        Validators.required,
+        Validators.pattern('^[0-9]*'),
+        
+      ]),
+      'remaining': new FormControl('', [
+        Validators.required,
+        Validators.pattern('^[0-9]*'),
+        
+      ]),
     });
     this.displayUser();
   }
+
 
   displayUser(){
     this.id = this.angularFireAuth.auth.currentUser.uid;
@@ -63,12 +76,21 @@ export class EditRangerComponent implements OnInit {
       this.number = result.payload.data().number;
       this.active = result.payload.data().active;
       this.role = result.payload.data().role;
+      this.points = result.payload.data().points;
+      this.remaining = result.payload.data().remaining;
       this.editForm.controls.email.setValue(this.email);
       this.editForm.controls.name.setValue(this.name);
+      try{
       document.getElementById("titlename").innerHTML= this.name;
+      }
+      catch(err){
+        
+      }
       this.editForm.controls.number.setValue(this.number);
       this.editForm.controls.active.setValue(this.active);
       this.editForm.controls.role.setValue(this.role);
+      this.editForm.controls.points.setValue(this.points);
+      this.editForm.controls.remaining.setValue(this.remaining);
 
       this.storage.ref('users/' + this.id + '/'+  this.id).getDownloadURL().subscribe( result => {
         this.profilePic = result;
@@ -78,7 +100,7 @@ export class EditRangerComponent implements OnInit {
       this.profilePic = "https://firebasestorage.googleapis.com/v0/b/erp-ranger-app.appspot.com/o/users%2Fdefault%2Fdefault.png?alt=media&token=fa61e670-6070-49b8-ac82-4dbb9161b39f";
       var picField = <HTMLImageElement>document.getElementById("picture");        
       picField.src = this.profilePic});
-    })
+    })    
     
     
     
@@ -114,6 +136,7 @@ export class EditRangerComponent implements OnInit {
       ref.put(this.imgFile);
   }
 
+  //checks to see if the form was changed
   detectChanges():boolean{
     let change = false;
     var activeBool = false;
@@ -124,7 +147,8 @@ export class EditRangerComponent implements OnInit {
     
     if((this.email == (<HTMLInputElement>document.getElementById("email")).value) && (this.name == (<HTMLInputElement>document.getElementById("name")).value) 
     &&(this.number == (<HTMLInputElement>document.getElementById("number")).value) && (this.active == activeBool)
-    &&(this.role == (<HTMLInputElement>document.getElementById("role")).value)){
+    &&(this.role == (<HTMLInputElement>document.getElementById("role")).value)&&(this.points == (<HTMLInputElement>document.getElementById("points")).value)
+    &&(this.remaining == (<HTMLInputElement>document.getElementById("remaining")).value)){
       change = false;
     }
     else{
@@ -134,6 +158,8 @@ export class EditRangerComponent implements OnInit {
       this.number = (<HTMLInputElement>document.getElementById("number")).value;
       this.role = (<HTMLInputElement>document.getElementById("role")).value;
       this.active = activeBool;
+      this.points = (<HTMLInputElement>document.getElementById("points")).value;
+      this.remaining = (<HTMLInputElement>document.getElementById("remaining")).value;
       
     }
     
@@ -141,4 +167,6 @@ export class EditRangerComponent implements OnInit {
     return change;
   }
 
+
+  
 }
