@@ -19,6 +19,7 @@ export class RangerLeaderboardComponent implements OnInit {
     this.displayDetails();
   }
 
+  // Retrieve all data in the user table, including current points scored by each ranger
   displayDetails() {
     this.users.getUserLeaderboardData().subscribe(result => {
       this.report = result;

@@ -1,6 +1,8 @@
 <div class="page-container">
   <mat-card class="content-card mat-elevation-z8 animated slideInUp">
       <mat-card-content *ngIf="report">
+          <div id="image-div" class="img-icon" ><img (onload)="showImg()" id="picture" src="" style="display:hidden;">
+          </div>
           <p>
             Ranger's name : <strong> {{ report.name }} </strong>
             <br>
