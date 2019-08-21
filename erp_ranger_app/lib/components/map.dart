@@ -221,7 +221,7 @@ class MapState extends State<MapComponent> {
     }
   }
 
-  //adsd the marker points to firebase
+  //adds the marker points to firebase
   void _logMarker(String id, GeoPoint pos) async{
     if(await patrolData.getIsOnPatrol()) {
       String user = await Auth().getUserUid();
@@ -239,6 +239,17 @@ class MapState extends State<MapComponent> {
         });
         //markersData.addMarker(id);
         _updateMarkers();
+        showDialog(context: context, child:
+        SimpleDialog(
+          title: new Text(
+              'Activated Marker',
+              style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.black
+              )
+          ),
+        )
+        );
       }
       else {
         showDialog(context: context, child:
@@ -246,6 +257,7 @@ class MapState extends State<MapComponent> {
           title: new Text(
               'You must be within 10m of the marker',
               style: TextStyle(
+                  fontSize: 20.0,
                   color: Colors.red
               )
           ),
