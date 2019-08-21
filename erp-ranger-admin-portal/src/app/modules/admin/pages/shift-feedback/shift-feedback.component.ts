@@ -52,7 +52,7 @@ export class ShiftFeedbackComponent implements OnInit {
   
   
  
-
+  //Fetches all the details about shift feedback documents and populates the events array which in turn populates the calendar
   displayShifts() {
     var i = 0;
     let observer = this.shifts.getFeedback().ref
@@ -61,7 +61,11 @@ export class ShiftFeedbackComponent implements OnInit {
         var patrolID :string;
         patrolID = change.doc.data().patrol;
         var feedBackInfo = change.doc.data().feedback;
-        console.log("Try here ->"+ patrolID);
+        
+        if(patrolID == null || patrolID ==""){
+
+        }
+        else{
         let docRef = this.shifts.getPatrol(patrolID);        
         let getPatrol = docRef.get()
         .then(doc => {
@@ -89,21 +93,9 @@ export class ShiftFeedbackComponent implements OnInit {
                     console.log("Park not found ");
                     
                   } else{     
-                    // console.log(change.doc.data());
-                    // console.log(doc.data());
-                    // console.log(parkDoc.data());
-                    
                     var parkName = parkDoc.data().name;
-                    var start = startTime.toDate();
-                   
+                    var start = startTime.toDate();                   
                     var end = endTime.toDate();
-                    // console.log(start);
-                    // console.log(end);
-                    
-                    // console.log("--------------------");
-                    // console.log(start,end,change.doc.id,userName,parkName, feedBackInfo);
-                    
-                    
                     this.addEventP(start,end,change.doc.id+ "," + userDoc.data().uid,userName,parkName, feedBackInfo);
                   }
                 })
@@ -122,7 +114,7 @@ export class ShiftFeedbackComponent implements OnInit {
         .catch(err => {
           console.log("Error getting document");         
         })
-      });
+      }});
     });
 
     
@@ -201,9 +193,6 @@ export class ShiftFeedbackComponent implements OnInit {
     var fid =  event.id.toString().substring(0,event.id.toString().indexOf(","));
     var uid = event.id.toString().substring(event.id.toString().indexOf(",")+1);
     let docRef = this.shifts.getFeedbackID(fid + ""); 
-      
-      console.log(fid ,"  ",uid);
-
     let getFB = docRef.get()
     .then(fDoc => {
       if(!fDoc.exists){

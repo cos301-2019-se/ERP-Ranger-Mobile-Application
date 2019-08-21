@@ -1,15 +1,15 @@
 <div class="page-container">
   <mat-card class="content-card mat-elevation-z8 animated slideInUp">
     <mat-card-content>
-      <form [formGroup]="addForm" #formDir="ngForm" (ngSubmit)="add()">
-        <h2>New Product</h2>
+      <form [formGroup]="editForm" #formDir="ngForm" (ngSubmit)="add()">
+        <h2>Edit Product :<span id="titlename"></span></h2>
         <h2><div id="added-reward"></div></h2>
         <div>
           <div class="form-group">
             <mat-form-field appearance="outline">
               <mat-label>Name</mat-label>
               <input matInput placeholder="Name" type="text" id="name" class="form-control" formControlName="name" required>
-              <mat-error *ngIf="addForm.get('name').hasError('required')">Name is required.</mat-error>
+              <mat-error *ngIf="editForm.get('name').hasError('required')">Name is required.</mat-error>
             </mat-form-field>
           </div>
 
@@ -17,8 +17,8 @@
             <mat-form-field appearance="outline">
               <mat-label>Cost</mat-label>
               <input matInput placeholder="Cost" type="text" id="name" class="form-control" formControlName="cost" required>
-              <mat-error *ngIf="addForm.get('cost').hasError('required')">Cost is required.</mat-error>
-              <mat-error *ngIf="addForm.get('cost').hasError('pattern')">Cost may only be an integer</mat-error>
+              <mat-error *ngIf="editForm.get('cost').hasError('required')">Cost is required.</mat-error>
+              <mat-error *ngIf="editForm.get('cost').hasError('pattern')">Cost may only be an integer</mat-error>
             </mat-form-field>
           </div>
 
@@ -26,7 +26,7 @@
             <mat-form-field appearance="outline">
               <mat-label>URL</mat-label>
               <input matInput placeholder="URL" type="text" id="url" class="form-control" formControlName="url" required>
-              <mat-error *ngIf="addForm.get('url').hasError('required')">URL is required.</mat-error>
+              <mat-error *ngIf="editForm.get('url').hasError('required')">URL is required.</mat-error>
             </mat-form-field>
           </div>
 
@@ -41,8 +41,8 @@
           
           
         </div>
-        <button mat-raised-button color="primary" type="submit" class="button" [disabled]="addForm.invalid" class="raised-button">Add</button>
-        <button mat-raised-button color="primary" class="raised-button right-button"  type="reset">Reset</button>
+        <button mat-raised-button color="primary" type="submit" class="button" [disabled]="editForm.invalid" class="raised-button">Add</button>
+        <button mat-raised-button color="primary" class="raised-button right-button" type="button" (click)="resetForm()">Reset</button>
       </form>
     </mat-card-content>
   </mat-card>
