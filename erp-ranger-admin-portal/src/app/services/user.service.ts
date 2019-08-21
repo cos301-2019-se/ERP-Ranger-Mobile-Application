@@ -32,4 +32,14 @@ export class UserService {
     return this.fireStore.collection("users");
   }
 
+  getAllUsers(admin?) {
+    return this.fireStore.collection('users', (ref) => {
+      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+      if (admin) {
+        query = query.where('role', '==', 'Admin');
+      }
+      return query;
+    }).snapshotChanges();
+  }
+
 }

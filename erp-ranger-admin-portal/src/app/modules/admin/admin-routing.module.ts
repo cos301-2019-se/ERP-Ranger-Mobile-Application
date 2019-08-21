@@ -18,6 +18,7 @@ import { EditUserComponent } from './pages/edit-user/edit-user.component';
 import { NotificationListComponent } from './pages/notification-list/notification-list.component';
 import { ReportTypeNewComponent } from './pages/report-type-new/report-type-new.component';
 import { ReportTypeUpdateComponent } from './pages/report-type-update/report-type-update.component';
+import { ReportReceiverNewComponent } from './pages/report-receiver-new/report-receiver-new.component';
 
 
 const routes: Routes = [
@@ -97,6 +98,10 @@ const routes: Routes = [
   {
     path: 'type/:id',
     component: ReportTypeUpdateComponent
+  },
+  {
+    path: 'notification/new',
+    component: ReportReceiverNewComponent
   },
   {
     path: 'dashboard',

@@ -82,10 +82,48 @@
   </mat-tab>
   <mat-tab label="Report Recipients">
     <div>
+      <div *ngIf="reportReceivers">
+      <mat-table [dataSource]="dataSourceReceivers" class="mat-elevation-z8">
 
+          <!--  Column -->
+          <ng-container matColumnDef="park">
+            <mat-header-cell *matHeaderCellDef>Park</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.park }}
+            </mat-cell>
+          </ng-container>
+
+          <!--  Column -->
+          <ng-container matColumnDef="user">
+            <mat-header-cell *matHeaderCellDef>User</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.user }}
+            </mat-cell>
+          </ng-container>
+
+            <!--  Column -->
+          <ng-container matColumnDef="type">
+            <mat-header-cell *matHeaderCellDef>Type</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.type }}
+            </mat-cell>
+          </ng-container>
+
+          <!-- Edit Column -->
+          <ng-container matColumnDef="edit">
+            <mat-header-cell *matHeaderCellDef>Edit</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <button mat-raised-button color="warn" (click)="deleteReportReceiver(element.id)">Delete</button>
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumnsReceivers"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumnsReceivers;"></mat-row>
+        </mat-table>
+      </div>
     </div>
     <div class="fab-button">
-      <a routerLink="/admin/">
+      <a routerLink="/admin/notification/new">
         <button mat-fab color="primary">
           <mat-icon>add</mat-icon>
         </button>

@@ -9,11 +9,11 @@ export class ReportReceiversService {
 
   constructor(private fireStore: AngularFirestore) { }
 
-  addReportType(data) {
-    //return this.fireStore.collection('report_types').add(data);
+  addReportReceiver(data) {
+    return this.fireStore.collection('report_type_park_user').add(data);
   }
 
-  getReportTypes(park?) {
+  getReportReceivers(park?) {
     return this.fireStore.collection('report_type_park_user', (ref) => {
       let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
       if (park) {
@@ -23,16 +23,12 @@ export class ReportReceiversService {
     }).snapshotChanges();
   }
 
-  readReportType(id) {
-    //return this.fireStore.doc('report_types/' + id).snapshotChanges();
+  readReportReceiver(id) {
+    return this.fireStore.doc('report_type_park_user/' + id).snapshotChanges();
   }
 
-  updateReportType(id, data) {
-    //return this.fireStore.doc('report_types/' + id).update(data);
-  }
-
-  deleteReportType(id) {
-    //return this.fireStore.doc('report_types/' + id).delete();
+  deleteReportReceiver(id) {
+    return this.fireStore.doc('report_type_park_user/' + id).delete();
   }
 
 }
