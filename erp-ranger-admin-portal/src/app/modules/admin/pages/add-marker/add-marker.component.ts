@@ -1,6 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { MouseEvent } from '@agm/core';
-import { AddMarkerService } from '../../services/add-marker.service';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
+import {
+  MouseEvent
+} from '@agm/core';
+import {
+  AddMarkerService
+} from '../../services/add-marker.service';
 
 @Component({
   selector: 'app-add-marker',
@@ -8,64 +15,70 @@ import { AddMarkerService } from '../../services/add-marker.service';
   styleUrls: ['./add-marker.component.scss']
 })
 export class AddMarkerComponent implements OnInit {
-  lat : number = 0;
-  lng : number =0  
-  zoom: number= 10;
-  parkID : string = "";
+  lat: number = 0;
+  lng: number = 0
+  zoom: number = 10;
+  parkID: string = "";
   markerArr;
 
-  
+
 
   currentMarker: number = 0;
 
-  
-  setRietvlei()  {
-    this.lat = -25.884648;
-    this.lng = 28.295682; 
-    this.parkID = "iwGnWNuDC3m1hRzNNBT5";
-    this.zoom = 12;
-  }
-  setSize(){
-    document.getElementById("map-agm").style.height = (document.body.offsetHeight - 96) + "px";
+
+  //set the default view
+  setRietvlei() {
+      this.lat = -25.884648;
+      this.lng = 28.295682;
+      this.parkID = "iwGnWNuDC3m1hRzNNBT5";
+      this.zoom = 12;
   }
 
-  setHighMarker(numberNew: string){
-    if (parseInt(numberNew,10) >= this.currentMarker){
-      this.currentMarker = parseInt(numberNew,10)+1;
-      
-    }
+  //makes the mao full-screen
+  setSize() {
+      document.getElementById("map-agm").style.height = (document.body.offsetHeight - 96) + "px";
   }
 
-  clickedMarker(label: string, index: number){
-    
+  //Sets the id of a marker
+  setIDMarker(numberNew: string) {
+      if (parseInt(numberNew, 10) >= this.currentMarker) {
+          this.currentMarker = parseInt(numberNew, 10) + 1;
+
+      }
   }
 
-  
+  clickedMarker(label: string, index: number) {
 
-  mapClicked($event: MouseEvent){
-    let tempLat: number = $event.coords.lat;
-    let tempLong : number = $event.coords.lng;
-    this.addMarker(tempLat,tempLong);
-    this.getMarkers();
   }
-  constructor(private markers : AddMarkerService) { }
+
+
+  //adds a marker on the spot clicked on the map
+  mapClicked($event: MouseEvent) {
+      let tempLat: number = $event.coords.lat;
+      let tempLong: number = $event.coords.lng;
+      this.addMarker(tempLat, tempLong);
+      this.getMarkers();
+  }
+  constructor(private markers: AddMarkerService) {}
 
   ngOnInit() {
-    this.getMarkers();
-    this.setRietvlei();
-    this.setSize();
+      this.getMarkers();
+      this.setRietvlei();
+      this.setSize();
   }
-  addMarker(la : number,lo : number){
-    var name = prompt("Marker Name:");
-    this.markers.addMarker(this.currentMarker+"", la,lo, name, this.parkID);
-    this.currentMarker++;
+
+  //Asks for a name of the marker to create 
+  addMarker(la: number, lo: number) {
+      var name = prompt("Marker Name:");
+      this.markers.addMarker(this.currentMarker + "", la, lo, name, this.parkID);
+      this.currentMarker++;
   }
-  getMarkers(){
-    this.markers.getMarkers().subscribe(result => {
-      this.markerArr = result;
-    });
+
+  //fetches all existing markers
+  getMarkers() {
+      this.markers.getMarkers().subscribe(result => {
+          this.markerArr = result;
+      });
   }
 
 }
-
-

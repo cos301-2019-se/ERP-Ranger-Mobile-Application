@@ -15,6 +15,7 @@ import { UserListComponent } from './pages/user-list/user-list.component'
 import { RewardListComponent } from './pages/reward-list/reward-list.component';
 import { AddRewardComponent } from './pages/add-reward/add-reward.component';
 import { EditUserComponent } from './pages/edit-user/edit-user.component';
+import { EditRewardComponent } from './pages/edit-reward/edit-reward.component';
 
 
 const routes: Routes = [
@@ -38,6 +39,10 @@ const routes: Routes = [
   {
     path: 'user/:id',    
     component: EditUserComponent
+  },
+  {
+    path: 'reward/:id',    
+    component: EditRewardComponent
   },
   {
     path: 'users/add',

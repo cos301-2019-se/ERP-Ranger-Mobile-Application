@@ -51,7 +51,8 @@ export class ShiftListComponent implements OnInit {
   
   
  
-
+   
+  //Fetches all the details about shift documents and populates the events array which in turn populates the calendar
   displayShifts() {
     var i = 0;
     let observer = this.shifts.getShifts().ref
