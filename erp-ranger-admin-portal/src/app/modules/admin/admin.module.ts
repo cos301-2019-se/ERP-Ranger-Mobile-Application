@@ -31,14 +31,17 @@ import { NotificationListComponent } from './pages/notification-list/notificatio
 import { ReportTypeNewComponent } from './pages/report-type-new/report-type-new.component';
 import { ReportTypeUpdateComponent } from './pages/report-type-update/report-type-update.component';
 import { ReportReceiverNewComponent } from './pages/report-receiver-new/report-receiver-new.component';
+import { EditRewardComponent } from './pages/edit-reward/edit-reward.component';
 
 @NgModule({
 
   declarations: [DashboardComponent, ReportDetailComponent, ShiftFeedbackComponent,
     ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, AddMarkerComponent,
     ReportOverviewComponent, AddUserComponent, UserPositionsComponent, UserListComponent, RewardListComponent,
-    AddRewardComponent, EditUserComponent, NotificationListComponent, ReportTypeNewComponent, ReportTypeUpdateComponent, ReportReceiverNewComponent
+    AddRewardComponent, EditUserComponent, NotificationListComponent, ReportTypeNewComponent, ReportTypeUpdateComponent,
+    ReportReceiverNewComponent, EditRewardComponent
   ],
+
   imports: [
     CommonModule,
     FormsModule,
