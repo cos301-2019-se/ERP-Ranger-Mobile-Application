@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProfileService } from "../../services/profile.service";
+import { RangerRewardService } from "../../services/ranger-reward.service";
 import { ActivatedRoute } from "@angular/router";
 import { UserService } from 'src/app/services/user.service';
 import { AngularFireStorage } from '@angular/fire/storage';
@@ -15,7 +16,7 @@ export class RangerRewardsComponent implements OnInit {
   report;
   rewards;
 
-  constructor(private profile: ProfileService, private route: ActivatedRoute, private users: UserService, private storage: AngularFireStorage, private angularFireAuth: AngularFireAuth) { }
+  constructor(private profile: ProfileService, private route: ActivatedRoute, private users: UserService, private storage: AngularFireStorage, private angularFireAuth: AngularFireAuth, private rewardService: RangerRewardService) { }
 
   ngOnInit() {
     this.displayDetails();
@@ -31,7 +32,7 @@ export class RangerRewardsComponent implements OnInit {
   }
 
   displayRewards() {
-    this.profile.getRewards().subscribe(result => {
+    this.rewardService.getRewards().subscribe(result => {
       this.rewards = result;
     });
   }

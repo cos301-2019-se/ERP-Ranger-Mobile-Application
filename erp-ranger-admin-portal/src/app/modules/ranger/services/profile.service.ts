@@ -17,8 +17,4 @@ export class ProfileService {
   getUserDetails(id: string) {
     return this.fireStore.collection('users').doc(id).valueChanges();
   }
-
-  getRewards() {
-    return this.fireStore.collection('rewards').snapshotChanges();
-  }
 }
