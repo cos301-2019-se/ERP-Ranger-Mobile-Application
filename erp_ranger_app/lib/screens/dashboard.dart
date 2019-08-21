@@ -307,6 +307,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } else if (title == "Rangers") {
       Navigator.push(context, new MaterialPageRoute(
           builder: (context) => new RangersScreen()));
+    } else if (title == "Log Feedback") {
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new FeedbackScreen()));
     }/* else if (title == "Patrol") {
       Navigator.push(context, new MaterialPageRoute(
           builder: (context) => new PatrolScreen()));
@@ -314,10 +317,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       //Navigator.pop(context);
       Navigator.push(context, new MaterialPageRoute(
           builder: (context) => new AssetsScreen(myAssets: false)));
-      } else if (title == "Log Feedback") {
-      Navigator.push(context, new MaterialPageRoute(
-          builder: (context) => new FeedbackScreen()));
-      }*/
+      } */
   }
 
   @override
