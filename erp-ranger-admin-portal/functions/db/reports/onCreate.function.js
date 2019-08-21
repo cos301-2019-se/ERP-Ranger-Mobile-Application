@@ -10,9 +10,14 @@ const accountSid = 'AC53139db5f1843928e7ca8837d3a45533';
 const authToken = 'ff573958cec2891b03c7b87a3d64efad';
 const sms = require('twilio')(accountSid, authToken);
 
+// CONSTANTS
 const nl = '\n';
 const db = admin.firestore();
 
+/**
+ * onCreate triggers when a user submits a report of an incident in the park
+ * they should receive for their patrol.
+ */
 exports = module.exports = functions.firestore.document('reports/{reportId}').onCreate((eventSnapshot, context) => {
 
   console.info(eventSnapshot.data());
@@ -20,6 +25,7 @@ exports = module.exports = functions.firestore.document('reports/{reportId}').on
   return reportRef.get()
     .then((report) => {
       const type = report.data().type;
+      // Determine the type and methods used for notification
       const typeRef = db.collection('report_types')
         .where('type', '==', type)
         .limit(1);
@@ -28,6 +34,7 @@ exports = module.exports = functions.firestore.document('reports/{reportId}').on
           const parkRef = db.doc('parks/' + report.data().park);
           parkRef.get()
             .then((park) => {
+              // Determine all the users subscribed to the specific report type
               const usersRef = db.collection('report_type_park_user')
                 .where('park', '==', park.id)
                 .where('type', '==', type.docs[0].id);
@@ -35,12 +42,15 @@ exports = module.exports = functions.firestore.document('reports/{reportId}').on
                 .then((users) => {
                   for (let i = 0; i < users.docs.length; i++) {
                     console.info(users.docs[i].data().user);//can compact and use data from here for email
+                    // Get the users details before sending notification
                     const userRef = db.doc('users/' + users.docs[i].data().user);
                     userRef.get()
                       .then((user) => {
+                        // Notify user with different methods
                         if (type.docs[0].data().methods['email']) email(type, park, user.data().email, report);
                         if (type.docs[0].data().methods['sms']) message(type, park, user.data().number, report);
-                        if (type.docs[0].data().methods['notification']) notify(type, park, null, report);
+                        if (type.docs[0].data().methods['web']) notify(type, park, null, report);
+                        if (type.docs[0].data().methods['api']) api(type, park, null, report);
                       })
                       .catch((error) => {
                         console.error('UserRef Error');
@@ -70,6 +80,14 @@ exports = module.exports = functions.firestore.document('reports/{reportId}').on
 
 });
 
+/**
+ * Notify admins of a report using email
+ *
+ * @param {*} type
+ * @param {*} park
+ * @param {*} user
+ * @param {*} report
+ */
 const email = (type, park, user, report) => {
   mail.setApiKey('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');
 
@@ -105,6 +123,13 @@ const email = (type, park, user, report) => {
     });
 }
 
+/**
+ * Notify admins of a report using sms
+ *
+ * @param {*} type
+ * @param {*} park
+ * @param {*} user
+ */
 const message = (type, park, user) => {
   const message = 'New Report: ' + type.docs[0].data().type + ' in ' + park.data().name;
 
@@ -123,10 +148,34 @@ const message = (type, park, user) => {
     });
 }
 
-const notify = (type, park, users) => {}
+/**
+ * Notify admins currently on the portal of a report
+ *
+ * @param {*} type
+ * @param {*} park
+ * @param {*} users
+ */
+const notify = (type, park, users) => {
+  // Not yet implemented
+}
 
-const api = (type, park, users) => {}
+/**
+ * Notify another system of an report using a HTTP request
+ * @param {*} type
+ * @param {*} park
+ * @param {*} users
+ */
+const api = (type, park, users) => {
+  // Not yet implemented
+}
 
+/**
+ * Generate the html email for a report using a template
+ *
+ * @param {*} type
+ * @param {*} park
+ * @param {*} report
+ */
 const generateHTML = (type, park, report) => {
   let html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml">';
   html += '<head><!--[if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]--><meta content="text/html; charset=utf-8" http-equiv="Content-Type"/><meta content="width=device-width" name="viewport"/><!--[if !mso]><!--><meta content="IE=edge" http-equiv="X-UA-Compatible"/><!--<![endif]--><title>ERP Park Report</title><!--[if !mso]><!--><link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css"/><!--<![endif]-->';
