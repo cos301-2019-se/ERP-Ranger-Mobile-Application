@@ -13,6 +13,16 @@ class ProfileScreen extends StatefulWidget{
 }
 
 class ProfileState extends State<ProfileScreen> {
+  Auth profileAuth = new Auth();
+  String user = "Name";
+  String email = "Email";
+  String park = "CurrentPark";
+  String role = "Role";
+
+  static Firestore db = Firestore.instance;
+  static CollectionReference userRef = db.collection('users');
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +37,96 @@ class ProfileState extends State<ProfileScreen> {
         padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 0.0),
         child: ListView(
           children: <Widget>[
-
+            _showName(),
+            _showEmail(),
+            _showRole(),
+            _showPark(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _showName(){
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+      child: new TextField(
+        key: Key('Text'),
+        maxLines: 1,
+        enabled: true,
+        maxLength: 1,
+        maxLengthEnforced: true,
+        decoration: new InputDecoration(
+            labelText: user,
+            border: OutlineInputBorder(),
+            prefixIcon: new Icon(
+              Icons.calendar_today,
+              color: Colors.grey,
+            )),
+        onTap: () => {},
+      ),
+    );
+  }
+
+  Widget _showEmail(){
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+      child: new TextField(
+        key: Key('Text'),
+        maxLines: 1,
+        enabled: true,
+        maxLength: 1,
+        maxLengthEnforced: true,
+        decoration: new InputDecoration(
+            labelText: email,
+            border: OutlineInputBorder(),
+            prefixIcon: new Icon(
+              Icons.calendar_today,
+              color: Colors.grey,
+            )),
+        onTap: () => {},
+      ),
+    );
+  }
+
+  Widget _showRole(){
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+      child: new TextField(
+        key: Key('Text'),
+        maxLines: 1,
+        enabled: true,
+        maxLength: 1,
+        maxLengthEnforced: true,
+        decoration: new InputDecoration(
+            labelText: role,
+            border: OutlineInputBorder(),
+            prefixIcon: new Icon(
+              Icons.calendar_today,
+              color: Colors.grey,
+            )),
+        onTap: () => {},
+      ),
+    );
+  }
+
+  Widget _showPark(){
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+      child: new TextField(
+        key: Key('Text'),
+        maxLines: 1,
+        enabled: true,
+        maxLength: 1,
+        maxLengthEnforced: true,
+        decoration: new InputDecoration(
+            labelText: park,
+            border: OutlineInputBorder(),
+            prefixIcon: new Icon(
+              Icons.calendar_today,
+              color: Colors.grey,
+            )),
+        onTap: () => {},
       ),
     );
   }
