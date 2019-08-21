@@ -4,10 +4,10 @@ const admin = require('firebase-admin');
 const db = admin.firestore();
 
 /**
- * onCreate triggers when a new marker is created and then counts all the
+ * onDelete triggers when an existing marker is deleted and then counts all the
  * markers in the park and saves it to the park.
  */
-exports = module.exports = functions.firestore.document('markers/{markerId}').onCreate((eventSnapshot, context) => {
+exports = module.exports = functions.firestore.document('markers/{markerId}').onDelete((eventSnapshot, context) => {
 
   const markers = db.collection('markers')
     .where('park', '==', eventSnapshot.data().park)
