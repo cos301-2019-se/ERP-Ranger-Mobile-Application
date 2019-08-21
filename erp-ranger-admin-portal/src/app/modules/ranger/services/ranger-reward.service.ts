@@ -10,6 +10,7 @@ export class RangerRewardService {
 
   constructor(private fireStore: AngularFirestore, private storage: AngularFireStorage) { }
 
+  // Get all rewards currently added to the database
   getRewards(){
     return this.fireStore.collection("rewards").snapshotChanges();
   }

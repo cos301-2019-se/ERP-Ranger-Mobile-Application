@@ -31,6 +31,7 @@ export class RangerRewardsComponent implements OnInit {
     });
   }
 
+  // Retrieve all rewards currently listed in the database
   displayRewards() {
     this.rewardService.getRewards().subscribe(result => {
       this.rewards = result;

@@ -39,6 +39,7 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  // Display profile picture of user currently logged in
   showImg(){
     var picField = <HTMLImageElement>document.getElementById("picture");
     picField.style.display = "visible";

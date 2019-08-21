@@ -67,7 +67,7 @@ export class EditRangerComponent implements OnInit {
     this.displayUser();
   }
 
-
+  // Get all stored data of user currently logged in
   displayUser(){
     this.id = this.angularFireAuth.auth.currentUser.uid;
     let doc = this.users.getUser(this.id).subscribe(result =>{
@@ -107,6 +107,7 @@ export class EditRangerComponent implements OnInit {
     
   }
 
+  // Load profile picture of user currently loggend in
   showImg(){
     var picField = <HTMLImageElement>document.getElementById("picture");
     picField.style.display = "visible";

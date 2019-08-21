@@ -6,6 +6,7 @@ import { EditRangerComponent } from './pages/edit-ranger/edit-ranger.component';
 import { RangerLeaderboardComponent } from './pages/ranger-leaderboard/ranger-leaderboard.component';
 import { RangerRewardsComponent } from './pages/ranger-rewards/ranger-rewards.component';
 
+// Used to create route links between each page
 const routes: Routes = [
   {
     path: '',
