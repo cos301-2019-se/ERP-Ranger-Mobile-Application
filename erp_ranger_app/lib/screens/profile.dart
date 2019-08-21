@@ -14,14 +14,36 @@ class ProfileScreen extends StatefulWidget{
 
 class ProfileState extends State<ProfileScreen> {
   Auth profileAuth = new Auth();
+  String id;
   String user = "Name";
   String email = "Email";
-  String park = "CurrentPark";
+  String points = "CurrentPoints";
   String role = "Role";
+  QuerySnapshot storage;
+  bool loading = true;
 
   static Firestore db = Firestore.instance;
   static CollectionReference userRef = db.collection('users');
 
+  Future<void> loadInfo() async{
+    id = await profileAuth.getUserUid();
+    storage = await db.collection('users').where('uid', isEqualTo: id).getDocuments();
+
+    user = storage.documents.elementAt(0).data['name'];
+    email = storage.documents.elementAt(0).data['email'];
+    points = storage.documents.elementAt(0).data['points'];
+    role = storage.documents.elementAt(0).data['role'];
+
+    setState(() {
+      loading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    loadInfo();
+    super.initState();
+  }
 
 
   @override
@@ -40,7 +62,8 @@ class ProfileState extends State<ProfileScreen> {
             _showName(),
             _showEmail(),
             _showRole(),
-            _showPark(),
+            _showPoints(),
+            this.loading == true ? _showLoading() : new Container(),
           ],
         ),
       ),
@@ -54,16 +77,16 @@ class ProfileState extends State<ProfileScreen> {
         key: Key('Text'),
         maxLines: 1,
         enabled: true,
-        maxLength: 1,
-        maxLengthEnforced: true,
         decoration: new InputDecoration(
             labelText: user,
             border: OutlineInputBorder(),
             prefixIcon: new Icon(
-              Icons.calendar_today,
+              Icons.accessibility,
               color: Colors.grey,
             )),
-        onTap: () => {},
+        onTap: () => {
+          FocusScope.of(context).requestFocus(new FocusNode())
+        },
       ),
     );
   }
@@ -75,16 +98,16 @@ class ProfileState extends State<ProfileScreen> {
         key: Key('Text'),
         maxLines: 1,
         enabled: true,
-        maxLength: 1,
-        maxLengthEnforced: true,
         decoration: new InputDecoration(
             labelText: email,
             border: OutlineInputBorder(),
             prefixIcon: new Icon(
-              Icons.calendar_today,
+              Icons.email,
               color: Colors.grey,
             )),
-        onTap: () => {},
+        onTap: () => {
+          FocusScope.of(context).requestFocus(new FocusNode())
+        },
       ),
     );
   }
@@ -96,38 +119,56 @@ class ProfileState extends State<ProfileScreen> {
         key: Key('Text'),
         maxLines: 1,
         enabled: true,
-        maxLength: 1,
-        maxLengthEnforced: true,
         decoration: new InputDecoration(
             labelText: role,
             border: OutlineInputBorder(),
             prefixIcon: new Icon(
-              Icons.calendar_today,
+              Icons.terrain,
               color: Colors.grey,
             )),
-        onTap: () => {},
+        onTap: () => {
+         FocusScope.of(context).requestFocus(new FocusNode())
+        },
       ),
     );
   }
 
-  Widget _showPark(){
+  Widget _showPoints(){
     return Padding(
       padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
       child: new TextField(
         key: Key('Text'),
         maxLines: 1,
         enabled: true,
-        maxLength: 1,
-        maxLengthEnforced: true,
         decoration: new InputDecoration(
-            labelText: park,
+            labelText: points,
             border: OutlineInputBorder(),
             prefixIcon: new Icon(
-              Icons.calendar_today,
+              Icons.monetization_on,
               color: Colors.grey,
             )),
-        onTap: () => {},
+        onTap: () => {
+          FocusScope.of(context).requestFocus(new FocusNode())
+        },
       ),
+    );
+  }
+
+  Widget _showLoading() {
+    return Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+        child: Container(
+          alignment: Alignment.center,
+          height: 50.0,
+          width: 50.0,
+          child: SizedBox(
+            child: CircularProgressIndicator(
+              strokeWidth: 3.0,
+            ),
+            height: 50.0,
+            width: 50.0,
+          ),
+        )
     );
   }
 }
