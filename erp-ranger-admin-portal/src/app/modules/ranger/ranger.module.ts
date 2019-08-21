@@ -11,9 +11,10 @@ import {FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
 import { RangerLeaderboardComponent } from './pages/ranger-leaderboard/ranger-leaderboard.component';
+import { RangerRewardsComponent } from './pages/ranger-rewards/ranger-rewards.component';
 
 @NgModule({
-  declarations: [ProfileComponent, NavComponent, EditRangerComponent, RangerLeaderboardComponent],
+  declarations: [ProfileComponent, NavComponent, EditRangerComponent, RangerLeaderboardComponent, RangerRewardsComponent],
   imports: [
     CommonModule,
     RangerRoutingModule,

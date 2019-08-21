@@ -4,6 +4,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { NavComponent } from './components/nav/nav.component';
 import { EditRangerComponent } from './pages/edit-ranger/edit-ranger.component';
 import { RangerLeaderboardComponent } from './pages/ranger-leaderboard/ranger-leaderboard.component';
+import { RangerRewardsComponent } from './pages/ranger-rewards/ranger-rewards.component';
 
 const routes: Routes = [
   {
@@ -21,8 +22,13 @@ const routes: Routes = [
   }, 
   {
     path: 'leaderboard',
-    component: RangerLeaderboardComponent
+    component: RangerLeaderboardComponent,
+  },
+  {
+    path: 'rewards',
+    component: RangerRewardsComponent
   }
+
 ];
 
 @NgModule({
