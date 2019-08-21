@@ -15,6 +15,7 @@ export class ShiftService {
 
 
   getPatrol(id : string){
+    
     return this.fireStore.collection("patrol").doc(id).ref;
   }
 

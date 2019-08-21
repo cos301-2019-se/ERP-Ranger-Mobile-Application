@@ -22,10 +22,10 @@ class ShiftState extends State<CreateShift> {
   bool dateFlag = false;
   bool midnightFlag = false;
   bool sendingReport = false;
+  Duration delayTime = new Duration(seconds: 2);
 
   static Firestore db = Firestore.instance;
   static CollectionReference shiftRef = db.collection('shifts');
-  DocumentReference parkRef = shiftRef.document('c0PvLdUAgLX9wtkoA4Ca');
 
   Auth tempAuth = new Auth();
 
@@ -112,41 +112,67 @@ class ShiftState extends State<CreateShift> {
       if (selectedDate.year == DateTime.now().year &&
           selectedDate.month == DateTime.now().month &&
           selectedDate.day == DateTime.now().day) {
-        if (selectedStartDateTime.hour < DateTime.now().hour) {
+        if (startFlag && selectedStartDateTime.hour < DateTime
+            .now()
+            .hour) {
+          Scaffold.of(this.context).showSnackBar(new SnackBar(
+              content: new Text('Selected start time has passed.')));
           return false;
-        } else if (selectedStartDateTime.hour == DateTime.now().hour &&
-            selectedStartDateTime.minute < DateTime.now().minute - 5) {
+        } else if (startFlag && selectedStartDateTime.hour == DateTime
+            .now()
+            .hour &&
+            selectedStartDateTime.minute < DateTime
+                .now()
+                .minute - 5) {
+          Scaffold.of(this.context).showSnackBar(new SnackBar(
+              content: new Text('Selected start time has passed.')));
           return false;
-        } else if (selectedEndDateTime.hour < selectedStartDateTime.hour &&
+        } else
+        if (endFlag && selectedEndDateTime.hour < selectedStartDateTime.hour &&
             (((24 - selectedStartDateTime.hour) + selectedEndDateTime.hour) <=
                 MAX_SHIFT_LENGTH)) {
           midnightFlag = true;
           return true;
-        } else if (selectedEndDateTime.hour == selectedStartDateTime.hour &&
+        } else if(endFlag && selectedEndDateTime.hour < selectedStartDateTime.hour &&
+            (((24 - selectedStartDateTime.hour) + selectedEndDateTime.hour) >=
+                MAX_SHIFT_LENGTH)){
+          Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Maximum shift length of 8 hours.')));
+          return false;
+        } else if (endFlag && selectedEndDateTime.hour == selectedStartDateTime.hour &&
             selectedEndDateTime.minute < selectedStartDateTime.minute) {
+          Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Selected end time after selected start time.')));
           return false;
-        } else if (selectedEndDateTime.hour < DateTime.now().hour) {
+        } else if (endFlag && selectedEndDateTime.hour < DateTime.now().hour) {
+          Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Selected end time has passed.')));
           return false;
-        } else if (selectedEndDateTime.hour == DateTime.now().hour &&
+        } else if (endFlag && selectedEndDateTime.hour == DateTime.now().hour &&
             selectedEndDateTime.minute < DateTime.now().minute - 5) {
+          Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Selected end time has passed.')));
           return false;
         } else {
           return true;
         }
       } else {
-        if (selectedStartDateTime.hour > selectedEndDateTime.hour &&
+        if (endFlag &&  selectedStartDateTime.hour > selectedEndDateTime.hour &&
             (((24 - selectedStartDateTime.hour) + selectedEndDateTime.hour) <=
                 MAX_SHIFT_LENGTH)) {
           midnightFlag = true;
           return true;
-        } else if (selectedStartDateTime.hour == selectedEndDateTime.hour &&
+        } else if(endFlag && selectedEndDateTime.hour < selectedStartDateTime.hour &&
+            (((24 - selectedStartDateTime.hour) + selectedEndDateTime.hour) >=
+                MAX_SHIFT_LENGTH)){
+          Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Maximum shift length of 8 hours.')));
+          return false;
+        }else if (endFlag && selectedStartDateTime.hour == selectedEndDateTime.hour &&
             selectedStartDateTime.minute < selectedEndDateTime.minute) {
+          Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Selected time has passed')));
           return false;
         } else {
           return true;
         }
       }
     } else {
+      Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('No chosen Date')));
       return false;
     }
   }
@@ -198,9 +224,9 @@ class ShiftState extends State<CreateShift> {
           "park": park,
           "start": start,
           "user": user,
-        })
-        .then((result) => {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen())),
+        }).then((result) => {
+              Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Success'))),
+              Timer(this.delayTime, () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen()));}),
             })
         .catchError((err) => print(err));
   }
@@ -222,11 +248,6 @@ class ShiftState extends State<CreateShift> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: AppBar(
-        title: Text("Book a shift"),
-        elevation: .1,
-        backgroundColor: Color.fromRGBO(18, 27, 65, 1.0),
-      ),
       body: new Container(
         padding: EdgeInsets.all(16.0),
         child: ListView(
@@ -249,10 +270,8 @@ class ShiftState extends State<CreateShift> {
         padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
         child: new TextField(
           key: Key('Text'),
-          maxLines: 1,
+          autofocus: false,
           enabled: true,
-          maxLength: 1,
-          maxLengthEnforced: true,
           decoration: new InputDecoration(
               labelText: 'Date',
               border: OutlineInputBorder(),
@@ -260,7 +279,10 @@ class ShiftState extends State<CreateShift> {
                 Icons.calendar_today,
                 color: Colors.grey,
               )),
-          onTap: () => _selectStartDate(context),
+          onTap: (){
+            FocusScope.of(context).requestFocus(new FocusNode());
+            _selectStartDate(context);
+          },
         ),
       );
     } else {
@@ -295,10 +317,9 @@ class ShiftState extends State<CreateShift> {
         padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
         child: new TextField(
           key: Key('Text'),
+          autofocus: false,
           maxLines: 1,
           enabled: true,
-          maxLength: 1,
-          maxLengthEnforced: true,
           decoration: new InputDecoration(
               labelText: 'StartTime',
               border: OutlineInputBorder(),
@@ -306,7 +327,10 @@ class ShiftState extends State<CreateShift> {
                 Icons.watch,
                 color: Colors.grey,
               )),
-          onTap: () => _selectStartDateTime(context),
+          onTap: (){
+            FocusScope.of(context).requestFocus(new FocusNode());
+            _selectStartDateTime(context);
+          },
         ),
       );
     } else if(!startFlag){
@@ -316,8 +340,6 @@ class ShiftState extends State<CreateShift> {
           key: Key('Text'),
           maxLines: 1,
           enabled: false,
-          maxLength: 1,
-          maxLengthEnforced: true,
           decoration: new InputDecoration(
               labelText: 'StartTime',
               border: OutlineInputBorder(),
@@ -333,10 +355,7 @@ class ShiftState extends State<CreateShift> {
         padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
         child: new TextField(
           key: Key('Text'),
-          maxLines: 1,
           enabled: false,
-          maxLength: 1,
-          maxLengthEnforced: true,
           decoration: new InputDecoration(
               labelText: displayDateTime(selectedStartDateTime),
               border: OutlineInputBorder(),
@@ -356,10 +375,9 @@ class ShiftState extends State<CreateShift> {
         padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
         child: new TextField(
           key: Key('Text'),
+          autofocus: false,
           maxLines: 1,
           enabled: true,
-          maxLength: 1,
-          maxLengthEnforced: true,
           decoration: new InputDecoration(
               labelText: 'EndTime',
               border: OutlineInputBorder(),
@@ -367,7 +385,10 @@ class ShiftState extends State<CreateShift> {
                 Icons.watch,
                 color: Colors.grey,
               )),
-          onTap: () => _selectEndDateTime(context),
+          onTap: (){
+            FocusScope.of(context).requestFocus(new FocusNode());
+            _selectEndDateTime(context);
+          },
         ),
       );
     } else if(!endFlag){
@@ -377,8 +398,6 @@ class ShiftState extends State<CreateShift> {
           key: Key('Text'),
           maxLines: 1,
           enabled: false,
-          maxLength: 1,
-          maxLengthEnforced: true,
           decoration: new InputDecoration(
               labelText: 'EndTime',
               border: OutlineInputBorder(),
@@ -396,8 +415,6 @@ class ShiftState extends State<CreateShift> {
           key: Key('Text'),
           maxLines: 1,
           enabled: false,
-          maxLength: 1,
-          maxLengthEnforced: true,
           decoration: new InputDecoration(
               labelText: displayDateTime(selectedEndDateTime),
               border: OutlineInputBorder(),
@@ -419,7 +436,7 @@ class ShiftState extends State<CreateShift> {
         child: new RaisedButton(
             elevation: 5.0,
             shape: new RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(30.0)),
+                borderRadius: new BorderRadius.circular(5.0)),
             color: Color.fromRGBO(18, 27, 65, 1.0),
             child: Text('Book Shift',
                 style: TextStyle(fontSize: 20.0, color: Colors.white)),
@@ -436,7 +453,7 @@ class ShiftState extends State<CreateShift> {
         child: new RaisedButton(
             elevation: 5.0,
             shape: new RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(30.0)),
+                borderRadius: new BorderRadius.circular(5.0)),
             color: Color.fromRGBO(200, 0, 0, 1.0),
             child: Text('Cancel',
                 style: TextStyle(fontSize: 20.0, color: Colors.white)),
