@@ -224,6 +224,7 @@ class MapState extends State<MapComponent> {
   //adds the marker points to firebase
   void _logMarker(String id, GeoPoint pos) async{
     if(await patrolData.getIsOnPatrol()) {
+      String patrol = await patrolData.getPatrolId();
       String user = await Auth().getUserUid();
       var _userPos = await _location.getLocation();
       var _latAngleDist = (((_userPos.latitude-pos.latitude).abs())/360)*2*pi*6378000;
@@ -236,6 +237,7 @@ class MapState extends State<MapComponent> {
           "reward": 0,
           "time": new DateTime.now(),
           "user": user,
+          "patrol": patrol,
         });
         //markersData.addMarker(id);
         _updateMarkers();
