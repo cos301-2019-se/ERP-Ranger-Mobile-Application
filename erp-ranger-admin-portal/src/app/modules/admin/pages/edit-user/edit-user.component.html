@@ -4,10 +4,12 @@
       <form [formGroup]="editForm" #formDir="ngForm" (ngSubmit)="updateUser()">
         <div class="header-div">
           <div class="header-text">
-          <div><h2>Edit User</h2></div>
+          <div><h2>Edit User</h2></div>          
           <div> <h2 id="titlename"></h2></div>
+          <div><h3 id="edited"></h3></div>
           </div>
           <div id="image-div" class="img-icon" ><img (onload)="showImg()" id="picture" src="" style="display:hidden;">
+            <label color="primary" for="img-input" class="custom-upload mat-caption"><mat-icon>cloud_upload</mat-icon>Upload Picture</label>
             <input  type="file" id="img-input" accept="image/" (change)="onFileSelected($event)">
           </div>
         </div>
@@ -16,7 +18,7 @@
             <mat-form-field appearance="outline">
               <mat-icon matPrefix>email</mat-icon>
               <mat-label>Email</mat-label>
-              <input matInput placeholder="Email" type="email" id="email" class="form-control" formControlName="email" required>
+              <input matInput placeholder="Email" [readonly]="!editable" type="email" id="email" class="form-control" formControlName="email" required>
               <mat-error *ngIf="editForm.get('email').hasError('required')">Email is required.</mat-error>
               <mat-error *ngIf="editForm.get('email').hasError('email')">Email must be valid.</mat-error>
             </mat-form-field>
@@ -32,6 +34,7 @@
           </div>
           <div class="form-group">
             <mat-form-field appearance="outline">
+              <mat-icon matPrefix>phone</mat-icon>
               <mat-label>Number</mat-label>
               <input matInput placeholder="Number" type="text" id="number" class="form-control" formControlName="number" required>
               <mat-error *ngIf="editForm.get('name').hasError('required')">Number is required.</mat-error>
@@ -40,6 +43,7 @@
 
           <div class="form-group">
             <mat-form-field appearance="outline">
+              <mat-icon matPrefix>label_important</mat-icon>
               <mat-label>Active</mat-label>
               <input matInput placeholder="Active" type="text" id="active" class="form-control" formControlName="active" required>
               <mat-error *ngIf="editForm.get('name').hasError('required')">Active is required.</mat-error>
@@ -50,15 +54,36 @@
 
           <div class="form-group">
             <mat-form-field appearance="outline">
+              <mat-icon matPrefix>accessibility</mat-icon>
               <mat-label>Role</mat-label>
               <input matInput placeholder="Role" type="text" id="role" class="form-control" formControlName="role" required>
               <mat-error *ngIf="editForm.get('name').hasError('required')">Role is required.</mat-error>
             </mat-form-field>
           </div>
 
+          <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-icon matPrefix>monetization_on</mat-icon>
+                <mat-label>Points</mat-label>
+                <input matInput placeholder="Points" type="text" id="points" class="form-control" formControlName="points" required>
+                <mat-error *ngIf="editForm.get('points').hasError('required')">Points is required.</mat-error>
+                <mat-error *ngIf="editForm.get('active').hasError('pattern')">Points must be a number</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-icon matPrefix>monetization_on</mat-icon>
+                  <mat-label>Remaining Points</mat-label>
+                  <input matInput placeholder="Remaining" type="text" id="remaining" class="form-control" formControlName="remaining" required>
+                  <mat-error *ngIf="editForm.get('remaining').hasError('required')">Remaining Points is required.</mat-error>
+                  <mat-error *ngIf="editForm.get('remaining').hasError('pattern')">Remaining Points must be a number</mat-error>
+                </mat-form-field>
+              </div>
+
         </div>
-        <button mat-raised-button color="primary" type="submit" class="button" [disabled]="editForm.invalid" class="register-button">Apply Changes</button>
-        
+        <button mat-raised-button color="primary" type="submit" class="raised-button" [disabled]="editForm.invalid">Apply Changes</button>
+        <button mat-raised-button color="primary" class="raised-button right-button" type="button" (click)="resetForm()">Reset</button>
         
       </form>
     </mat-card-content>

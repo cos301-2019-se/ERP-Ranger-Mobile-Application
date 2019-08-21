@@ -39,6 +39,7 @@ export class AddRewardComponent implements OnInit {
   }
 
   add(){
+    var name = this.addForm.get('name').value;
     this.rewardService.addReward(
       this.addForm.get('name').value,
       this.addForm.get('cost').value,
@@ -47,6 +48,7 @@ export class AddRewardComponent implements OnInit {
     );    
     this.addForm.reset();
     this.formRef.resetForm();
+    document.getElementById("added-reward"). innerHTML = name  + " was added."
     
   }
 

@@ -6,10 +6,34 @@
     flex-direction: column;
   }
   
+.img-icon{
+  position: relative;
+  width:40%;
+  top: 2%;
+  left:60%;
+}
+
+.img-icon img{
+  position: relative;
+  width: 100%;
+  
+}
+
+.header-div{
+  position: relative;
+  padding-bottom: 20px;
+  width:100%;
+  min-height: 80px;
+  overflow: hidden;
+}
+.header-text{
+  position: fixed;
+}
+  
   .content-card {
     margin-top: 20px;
     width: 400px;
-    width: 65%;
+    max-width: 80%;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -23,14 +47,6 @@
   h3 {
     width: 100%;
     text-align: center;
-  }
-
-  h2{
-    font-size:30px;
-  }
-
-  h2 div#added-reward{
-    font-size:15px !important;
   }
   
   mat-card-content {
@@ -46,13 +62,8 @@
     width: 100%;
   }
   
-  .form-group mat-label{
-    font-size:20px;
-  }
-
   mat-form-field {
     width: 100%;
-    font-size : 23px;
   }
   
   mat-form-field mat-icon {
@@ -61,12 +72,4 @@
   
   .login-button {
     width: 100%;
-  }
-
-  .raised-button{
-    padding:10px;
-    padding-left: 18px;
-    padding-right: 18px;
-    font-size:25px;
-    color:white;
   }
