@@ -38,7 +38,8 @@ export class CreateUserService {
           number:number,
           role: "Ranger",
           uid: userData.user.uid,
-          points: 0
+          points: 0,
+          remaining:0
         });
         secondaryApp.auth().signOut();
         firebase.app("Secondary").delete().then(function(){});
