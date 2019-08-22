@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:erp_ranger_app/services/auth.dart';
+import 'package:erp_ranger_app/services/patrolData.dart';
 import 'package:erp_ranger_app/services/park.dart';
 import 'package:erp_ranger_app/screens/dashboard.dart';
 import 'package:compressimage/compressimage.dart';
@@ -77,21 +78,32 @@ class LeaderboardState extends State<LeaderboardScreen> {
   void _fetchLeaderboardEntries() async {
     String user = await Auth().getUserUid();
     List<Widget> entries = new List<Widget>();
+
+    QuerySnapshot querySnapshotPoints = await Firestore.instance.collection('marker_log').where('time', isGreaterThanOrEqualTo: await patrolData.getPatrolStart()).getDocuments();
+    List<DocumentSnapshot> documentListPoints = querySnapshotPoints.documents;
+    int points=0;
+    documentListPoints.forEach((DocumentSnapshot document){
+      if(document['user']==user) {
+        points += document['reward'];
+      }
+    });
+
     QuerySnapshot querySnapshot = await _firestore.collection('users').getDocuments();
     List<DocumentSnapshot> documentList = querySnapshot.documents;
     
     documentList.removeWhere((a)=>a.data['role']=='Admin');
     documentList.removeWhere((a)=>a.data['points']==null);
+    documentList.firstWhere((a)=>a.data['uid']==user).data['points']+=points;
     documentList.sort((a,b)=>(b.data['points'].compareTo(a.data['points'])));
     
     bool alternate = true;
     var pos = 1;
 
     for(DocumentSnapshot document in documentList)/*documentList.forEach((DocumentSnapshot document)*/ {
-      print('users/'+document.data['uid']+'/'+document.data['uid']);
+      //print('users/'+document.data['uid']+'/'+document.data['uid']);
       if(document.data['role']=='Ranger')
       {
-        var ref = FirebaseStorage.instance.ref().child('users/'+document.data['uid']+'/'+document.data['uid']);
+        /*var ref = FirebaseStorage.instance.ref().child('users/'+document.data['uid']+'/'+document.data['uid']);
         var url;
         try
         {
@@ -102,7 +114,7 @@ class LeaderboardState extends State<LeaderboardScreen> {
             ref = FirebaseStorage.instance.ref().child('users/default/default.png');// + document.data['uid'] + '/' + document.data['uid'] + '.jpg');
             url = await ref.getDownloadURL();
         }
-        var image = NetworkImage(url);
+        var image = NetworkImage(url);*/
 
         var backColor;
         var textColor;
@@ -139,7 +151,7 @@ class LeaderboardState extends State<LeaderboardScreen> {
                                 )
                             )
                         ),
-                        Padding(
+                        /*Padding(
                             padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                             child: GestureDetector(
                               child: CircleAvatar(
@@ -150,7 +162,7 @@ class LeaderboardState extends State<LeaderboardScreen> {
                                 _displayImage(image,document.data['name']);
                               },
                             )
-                        ),
+                        ),*/
                       ]
                   ),
                   title: new Text(
@@ -182,7 +194,7 @@ class LeaderboardState extends State<LeaderboardScreen> {
   }
 
   //displays the image of the ranger
-  void _displayImage(NetworkImage image,String user) async{
+  /*void _displayImage(NetworkImage image,String user) async{
     double width = MediaQuery.of(context).size.width;
     showDialog(context: context, child:
       SimpleDialog(
@@ -198,5 +210,5 @@ class LeaderboardState extends State<LeaderboardScreen> {
         ],
       )
     );
-  }
+  }*/
 }
