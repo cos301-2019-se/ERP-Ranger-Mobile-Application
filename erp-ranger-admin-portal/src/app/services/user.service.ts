@@ -65,11 +65,13 @@ export class UserService {
   }
 
   deleteUser(id : string){
-    this.fireStore.collection("users").doc(id).update({
-      active: false
+    this.fireStore.doc('users/' + id).update({
+      active:false
     }).then(function(){
       location.reload();
-    })
+    }).catch(function(err){
+      
+    });
   }
      
   getUserLeaderboardData() {
