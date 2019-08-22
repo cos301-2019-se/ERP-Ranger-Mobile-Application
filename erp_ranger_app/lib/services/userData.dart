@@ -17,12 +17,16 @@ class userData {
   static String _name;
   static String _email;
   static NetworkImage _image;
+  static int _points;
+  static String _role;
 
   static void reset()
   {
     _name=null;
     _email=null;
     _image=null;
+    _points=null;
+    _role=null;
   }
 
   static Future<String> getUserName() async {
@@ -69,6 +73,32 @@ class userData {
       }
       _image = NetworkImage(url);
       return _image;
+    }
+  }
+
+  static Future<int> getUserPoints() async{
+    if(_points!=null) {
+      return _points;
+    }
+    else {
+      Auth _tempAuth = new Auth();
+      String user = await _tempAuth.getUserUid();
+      var document = await Firestore.instance.collection('users').document(user).get();
+      _points = document['points'];
+      return _points;
+    }
+  }
+
+  static Future<String> getUserRole() async{
+    if(_role!=null) {
+      return _role;
+    }
+    else {
+      Auth _tempAuth = new Auth();
+      String user = await _tempAuth.getUserUid();
+      var document = await Firestore.instance.collection('users').document(user).get();
+      _role = document['role'];
+      return _role;
     }
   }
 }
