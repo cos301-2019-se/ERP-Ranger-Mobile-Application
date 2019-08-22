@@ -159,20 +159,19 @@ class LoginState extends State<LoginScreen> {
       child: SizedBox(
         height: 40.0,
         child: new RaisedButton(
-          elevation: 5.0,
-          shape: new RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(5.0)
-          ),
-          color: Colors.blue,
-          child: Text(
-            'Login',
-            style: TextStyle(
-              fontSize: 20.0,
-              color: Colors.white
-            )
-          ),
-          onPressed: this._attempting == false? _performLogin : null,
-        ),
+            elevation: 5.0,
+            shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(5.0)),
+            color: Color.fromRGBO(18, 27, 65, 1.0),
+            child: Text(
+                'Login',
+                style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.white
+                )
+            ),
+            onPressed: this._attempting == false? _performLogin : null,
+        )
       ),
     );
   }
