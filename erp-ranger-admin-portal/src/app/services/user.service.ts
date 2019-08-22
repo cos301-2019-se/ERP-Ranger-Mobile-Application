@@ -54,8 +54,7 @@ export class UserService {
     return this.fireStore.collection("users");
   }
 
-  /*Makes a users inactive with an update(This calls the cloud function
-    to delete said user from the authenticated users)*/
+  
   getAllUsers(admin?) {
     return this.fireStore.collection('users', (ref) => {
       let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
@@ -66,6 +65,8 @@ export class UserService {
     }).snapshotChanges();
   }
 
+  /*Makes a users inactive with an update(This calls the cloud function
+    to delete said user from the authenticated users)*/
   deleteUser(id : string){
     this.fireStore.doc('users/' + id).update({
       active:false
