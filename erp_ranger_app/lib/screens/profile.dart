@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:erp_ranger_app/services/auth.dart';
 import 'package:erp_ranger_app/services/park.dart';
 import 'package:erp_ranger_app/screens/dashboard.dart';
+import 'package:erp_ranger_app/services/userData.dart';
 
 class ProfileScreen extends StatefulWidget{
   @override
@@ -13,65 +14,105 @@ class ProfileScreen extends StatefulWidget{
 }
 
 class ProfileState extends State<ProfileScreen> {
-  Auth profileAuth = new Auth();
-  String id;
-  String user = "Name";
-  String email = "Email";
-  String points = "CurrentPoints";
-  String role = "Role";
-  QuerySnapshot storage;
-  bool loading = true;
-  bool passwordChange = false;
-  bool nameChange = false;
-  FocusNode changeFocusNode = new FocusNode();
-  TextEditingController changeController = new TextEditingController();
+  Auth _profileAuth = new Auth();
+  String _id;
+  String _user = "Name";
+  String _email = "Email";
+  int _points = 0;
+  String _role = "Role";
+  bool _loading = true;
+  bool _passwordChange = false;
+  bool _nameChange = false;
+  FocusNode _changeFocusNode = new FocusNode();
+  TextEditingController _changeController = new TextEditingController();
+  Widget _userImage;
 
-  static Firestore db = Firestore.instance;
-  static CollectionReference userRef = db.collection('users');
-  final TextEditingController textController = new TextEditingController();
+  static Firestore _db = Firestore.instance;
+  final TextEditingController _textController = new TextEditingController();
 
+  //loads all relevant information on the user from the database
   Future<void> loadInfo() async{
-    id = await profileAuth.getUserUid();
-    storage = await db.collection('users').where('uid', isEqualTo: id).getDocuments();
+    _user = await userData.getUserName();
+    _email = await userData.getUserEmail();
+    _points = await userData.getUserPoints();
+    _role = await userData.getUserRole();
 
-    user = storage.documents.elementAt(0).data['name'];
-    email = storage.documents.elementAt(0).data['email'];
-    points = storage.documents.elementAt(0).data['points'];
-    role = storage.documents.elementAt(0).data['role'];
+    double width = MediaQuery.of(context).size.width;
+    Widget details = new Column(
+      children: <Widget>[
+        GestureDetector(
+          child: new CircleAvatar(
+            backgroundImage: await userData.getUserImage(),//NetworkImage(url),
+            backgroundColor: Colors.transparent,
+            radius: 40,
+          ),
+          onTap: (){
+            _displayImage();
+          },
+        ),
+      ],
+    );
+    setState(() {
+      _userImage=details;
+    });
 
     setState(() {
-      loading = false;
+      _loading = false;
     });
+
   }
 
+  //opens a preview of the image.
+  void _displayImage() async{
+    double width = MediaQuery.of(context).size.width;
+    showDialog(context: context, child:
+    SimpleDialog(
+      title: Text(
+          await userData.getUserName(),
+          style: TextStyle(
+              fontSize: 20.0,
+              color: Colors.black
+          )
+      ),
+      children: <Widget>[
+        Image(image: await userData.getUserImage()), //,height: width/1.5,width: width/1.5,)
+        Padding(padding: EdgeInsets.fromLTRB(10.0, 15.0, 10.0, 20.0),child: SizedBox(height: 40.0,child: new RaisedButton(elevation: 5.0,shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(5.0)),color: Color.fromRGBO(18, 27, 65, 1.0),child: Text('Change image',style: TextStyle(fontSize: 20.0, color: Colors.white)),onPressed: () => {changeName()},),),),
+        ],
+      )
+    );
+  }
+
+  //Toggles the password change flag to allow for multiple changes to the users password
   void changePassword(){
-    if(!this.passwordChange) {
-      this.passwordChange = true;
+    if(!this._passwordChange) {
+      this._passwordChange = true;
     } else {
-      this.passwordChange = false;
+      this._passwordChange = false;
     }
     setState(() {
 
     });
   }
 
+  //Sends a password change email to the users given email
   Future<void> sendPasswordEmail() async{
-    profileAuth.getAuth().sendPasswordResetEmail(email: this.email);
-    this.passwordChange = false;
+    _profileAuth.getAuth().sendPasswordResetEmail(email: this._email);
+    this._passwordChange = false;
     setState(() {
 
     });
   }
 
+  //Toggles the name flag to allow for multiple changes to the users name.
   Future<void> changeName() async {
-    if(!nameChange){
-      this.nameChange = true;
+    if(!_nameChange){
+      this._nameChange = true;
       setState(() {
 
       });
-      FocusScope.of(context).requestFocus(changeFocusNode);
+      FocusScope.of(context).requestFocus(_changeFocusNode);
     } else {
-      this.nameChange = false;
+      this._nameChange = false;
       setState(() {
 
       });
@@ -79,11 +120,12 @@ class ProfileState extends State<ProfileScreen> {
     }
   }
 
+  //Sends the users new name to the database.
   Future<void> uploadName() async {
-    this.nameChange = false;
-    print("TextController value: " + changeController.text);
-    var result = await db.collection('users').document(id).updateData({'name': changeController.text});
-    changeController.clear();
+    this._nameChange = false;
+    print("TextController value: " + _changeController.text);
+    var result = await _db.collection('users').document(_id).updateData({'name': _changeController.text});
+    _changeController.clear();
     loadInfo();
 
     setState(() {
@@ -99,8 +141,9 @@ class ProfileState extends State<ProfileScreen> {
 
   @override
   void dispose() {
-    textController.dispose();
-    changeFocusNode.dispose();
+    _textController.dispose();
+    _changeController.dispose();
+    _changeFocusNode.dispose();
     super.dispose();
   }
 
@@ -117,34 +160,45 @@ class ProfileState extends State<ProfileScreen> {
         padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 0.0),
         child: ListView(
           children: <Widget>[
-            this.loading == true ? _showLoading() : new Container(),
+            this._loading == true ? _showLoading() : new Container(),
+            _showProfilePicture(),
             _showName(),
             _showChangeName(),
-            this.nameChange == true? _showConfirmNewName() : new Container(),
+            this._nameChange == true? _showConfirmNewName() : new Container(),
             _showEmail(),
             //_showChangeEmail(),
             _showRole(),
             _showPoints(),
             _showChangePassword(),
-            this.passwordChange == true? _showConfirmNewPassword() : new Container(),
+            this._passwordChange == true? _showConfirmNewPassword() : new Container(),
           ],
         ),
       ),
     );
   }
 
+  Widget _showProfilePicture(){
+    if(!_loading){
+      return _userImage;
+    } else{
+      return Padding(
+          padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+      );
+    }
+  }
+
   Widget _showName(){
-    if(!nameChange) {
+    if(!_nameChange) {
       return Padding(
         padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
         child: new TextField(
-          controller: changeController,
-          focusNode: changeFocusNode,
+          controller: _changeController,
+          focusNode: _changeFocusNode,
           key: Key('Text'),
           maxLines: 1,
           enabled: true,
           decoration: new InputDecoration(
-              labelText: user,
+              labelText: _user,
               border: OutlineInputBorder(),
               prefixIcon: new Icon(
                 Icons.accessibility,
@@ -160,8 +214,8 @@ class ProfileState extends State<ProfileScreen> {
       return Padding(
         padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
         child: new TextField(
-          focusNode: changeFocusNode,
-          controller: changeController,
+          focusNode: _changeFocusNode,
+          controller: _changeController,
           key: Key('Text'),
           maxLines: 1,
           enabled: true,
@@ -212,7 +266,7 @@ class ProfileState extends State<ProfileScreen> {
         maxLines: 1,
         enabled: true,
         decoration: new InputDecoration(
-            labelText: email,
+            labelText: _email,
             border: OutlineInputBorder(),
             prefixIcon: new Icon(
               Icons.email,
@@ -253,7 +307,7 @@ class ProfileState extends State<ProfileScreen> {
         maxLines: 1,
         enabled: true,
         decoration: new InputDecoration(
-            labelText: role,
+            labelText: _role,
             border: OutlineInputBorder(),
             prefixIcon: new Icon(
               Icons.terrain,
@@ -274,7 +328,7 @@ class ProfileState extends State<ProfileScreen> {
         maxLines: 1,
         enabled: true,
         decoration: new InputDecoration(
-            labelText: points,
+            labelText: _points.toString(),
             border: OutlineInputBorder(),
             prefixIcon: new Icon(
               Icons.monetization_on,
