@@ -17,6 +17,7 @@ export class UserService {
     return this.fireStore.doc<User>(`users/${uid}`).snapshotChanges();
   }
 
+  //Sets or updates a user()
   setUser(uid:string, email:String, name:String, number: String, active:boolean, role: String, points=-1, remaining=-1){
     if (points== -1 || remaining == -1){
       this.fireStore.collection("users").doc(uid).update({
@@ -40,20 +41,10 @@ export class UserService {
         uid: uid
       })
     }
-
-    
-    // this.fireStore.collection("users").doc(uid).set({
-    //   active: active,
-    //   email: email,
-    //   name: name,
-    //   number:number,
-    //   role: role,
-    //   points: parseInt(points+ "",10),
-    //   uid: uid
-    // })
+  
   }
 
-
+  //returns a user documents based on the users id
   getUserByID(uid: string) {
     let doc = this.fireStore.collection("users").doc(uid);
   }
@@ -64,6 +55,8 @@ export class UserService {
     return this.fireStore.collection("users");
   }
 
+  /*Makes a users inactive with an update(This calls the cloud function
+    to delete said user from the authenticated users)*/
   deleteUser(id : string){
     this.fireStore.doc('users/' + id).update({
       active:false

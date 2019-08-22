@@ -17,6 +17,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
   styleUrls: ['./edit-ranger.component.scss']
 })
 export class EditRangerComponent implements OnInit {
+  editable;
   id;
   profilePic;
   editForm: FormGroup;
