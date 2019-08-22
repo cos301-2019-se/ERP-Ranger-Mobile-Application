@@ -20,6 +20,7 @@ import { fromRef } from '@angular/fire/firestore';
 })
 export class EditUserComponent implements OnInit {
   id;
+  editable;
   profilePic;
   editForm: FormGroup;
   name;
