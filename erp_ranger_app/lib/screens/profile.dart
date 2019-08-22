@@ -21,9 +21,14 @@ class ProfileState extends State<ProfileScreen> {
   String role = "Role";
   QuerySnapshot storage;
   bool loading = true;
+  bool passwordChange = false;
+  bool nameChange = false;
+  FocusNode changeFocusNode = new FocusNode();
+  TextEditingController changeController = new TextEditingController();
 
   static Firestore db = Firestore.instance;
   static CollectionReference userRef = db.collection('users');
+  final TextEditingController textController = new TextEditingController();
 
   Future<void> loadInfo() async{
     id = await profileAuth.getUserUid();
@@ -39,12 +44,65 @@ class ProfileState extends State<ProfileScreen> {
     });
   }
 
+  void changePassword(){
+    if(!this.passwordChange) {
+      this.passwordChange = true;
+    } else {
+      this.passwordChange = false;
+    }
+    setState(() {
+
+    });
+  }
+
+  Future<void> sendPasswordEmail() async{
+    profileAuth.getAuth().sendPasswordResetEmail(email: this.email);
+    this.passwordChange = false;
+    setState(() {
+
+    });
+  }
+
+  Future<void> changeName() async {
+    if(!nameChange){
+      this.nameChange = true;
+      setState(() {
+
+      });
+      FocusScope.of(context).requestFocus(changeFocusNode);
+    } else {
+      this.nameChange = false;
+      setState(() {
+
+      });
+      FocusScope.of(context).requestFocus(new FocusNode());
+    }
+  }
+
+  Future<void> uploadName() async {
+    this.nameChange = false;
+    print("TextController value: " + changeController.text);
+    var result = await db.collection('users').document(id).updateData({'name': changeController.text});
+    changeController.clear();
+    loadInfo();
+
+    setState(() {
+      FocusScope.of(context).requestFocus(new FocusNode());
+    });
+  }
+
   @override
   void initState() {
     loadInfo();
     super.initState();
   }
 
+  @override
+  void dispose() {
+    textController.dispose();
+    changeFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,11 +117,16 @@ class ProfileState extends State<ProfileScreen> {
         padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 0.0),
         child: ListView(
           children: <Widget>[
+            this.loading == true ? _showLoading() : new Container(),
             _showName(),
+            _showChangeName(),
+            this.nameChange == true? _showConfirmNewName() : new Container(),
             _showEmail(),
+            //_showChangeEmail(),
             _showRole(),
             _showPoints(),
-            this.loading == true ? _showLoading() : new Container(),
+            _showChangePassword(),
+            this.passwordChange == true? _showConfirmNewPassword() : new Container(),
           ],
         ),
       ),
@@ -71,23 +134,73 @@ class ProfileState extends State<ProfileScreen> {
   }
 
   Widget _showName(){
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
-      child: new TextField(
-        key: Key('Text'),
-        maxLines: 1,
-        enabled: true,
-        decoration: new InputDecoration(
-            labelText: user,
-            border: OutlineInputBorder(),
-            prefixIcon: new Icon(
-              Icons.accessibility,
-              color: Colors.grey,
-            )),
-        onTap: () => {
-          FocusScope.of(context).requestFocus(new FocusNode())
-        },
+    if(!nameChange) {
+      return Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+        child: new TextField(
+          controller: changeController,
+          focusNode: changeFocusNode,
+          key: Key('Text'),
+          maxLines: 1,
+          enabled: true,
+          decoration: new InputDecoration(
+              labelText: user,
+              border: OutlineInputBorder(),
+              prefixIcon: new Icon(
+                Icons.accessibility,
+                color: Colors.grey,
+              )),
+          onTap: () =>
+          {
+            FocusScope.of(context).requestFocus(new FocusNode())
+          },
+        ),
+      );
+    } else {
+      return Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+        child: new TextField(
+          focusNode: changeFocusNode,
+          controller: changeController,
+          key: Key('Text'),
+          maxLines: 1,
+          enabled: true,
+          decoration: new InputDecoration(
+              labelText: 'Enter new name:',
+              border: OutlineInputBorder(),
+              prefixIcon: new Icon(
+                Icons.accessibility,
+                color: Colors.grey,
+              )),
+        ),
+      );
+    }
+  }
+
+  Widget _showChangeName(){
+    return new Padding(
+      padding: EdgeInsets.fromLTRB(10.0, 15.0, 10.0, 20.0),
+      child: SizedBox(
+        height: 40.0,
+        child: new RaisedButton(
+          elevation: 5.0,
+          shape: new RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(5.0)),
+          color: Color.fromRGBO(18, 27, 65, 1.0),
+          child: Text('Change name',
+              style: TextStyle(fontSize: 20.0, color: Colors.white)),
+          onPressed: () => {changeName()},
+        ),
       ),
+    );
+  }
+
+  Widget _showConfirmNewName(){
+    return Row(
+      children: <Widget>[
+        new Padding(padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0), child: SizedBox( height: 40, child: new RaisedButton(elevation: 5.0, shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(5.0)), color: new Color.fromRGBO(18, 27, 65, 1.0), child: Text("Confirm", style: TextStyle(fontSize: 20.0, color: Colors.white),), onPressed: () => {uploadName(),}),),),
+        new Padding(padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0), child: SizedBox( height: 40, child: new RaisedButton(elevation: 5.0, shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(5.0)), color: new Color.fromRGBO(200, 0, 0, 1.0), child: Text("Cancel", style: TextStyle(fontSize: 20.0, color: Colors.white),), onPressed: () => {changeName()}),),)
+      ],
     );
   }
 
@@ -111,6 +224,26 @@ class ProfileState extends State<ProfileScreen> {
       ),
     );
   }
+
+/*
+  Widget _showChangeEmail(){
+    return new Padding(
+      padding: EdgeInsets.fromLTRB(10.0, 15.0, 10.0, 20.0),
+      child: SizedBox(
+        height: 40.0,
+        child: new RaisedButton(
+          elevation: 5.0,
+          shape: new RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(5.0)),
+          color: Color.fromRGBO(18, 27, 65, 1.0),
+          child: Text('Change email',
+              style: TextStyle(fontSize: 20.0, color: Colors.white)),
+          onPressed: () => {},
+        ),
+      ),
+    );
+  }
+*/
 
   Widget _showRole(){
     return Padding(
@@ -148,9 +281,38 @@ class ProfileState extends State<ProfileScreen> {
               color: Colors.grey,
             )),
         onTap: () => {
-          FocusScope.of(context).requestFocus(new FocusNode())
-        },
+          FocusScope.of(context).requestFocus(new FocusNode()),
+        }
       ),
+    );
+  }
+
+  Widget _showChangePassword(){
+    return new Padding(
+      padding: EdgeInsets.fromLTRB(10.0, 15.0, 10.0, 20.0),
+      child: SizedBox(
+        height: 40.0,
+        child: new RaisedButton(
+          elevation: 5.0,
+          shape: new RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(5.0)),
+          color: Color.fromRGBO(18, 27, 65, 1.0),
+          child: Text('Change password',
+              style: TextStyle(fontSize: 20.0, color: Colors.white)),
+          onPressed: () => {
+            changePassword(),
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _showConfirmNewPassword(){
+    return Row(
+      children: <Widget>[
+        new Padding(padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0), child: SizedBox( height: 40, child: new RaisedButton(elevation: 5.0, shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(5.0)), color: new Color.fromRGBO(18, 27, 65, 1.0), child: Text("Confirm", style: TextStyle(fontSize: 20.0, color: Colors.white),), onPressed: () => {sendPasswordEmail(),}),),),
+        new Padding(padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0), child: SizedBox( height: 40, child: new RaisedButton(elevation: 5.0, shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(5.0)), color: new Color.fromRGBO(200, 0, 0, 1.0), child: Text("Cancel", style: TextStyle(fontSize: 20.0, color: Colors.white),), onPressed: () => {changePassword()}),),)
+      ],
     );
   }
 

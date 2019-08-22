@@ -49,7 +49,6 @@ export class UserService {
     let doc = this.fireStore.collection("users").doc(uid);
   }
 
-
   // Get all users stored in the database
   getUsers(){
     return this.fireStore.collection("users");
@@ -57,6 +56,16 @@ export class UserService {
 
   /*Makes a users inactive with an update(This calls the cloud function
     to delete said user from the authenticated users)*/
+  getAllUsers(admin?) {
+    return this.fireStore.collection('users', (ref) => {
+      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+      if (admin) {
+        query = query.where('role', '==', 'Admin');
+      }
+      return query;
+    }).snapshotChanges();
+  }
+
   deleteUser(id : string){
     this.fireStore.doc('users/' + id).update({
       active:false
@@ -66,11 +75,9 @@ export class UserService {
       
     });
   }
-     
+
   getUserLeaderboardData() {
     return this.fireStore.collection("users", ref => ref.orderBy("points")).valueChanges();
   }
-
-  
 
 }

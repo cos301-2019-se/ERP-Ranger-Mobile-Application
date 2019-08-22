@@ -14,6 +14,7 @@ import 'package:erp_ranger_app/services/userData.dart';
 import 'package:erp_ranger_app/screens/leaderboard.dart';
 import 'package:erp_ranger_app/screens/ranger.dart';
 import 'package:erp_ranger_app/screens/shifts.dart';
+import 'package:erp_ranger_app/screens/profile.dart';
 
 class DrawerItem {
   String title;
@@ -35,6 +36,7 @@ class CustomDrawerState extends State<CustomDrawer> {
 
   //and array describing the links to other screens that is used when creating their list tiles
   final drawerItems = [
+    new DrawerItem("Profile", Icons.account_circle),
     new DrawerItem("Home", Icons.home),
     new DrawerItem("Map", Icons.map),
     new DrawerItem("Reports", Icons.message),
@@ -49,7 +51,11 @@ class CustomDrawerState extends State<CustomDrawer> {
 
   //used to select a screen to go to after clicking a link
   void _getDrawerItemWidget(String title) {
-    if (title == "Home")  {
+    if (title == "Profile")  {
+      Navigator.pop(context);
+      Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new ProfileScreen()));
+    } else if (title == "Home")  {
       Navigator.pop(context);
       Navigator.push(context, new MaterialPageRoute(
           builder: (context) => new DashboardScreen()));
