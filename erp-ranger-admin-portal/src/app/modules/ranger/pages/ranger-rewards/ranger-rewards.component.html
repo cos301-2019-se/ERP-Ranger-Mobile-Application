@@ -13,6 +13,7 @@
       <br>
       Point Balance : {{ report.points }}
       <br>
+      Points Remaining: {{ report.remaining }}
     </mat-card-content>
   </mat-card>
 
@@ -24,7 +25,7 @@
               </h2>
               <ng-container *ngFor="let r of rewards">
               <ul>
-                <li *ngIf="r.payload.doc.data().cost < report.points"><a href="{{ r.payload.doc.data().url }}" target="_blank"> {{ r.payload.doc.data().name }} - {{ r.payload.doc.data().cost }} Points </a></li>
+                <li *ngIf="r.payload.doc.data().cost < report.remaining"><a href="{{ r.payload.doc.data().url }}" target="_blank"> {{ r.payload.doc.data().name }} - {{ r.payload.doc.data().cost }} Points </a></li>
               </ul>
             </ng-container>
             <h2>
@@ -32,7 +33,7 @@
               </h2>
             <ng-container *ngFor="let r of rewards">
               <ul>
-                  <li *ngIf="r.payload.doc.data().cost > report.points"><a href="{{ r.payload.doc.data().url }}" target="_blank"> {{ r.payload.doc.data().name }} - {{ r.payload.doc.data().cost }} Points </a></li>
+                  <li *ngIf="r.payload.doc.data().cost > report.remaining"><a href="{{ r.payload.doc.data().url }}" target="_blank"> {{ r.payload.doc.data().name }} - {{ r.payload.doc.data().cost }} Points </a></li>
                 </ul>
               </ng-container>
             </div>
