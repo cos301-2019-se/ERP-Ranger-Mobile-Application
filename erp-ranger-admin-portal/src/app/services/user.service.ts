@@ -41,7 +41,7 @@ export class UserService {
       })
     }
 
-    
+
     // this.fireStore.collection("users").doc(uid).set({
     //   active: active,
     //   email: email,
@@ -53,15 +53,23 @@ export class UserService {
     // })
   }
 
-
   getUserByID(uid: string) {
     let doc = this.fireStore.collection("users").doc(uid);
   }
 
-
   // Get all users stored in the database
   getUsers(){
     return this.fireStore.collection("users");
+  }
+
+  getAllUsers(admin?) {
+    return this.fireStore.collection('users', (ref) => {
+      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+      if (admin) {
+        query = query.where('role', '==', 'Admin');
+      }
+      return query;
+    }).snapshotChanges();
   }
 
   deleteUser(id : string){
@@ -73,11 +81,9 @@ export class UserService {
       
     });
   }
-     
+
   getUserLeaderboardData() {
     return this.fireStore.collection("users", ref => ref.orderBy("points")).valueChanges();
   }
-
-  
 
 }
