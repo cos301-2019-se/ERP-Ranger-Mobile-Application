@@ -34,14 +34,41 @@
     <td mat-cell *matCellDef="let element"> {{element.role}} </td>
   </ng-container>
 
+  <ng-container matColumnDef="points">
+      <th mat-header-cell *matHeaderCellDef> Points </th>
+      <td mat-cell *matCellDef="let element"> {{element.points}} </td>
+  </ng-container>
+  
+  <ng-container matColumnDef="remaining">
+      <th mat-header-cell *matHeaderCellDef> Remaining Points </th>
+      <td mat-cell *matCellDef="let element"> {{element.remaining}} </td>
+  </ng-container>
+
   <ng-container matColumnDef="edit">
     <th mat-header-cell *matHeaderCellDef> Edit </th>
     <td mat-cell *matCellDef="let element"> <a href="/admin/user/{{ element.id }}"> <mat-icon>edit</mat-icon></a> </td>
+  </ng-container>
+
+  <ng-container matColumnDef="delete">
+    <th mat-header-cell *matHeaderCellDef> Delete </th>
+    <td mat-cell *matCellDef="let element"> <mat-icon id="delete-icon" (click)="deleteConfirm(element.id)">delete</mat-icon> </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 <a routerLink="add">
-  <button mat-raised-button color="primary">Add New User</button>
+  <button mat-raised-button class="raised-button" color="primary">Add New User</button>
 </a>
+
+<mat-card id="overlay-confirm-delete">
+    <button class="hide-overlay-btn" (click)=hideOverlay()>
+        <mat-icon>close</mat-icon>
+    </button>
+    <div class="confirm"><strong>Confirm</strong></div>
+    <div class="confirm-msg">Are you sure you want to delete <span id="delete-user"></span></div>
+    <div class="confirm-options">
+      <div class="click-confirm mat-caption"> <div class="confirm-option" (click)="confirmedDelete()">Yes</div></div>
+      <div class="click-confirm mat-caption"> <div class="confirm-option" (click)="hideOverlay()">No</div></div>
+    </div>
+</mat-card>

@@ -10,10 +10,12 @@ export class AddMarkerService {
 
   constructor(private fireStore: AngularFirestore) { }
 
+  //fetches all existing markers from the database
   getMarkers(){
     return this.fireStore.collection('markers').snapshotChanges();
   }
 
+  //adds a marker to the database
   addMarker(id: string, lat: number, long: number,name:string,park:string){
     var locationData = new firebase.firestore.GeoPoint(lat,long);
     var self = this;

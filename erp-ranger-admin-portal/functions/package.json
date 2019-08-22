@@ -2,11 +2,14 @@
   "name": "functions",
   "description": "Cloud Functions for ERP Ranger App",
   "dependencies": {
+    "@sendgrid/mail": "^6.4.0",
     "camelcase": "^5.3.1",
     "firebase-admin": "^8.2.0",
     "firebase-functions": "^3.1.0",
     "glob": "^7.1.4",
-    "nodemailer": "^6.3.0"
+    "nodemailer": "^6.3.0",
+    "twilio": "^3.33.3",
+    "firebase": "^6.0.2"
   },
   "engines": {
     "node": "8"

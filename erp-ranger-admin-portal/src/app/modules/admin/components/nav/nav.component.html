@@ -31,6 +31,12 @@
       </a>
     </li>
     <li>
+      <a routerLink="notifications">
+        <mat-icon>notification_important</mat-icon>
+        <span>Report Notifications</span>
+      </a>
+    </li>
+    <li>
       <a routerLink="users">
         <mat-icon>person</mat-icon>
         <span>Rangers</span>
@@ -46,6 +52,12 @@
       <a routerLink="positions">
         <mat-icon>my_location</mat-icon>
         <span>Ranger Positions</span>
+      </a>
+    </li>
+    <li>
+      <a (click)="logout()">
+        <mat-icon>undo</mat-icon>
+        <span>Logout</span>
       </a>
     </li>
   </ul>
