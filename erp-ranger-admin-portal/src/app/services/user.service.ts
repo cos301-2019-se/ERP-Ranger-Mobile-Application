@@ -65,7 +65,9 @@ export class UserService {
   }
 
   deleteUser(id : string){
-    this.fireStore.doc('users/' + id).delete().then(function(){
+    this.fireStore.doc('users/' + id).update({
+      active:false
+    }).then(function(){
       location.reload();
     }).catch(function(err){
       

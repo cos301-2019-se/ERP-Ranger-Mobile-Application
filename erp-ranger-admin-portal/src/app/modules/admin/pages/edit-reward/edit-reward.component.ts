@@ -78,7 +78,7 @@ export class EditRewardComponent implements OnInit {
   //When Add is clicked, the changed are added to the database
   add(){
     var name = this.editForm.get('name').value;
-    this.rewardService.addReward(
+    this.rewardService.setReward(this.id,
       this.editForm.get('name').value,
       this.editForm.get('cost').value,
       this.editForm.get('url').value,
