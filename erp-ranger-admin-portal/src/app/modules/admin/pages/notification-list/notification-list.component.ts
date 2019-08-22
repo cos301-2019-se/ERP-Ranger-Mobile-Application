@@ -28,6 +28,9 @@ export class NotificationListComponent implements OnInit {
     this.getReportReceivers();
   }
 
+  /**
+   * Get the list of report types to be displayed
+   */
   getReportTypes() {
     this.reportTypeService.getReportTypes().subscribe((result) => {
       this.reportTypes = [];
@@ -43,6 +46,9 @@ export class NotificationListComponent implements OnInit {
     });
   }
 
+  /**
+   * Delete a report type
+   */
   deleteReportType(id: string) {
     let type: any;
     for (let i = 0; i < this.reportTypes.length; i++) {
@@ -62,8 +68,11 @@ export class NotificationListComponent implements OnInit {
     }
   }
 
+  /**
+   * Get the list of admins that receive report notifications for the specific park
+   */
   getReportReceivers() {
-    const park = 'iwGnWNuDC3m1hRzNNBT5';
+    const park = 'iwGnWNuDC3m1hRzNNBT5'; // @TODO: Change to park value in settings.
     this.reportReceiverService.getReportReceivers(park).subscribe((results) => {
       this.reportReceivers = [];
       for (let i = 0; i < results.length; i++) {
@@ -84,6 +93,9 @@ export class NotificationListComponent implements OnInit {
     });
   }
 
+  /**
+   * Delete a report receiver
+   */
   deleteReportReceiver(id: string) {
     let type: any;
     for (let i = 0; i < this.reportReceivers.length; i++) {

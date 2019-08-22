@@ -63,6 +63,9 @@ export class ReportTypeUpdateComponent implements OnInit {
     });
   }
 
+  /**
+   * Update report type
+   */
   update() {
     const data = {
       type: this.reportTypeForm.get('type').value,

@@ -37,6 +37,9 @@ export class ReportTypeNewComponent implements OnInit {
     });
   }
 
+  /**
+   * Create a new report type
+   */
   create() {
     const data = {
       type: this.reportTypeForm.get('type').value,

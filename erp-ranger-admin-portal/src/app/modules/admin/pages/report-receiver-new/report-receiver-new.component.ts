@@ -50,6 +50,9 @@ export class ReportReceiverNewComponent implements OnInit {
     this.getReportTypes();
   }
 
+  /**
+   * Get list of park for autocompletion
+   */
   getParks() {
     this.parkService.getParks().subscribe((results) => {
       this.parkList = [];
@@ -59,6 +62,7 @@ export class ReportReceiverNewComponent implements OnInit {
           name: results[i].payload.doc.data()['name']
         };
       }
+      // Set filtered list using input to determine filter
       this.filteredParks = this.reportReceiverForm.get('park').valueChanges
         .pipe(
           startWith(''),
@@ -70,6 +74,9 @@ export class ReportReceiverNewComponent implements OnInit {
     });
   }
 
+  /**
+   * Get list of admins that can be notified for autocompletion
+   */
   getAdmins() {
     this.userService.getAllUsers(true).subscribe((results) => {
       this.adminList = [];
@@ -79,6 +86,7 @@ export class ReportReceiverNewComponent implements OnInit {
           name: results[i].payload.doc.data()['name']
         };
       }
+      // Set filtered list using input to determine filter
       this.filteredUsers = this.reportReceiverForm.get('user').valueChanges
         .pipe(
           startWith(''),
@@ -90,6 +98,9 @@ export class ReportReceiverNewComponent implements OnInit {
     });
   }
 
+  /**
+   * Get list of report types for autocompletion
+   */
   getReportTypes() {
     this.reportTypeService.getReportTypes().subscribe((results) => {
       this.reportList = [];
@@ -99,6 +110,7 @@ export class ReportReceiverNewComponent implements OnInit {
           name: results[i].payload.doc.data()['type']
         };
       }
+      // Set filtered list using input to determine filter
       this.filteredTypes = this.reportReceiverForm.get('type').valueChanges
         .pipe(
           startWith(''),
@@ -110,12 +122,20 @@ export class ReportReceiverNewComponent implements OnInit {
     });
   }
 
+  /**
+   * This sets the id of the chosen field (park, user, type) so it can be
+   * used later when creating a new notification. This is done because the value
+   * field on input and autocomplete is used for the name and not the id
+   */
   setDocId(event: MatOptionSelectionChange, key, id) {
     if (event.isUserInput) {
       this.docIds[key] = id;
     }
   }
 
+  /**
+   * This function creates a new notification
+   */
   create() {
     try {
       const data = {
