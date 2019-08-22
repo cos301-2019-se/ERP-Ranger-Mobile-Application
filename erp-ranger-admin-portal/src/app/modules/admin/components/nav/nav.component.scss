@@ -6,6 +6,7 @@
 nav {
   max-width: 100%;
   align-self: flex-start;
+  overflow: hidden;
 }
 
 nav ul {
@@ -34,6 +35,7 @@ nav ul li a {
 nav ul li a:hover {
   border-left-color: #121B41;
   background-color: #DADADA;
+  cursor: pointer;
 }
 
 span {
@@ -42,4 +44,12 @@ span {
 
 mat-icon {
   margin-right: 10px;
+}
+
+.bottom{
+  position: absolute;
+  display: inline-block;
+  bottom:0;
+  width: 100%;
+  
 }
