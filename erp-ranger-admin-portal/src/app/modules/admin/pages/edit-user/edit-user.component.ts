@@ -115,7 +115,7 @@ export class EditUserComponent implements OnInit {
         var picField = <HTMLImageElement>document.getElementById("picture");        
         picField.src = this.profilePic;
     },(err)=> {
-      this.profilePic = "https://firebasestorage.googleapis.com/v0/b/erp-ranger-app.appspot.com/o/users%2Fdefault%2Fdefault.png?alt=media&token=fa61e670-6070-49b8-ac82-4dbb9161b39f";
+      this.profilePic = "https://firebasestorage.googleapis.com/v0/b/erp-ranger-app.appspot.com/o/users%2Fdefault%2Fdefault.png?alt=media&token=93405721-9f75-46bb-9214-e9117e9d9cd3";
       var picField = <HTMLImageElement>document.getElementById("picture");        
       picField.src = this.profilePic});
     })    
