@@ -1,0 +1,35 @@
+.page-container {
+  overflow: hidden;
+  min-width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.page-container > div {
+  min-height: 100vh;
+  min-width: 50%;
+  max-width: 50%;
+}
+
+.data-container {
+  padding: 8px;
+}
+
+agm-map {
+  height: 100vh;
+}
+
+.agm-title {
+  margin-block-start: 0px;
+  margin-block-end: 10px;
+}
+
+.agm-link {
+  width: 100%;
+}
+
+.agm-button {
+  width: 100%;
+}
