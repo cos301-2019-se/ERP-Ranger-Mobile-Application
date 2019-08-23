@@ -129,7 +129,7 @@ export class DashboardComponent implements OnInit {
         this.reportList[i]['info'] = this.getReportType(this.reportList[i]['type']);
       }
       this.dataSourceReports = new MatTableDataSource(this.reportList);
-      this.dataSourceReports.paginator = this.paginator.toArray()[1];
+      this.dataSourceReports.paginator = this.paginator.toArray()[0];
     });
   }
 
