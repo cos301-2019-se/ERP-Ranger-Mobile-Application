@@ -21,7 +21,10 @@
         [disableDefaultUI]="false"
         [zoomControl]="false"
         (mapClick)="mapClicked($event)">
-
+        <agm-kml-layer
+          [url]="kml"
+          [clickable]="defaultui">
+        </agm-kml-layer>
         <agm-marker 
             *ngFor="let m of markerArr"            
             [latitude]="m.payload.doc.data().location.geopoint.latitude"

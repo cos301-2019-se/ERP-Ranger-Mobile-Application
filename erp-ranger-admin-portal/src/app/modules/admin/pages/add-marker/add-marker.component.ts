@@ -20,7 +20,7 @@ export class AddMarkerComponent implements OnInit {
   zoom: number = 10;
   parkID: string = "";
   markerArr;
-
+  kml = 'https://gist.githubusercontent.com/Jtfnel/77b53014741ec9fce2ffc68d210cdf56/raw/cd8d5bbf2476c48512cb6d44694a52289aa52999/rietvlei.kml';
 
 
   currentMarker: number = 0;
@@ -36,7 +36,7 @@ export class AddMarkerComponent implements OnInit {
 
   //makes the mao full-screen
   setSize() {
-      document.getElementById("map-agm").style.height = (document.body.offsetHeight - 96) + "px";
+      document.getElementById("map-agm").style.height = (document.body.offsetHeight - 32) + "px";
   }
 
   //Sets the id of a marker
@@ -70,8 +70,11 @@ export class AddMarkerComponent implements OnInit {
   //Asks for a name of the marker to create 
   addMarker(la: number, lo: number) {
       var name = prompt("Marker Name:");
-      this.markers.addMarker(this.currentMarker + "", la, lo, name, this.parkID);
-      this.currentMarker++;
+      if(name!="" && name !=null){
+        this.markers.addMarker(this.currentMarker + "", la, lo, name, this.parkID);
+        this.currentMarker++;
+      }
+      
   }
 
   //fetches all existing markers

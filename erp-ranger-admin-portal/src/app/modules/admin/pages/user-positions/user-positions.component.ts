@@ -22,7 +22,7 @@ export class UserPositionsComponent implements OnInit {
   zoom: number= 12;
   parkID="";
   resetTime : number = 60;
-  
+  kml = 'https://gist.githubusercontent.com/Jtfnel/77b53014741ec9fce2ffc68d210cdf56/raw/cd8d5bbf2476c48512cb6d44694a52289aa52999/rietvlei.kml';
   posArr: posMarker[] = [];
   constructor(private pService : PositionService, private shifts : ShiftService) { }
 
@@ -47,7 +47,7 @@ export class UserPositionsComponent implements OnInit {
    
   }
   setSize(){
-    document.getElementById("map-agm").style.height = (document.body.offsetHeight - 96) + "px";
+    document.getElementById("map-agm").style.height = (document.body.offsetHeight - 32) + "px";
   }
   setRietvlei()  {
     this.lat = -25.884648;
@@ -65,7 +65,7 @@ export class UserPositionsComponent implements OnInit {
       }
     }
 
-    return hasVal
+    return hasVal 
 
   }
   deleteById(id:string){
