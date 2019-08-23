@@ -11,6 +11,7 @@ export class PositionService {
 
   constructor(private fireStore: AngularFirestore) { }
 
+  //fetches positions of users
   getPositions(){
     return this.fireStore.collection('position');
   }

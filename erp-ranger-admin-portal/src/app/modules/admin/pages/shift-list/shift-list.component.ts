@@ -13,6 +13,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { elementStart } from '@angular/core/src/render3';
 import { CalendarDayViewEventComponent } from 'angular-calendar/modules/day/calendar-day-view-event.component';
 import { google } from '@agm/core/services/google-maps-types';
+import { TimeInterval } from 'rxjs/internal/operators/timeInterval';
 
 const colors: any = {
   red: {
@@ -39,11 +40,10 @@ export class ShiftListComponent implements OnInit {
   size = -1;
   temp = 0;
   counter = 0;
+  refreshInt;
   ngOnInit() {
-    this.displayShifts();
-    setInterval(function(){
-      this.events = this.events;
-    },300)
+    this.displayShifts();    
+    this.refreshInt = setInterval(function(){this.events = this.events},1000);
   }
 
   constructor(private shifts: ShiftService, private modal: NgbModal, private cdr: ChangeDetectorRef) {}
@@ -51,7 +51,8 @@ export class ShiftListComponent implements OnInit {
   
   
  
-
+   
+  //Fetches all the details about shift documents and populates the events array which in turn populates the calendar
   displayShifts() {
     var i = 0;
     let observer = this.shifts.getShifts().ref
@@ -83,6 +84,7 @@ export class ShiftListComponent implements OnInit {
               else{
                 var park= doc.data().name ;                
                 this.addEventP(t2,t,id, name,park);
+                
               }
             })  
             .catch(err => {
@@ -173,11 +175,18 @@ export class ShiftListComponent implements OnInit {
     this.modal.open(this.modalContent, { size: 'lg' });
   }
 
+  getTimeFormat(time : string) : String{
+    if(time.length == 1){
+      return "0" + time;
+    }
+    return time;
+  }
+
   addEventP( patrolDate: Date, endDate : Date, id, name : string,park : string): void {
     this.events = [
       ...this.events,
       {
-        title:    name + " ( " + patrolDate.getHours() +":"+  patrolDate.getMinutes() + "  -  "+ endDate.getHours() +":"+  endDate.getMinutes() + " ) At " + park ,
+        title:    name + " ( " + this.getTimeFormat(patrolDate.getHours()+"") +":"+  this.getTimeFormat(patrolDate.getMinutes() + "") + "  -  "+ this.getTimeFormat(endDate.getHours()+"") +":"+  this.getTimeFormat(endDate.getMinutes()+"") + " ) At " + park ,
         start: startOfDay(patrolDate),
         end: endOfDay(endDate),
         id : id,
@@ -189,6 +198,8 @@ export class ShiftListComponent implements OnInit {
         }
       }
     ];    
+    
+    
   }
 
   deleteEvent(eventToDelete: CalendarEvent) {

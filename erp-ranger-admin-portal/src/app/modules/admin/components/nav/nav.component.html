@@ -7,6 +7,12 @@
       </a>
     </li>
     <li>
+      <a routerLink="rewards">
+        <mat-icon>card_giftcard</mat-icon>
+        <span>Rewards</span>
+      </a>
+    </li>
+    <li>
       <a routerLink="shifts">
         <mat-icon>assignment</mat-icon>
         <span>Shifts</span>
@@ -25,6 +31,12 @@
       </a>
     </li>
     <li>
+      <a routerLink="notifications">
+        <mat-icon>notification_important</mat-icon>
+        <span>Report Notifications</span>
+      </a>
+    </li>
+    <li>
       <a routerLink="users">
         <mat-icon>person</mat-icon>
         <span>Rangers</span>
@@ -40,6 +52,12 @@
       <a routerLink="positions">
         <mat-icon>my_location</mat-icon>
         <span>Ranger Positions</span>
+      </a>
+    </li>
+    <li class="bottom">
+      <a  (click)="logout()">
+        <mat-icon>undo</mat-icon>
+        <span>Logout</span>
       </a>
     </li>
   </ul>
