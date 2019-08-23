@@ -8,7 +8,10 @@
           [zoom]="zoom"
           [disableDefaultUI]="false"
           [zoomControl]="false">
-
+          <agm-kml-layer
+            [url]="kml"
+            [clickable]="defaultui">
+         </agm-kml-layer>
       <agm-marker
         *ngFor="let m of markers"
         [latitude]="m.payload.doc.data().location.geopoint.latitude"
