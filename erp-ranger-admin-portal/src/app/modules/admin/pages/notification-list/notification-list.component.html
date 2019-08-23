@@ -109,6 +109,14 @@
             </mat-cell>
           </ng-container>
 
+          <!-- Edit Column -->
+          <ng-container matColumnDef="edit">
+            <mat-header-cell *matHeaderCellDef>Edit</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <button mat-raised-button color="warn" (click)="deleteReportReceiver(element.id)">Delete</button>
+            </mat-cell>
+          </ng-container>
+
           <mat-header-row *matHeaderRowDef="displayedColumnsReceivers"></mat-header-row>
           <mat-row *matRowDef="let row; columns: displayedColumnsReceivers;"></mat-row>
         </mat-table>
