@@ -49,7 +49,7 @@
 
           <!-- API Column -->
           <ng-container matColumnDef="api">
-            <mat-header-cell *matHeaderCellDef>API</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef>3rd Party</mat-header-cell>
             <mat-cell *matCellDef="let element">
               <mat-icon *ngIf="element.methods['api']">check</mat-icon>
               <mat-icon *ngIf="!element.methods['api']">close</mat-icon>
@@ -87,7 +87,7 @@
 
           <!--  Column -->
           <ng-container matColumnDef="park">
-            <mat-header-cell *matHeaderCellDef>Park</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
             <mat-cell *matCellDef="let element">
               {{ element.park }}
             </mat-cell>
@@ -106,14 +106,6 @@
             <mat-header-cell *matHeaderCellDef>Type</mat-header-cell>
             <mat-cell *matCellDef="let element">
               {{ element.type }}
-            </mat-cell>
-          </ng-container>
-
-          <!-- Edit Column -->
-          <ng-container matColumnDef="edit">
-            <mat-header-cell *matHeaderCellDef>Edit</mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              <button mat-raised-button color="warn" (click)="deleteReportReceiver(element.id)">Delete</button>
             </mat-cell>
           </ng-container>
 
