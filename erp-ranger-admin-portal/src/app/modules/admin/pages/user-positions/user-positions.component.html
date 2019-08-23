@@ -29,7 +29,8 @@
             *ngFor="let m of posArr"
             [latitude]="m.latitude"
             [longitude]="m.longitude"
-            [label]="m.userName"
+           
+            [iconUrl]="m.icon">
             
             >
 
@@ -37,6 +38,7 @@
 
           <agm-info-window>
             <!--<strong>Marker ID :  {{m.id}}</strong>-->
+            <div><strong>Name :  {{m.userName}}</strong></div>
             <div><strong>Time :  {{m.time}}</strong></div>
             <div><strong>Lat : {{m.latitude}}</strong></div>
             <div><strong>Long : {{m.longitude}}</strong></div>

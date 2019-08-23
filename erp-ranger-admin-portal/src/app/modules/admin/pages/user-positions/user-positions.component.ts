@@ -179,7 +179,14 @@ export class UserPositionsComponent implements OnInit {
                     parkName: docPark.data().name,
                     userID:nameID,
                     userName: doc.data().name,
-                    time: temp
+                    time: temp,
+                    icon : {
+                      url: 'https://fonts.gstatic.com/s/i/materialicons/my_location/v1/24px.svg',
+                      scaledSize: {
+                        width: 30,
+                        height: 30
+                      }
+                    }
           
                   }];
                   this.posArr =this.posArr;
@@ -208,7 +215,7 @@ interface posMarker{
   longitude:number,
   parkName: string,
   userID:string,
-  icon?:string,
+  icon?,
   userName: string,
   time: Date
 }
