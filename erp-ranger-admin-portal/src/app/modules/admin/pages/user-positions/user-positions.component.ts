@@ -23,6 +23,7 @@ export class UserPositionsComponent implements OnInit {
   parkID="";
   resetTime : number = 60;
   kml = 'https://gist.githubusercontent.com/Jtfnel/77b53014741ec9fce2ffc68d210cdf56/raw/cd8d5bbf2476c48512cb6d44694a52289aa52999/rietvlei.kml';
+  defaultui;
   posArr: posMarker[] = [];
   constructor(private pService : PositionService, private shifts : ShiftService) { }
 
@@ -179,7 +180,14 @@ export class UserPositionsComponent implements OnInit {
                     parkName: docPark.data().name,
                     userID:nameID,
                     userName: doc.data().name,
-                    time: temp
+                    time: temp,
+                    icon : {
+                      url: 'https://fonts.gstatic.com/s/i/materialicons/my_location/v1/24px.svg',
+                      scaledSize: {
+                        width: 30,
+                        height: 30
+                      }
+                    }
           
                   }];
                   this.posArr =this.posArr;
@@ -208,7 +216,7 @@ interface posMarker{
   longitude:number,
   parkName: string,
   userID:string,
-  icon?:string,
+  icon?,
   userName: string,
   time: Date
 }
