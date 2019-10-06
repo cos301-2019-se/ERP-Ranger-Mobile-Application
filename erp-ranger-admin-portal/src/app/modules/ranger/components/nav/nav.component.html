@@ -1,3 +1,28 @@
-<p>
-  nav works!
-</p>
+<nav>
+    <ul>
+      <li>
+        <a routerLink = "profile">
+            <mat-icon>account_box</mat-icon>
+            <span>Profile</span>
+        </a>
+      </li>  
+      <li>
+          <a routerLink = "leaderboard">
+              <mat-icon>assessment</mat-icon>
+              <span>Leaderboard</span>
+          </a>
+      </li>
+      <li>
+          <a routerLink = "rewards">
+              <mat-icon>card_giftcard</mat-icon>
+              <span>Ranger Rewards</span>
+          </a>
+      </li>
+      <li class="bottom">
+        <a (click)="logout()">
+          <mat-icon>undo</mat-icon>
+          <span>Logout</span>
+        </a>
+      </li>
+    </ul>  
+  </nav>

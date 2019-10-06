@@ -14,8 +14,12 @@ void main() {
     testWidgets('Report Widget is generated', (WidgetTester tester) async {
       await tester.pumpWidget(reportWidget);
 
-      final createdFinder = find.text('Report');
+      await tester.tap(find.byType(RaisedButton));
+      await tester.enterText(find.byKey(Key('Text')), 'test');
+      await tester.tap(find.byType(DropdownButtonHideUnderline));
 
+      await tester.pumpAndSettle();
+      final createdFinder = find.text('Report');
       expect(createdFinder, findsOneWidget);
     });
   });

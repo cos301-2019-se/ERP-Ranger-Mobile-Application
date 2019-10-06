@@ -8,7 +8,14 @@ import {
     MatButtonModule,
     MatSnackBarModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatTabsModule,
+    MatDialogModule,
+    MatCheckboxModule,
+    MatSelectModule,
+    MatAutocompleteModule,
+    MatOptionModule,
+    MatPaginatorModule
 } from '@angular/material';
 
 @NgModule({
@@ -20,7 +27,14 @@ import {
     MatButtonModule,
     MatSnackBarModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatTabsModule,
+    MatDialogModule,
+    MatCheckboxModule,
+    MatSelectModule,
+    MatAutocompleteModule,
+    MatOptionModule,
+    MatPaginatorModule
   ],
   exports: [
     MatSidenavModule,
@@ -30,7 +44,14 @@ import {
     MatButtonModule,
     MatSnackBarModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatTabsModule,
+    MatDialogModule,
+    MatCheckboxModule,
+    MatSelectModule,
+    MatAutocompleteModule,
+    MatOptionModule,
+    MatPaginatorModule
   ]
 })
 export class MaterialModule {}

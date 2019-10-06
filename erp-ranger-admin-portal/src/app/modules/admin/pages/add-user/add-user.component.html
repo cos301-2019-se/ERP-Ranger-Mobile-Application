@@ -1,0 +1,50 @@
+<div class="page-container">
+  <mat-card class="content-card mat-elevation-z8 animated slideInUp">
+    <mat-card-content>
+      <form [formGroup]="regForm" #formDir="ngForm" (ngSubmit)="register()">
+        <h2>New User</h2>
+        <h3 id="success-msg"></h3>
+        <div>
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-icon matPrefix>email</mat-icon>
+              <mat-label>Email</mat-label>
+              <input matInput placeholder="Email" type="email" id="email" class="form-control" formControlName="email" required>
+              <mat-error *ngIf="regForm.get('email').hasError('required')">Email is required.</mat-error>
+              <mat-error *ngIf="regForm.get('email').hasError('email')">Email must be valid.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-icon matPrefix>lock</mat-icon>
+              <mat-label>Password</mat-label>
+              <input matInput placeholder="Password" type="password" autocomplete="new-password" id="password" class="form-control" formControlName="password" required>
+              <mat-error *ngIf="regForm.get('password').hasError('required')">Password is required.</mat-error>
+              <mat-error *ngIf="regForm.get('password').hasError('pattern')">Password must be include at one letter and one number.</mat-error>
+              <mat-error *ngIf="regForm.get('password').hasError('minlength')">Password must be at least 8 characters long.</mat-error>
+              <mat-error *ngIf="regForm.get('password').hasError('maxlength')">Password cannot be more than 20 characters long.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-icon matPrefix>format_color_text</mat-icon>
+              <mat-label>Name</mat-label>
+              <input matInput placeholder="Name" type="text" id="name" class="form-control" formControlName="name" required>
+              <mat-error *ngIf="regForm.get('password').hasError('required')">Name is required.</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-icon matPrefix>phone</mat-icon>
+              <mat-label>Number</mat-label>
+              <input matInput placeholder="Number" type="text" id="number" class="form-control" formControlName="number" required>
+              <mat-error *ngIf="regForm.get('password').hasError('required')">Number is required.</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <button mat-raised-button color="primary" class="raised-button"  [disabled]="regForm.invalid" type="submit">Register</button>
+        <button mat-raised-button color="primary" class="raised-button right-button"  type="reset">Reset</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -3,12 +3,12 @@ agm-map {
     width: 100%;
     min-height: 100%;
 }
-  
-  
+
+
   * {
     font-family: Lato;
   }
-  
-  a {
-    color: darkblue;
+
+  .page-container{
+    overflow: hidden;
   }

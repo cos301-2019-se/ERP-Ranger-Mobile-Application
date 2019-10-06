@@ -1,20 +1,33 @@
-<agm-map 
-  [latitude]="lat"
-  [longitude]="lng"
-  [zoom]="zoom"
-  [disableDefaultUI]="false"
-  [zoomControl]="false">
+<div class="page-container">
+    <mat-card class="content-card mat-elevation-z8 animated slideInUp">
+      <mat-card-content>
+        <agm-map
+          id="map-agm"
+          [latitude]="lat"
+          [longitude]="lng"
+          [zoom]="zoom"
+          [disableDefaultUI]="false"
+          [zoomControl]="false">
+          <agm-kml-layer
+            [url]="kml"
+            [clickable]="defaultui">
+         </agm-kml-layer>
+      <agm-marker
+        *ngFor="let m of markers"
+        [latitude]="m.payload.doc.data().location.geopoint.latitude"
+        [longitude]="m.payload.doc.data().location.geopoint.longitude"
+      >
 
-  <agm-marker 
-      *ngFor="let m of markers"
-      [latitude]="m.payload.doc.data().location.geopoint.latitude"
-      [longitude]="m.payload.doc.data().location.geopoint.longitude"
-      [label]="R">
-      
-    <agm-info-window>
-      {{ m.payload.doc.data().type }} - {{ m.payload.doc.data().report }}
-    </agm-info-window>
-    
-  </agm-marker>
-  
-</agm-map>
+      <agm-info-window>
+        {{ m.payload.doc.data().type }} - {{ m.payload.doc.data().report }}
+        <br>
+        <a [routerLink] = "['/admin/report', m.payload.doc.id]">
+        <!--<span>More Info</span>-->
+          <button mat-raised-button color="primary">More Info</button>
+        </a>
+      </agm-info-window>
+    </agm-marker>
+    </agm-map>
+    </mat-card-content>
+  </mat-card>
+</div>

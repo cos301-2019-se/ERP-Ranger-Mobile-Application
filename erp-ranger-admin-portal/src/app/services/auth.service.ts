@@ -60,6 +60,7 @@ export class AuthService {
     this.fireAuth.auth.signOut().then(() => {
       this.router.navigate(['/']);
     });
+    location.reload(true);
   }
 
   setupSession(uid: String) {
