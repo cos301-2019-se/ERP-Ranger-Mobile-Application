@@ -1,7 +1,7 @@
 # ERP Ranger Mobile Application [![Build Status](https://travis-ci.org/cos301-2019-se/ERP-Ranger-Mobile-Application.svg?branch=master)](https://travis-ci.org/cos301-2019-se/ERP-Ranger-Mobile-Application)
 
 ## Project Description:
-Our project is to create a mobile application to assist ERP rangers with various daily tasks. These include, managing a ranger&#39;s patrol shifts, being able to view all said shifts, tracking and reporting a ranger&#39;s position whilst out on patrol, notifying rangers of incident&#39;s that have taken place, allowing rangers to write and submit a report after a shift has finished and managing the park's assets.
+Our project is to create a mobile application to assist ERP rangers with various daily tasks. These include, managing a ranger&#39;s patrol shifts, being able to view all said shifts, tracking and reporting a ranger&#39;s position whilst out on patrol, notifying rangers of incident&#39;s that have taken place and allowing rangers to write and submit a report after a shift has finished.
 
 ## Project Management Tools
 <a href="https://trello.com/b/DdRmfdV3/erp-ranger-mobile-application" target="_blank">Trello</a>
