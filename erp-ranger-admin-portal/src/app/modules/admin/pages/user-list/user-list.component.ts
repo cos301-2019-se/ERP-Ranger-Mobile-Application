@@ -21,7 +21,7 @@ export class UserListComponent implements OnInit {
     this.getUsers();
     
   }
-
+  //Finds a user in the array and returns their name
   findUserWithID(id) : string{
     var name = "";
     for(var i =0;i<this.userArr.length;i++){
@@ -33,29 +33,28 @@ export class UserListComponent implements OnInit {
 
     return name;
   }
-
+  //Refreshes array
   startRefresh(){
     this.refresher = setInterval(function(){this.userArr = this.userArr;},1000)
   }
-
+  //stops refreshing
   stopRefresh(){
     this.refresher = clearInterval();
   }
-
+  //confirm overlay when deleting reward
   deleteConfirm(user){
-    this.userToDel = user;
-    
+    this.userToDel = user;    
     document.getElementById("overlay-confirm-delete").style.visibility = "visible";
-    document.getElementById("delete-user").innerHTML=this.findUserWithID(this.userToDel)
+    document.getElementById("delete-user").innerHTML=this.findUserWithID(this.userToDel);
     
 
   }
-
+  //hides the confirm overlay
   hideOverlay(){
     document.getElementById("overlay-confirm-delete").style.visibility = "hidden";
 
   }
-
+  //deletes the reward from the table
   confirmedDelete(){
     this.userService.deleteUser(this.userToDel);
     this.hideOverlay();
@@ -64,12 +63,13 @@ export class UserListComponent implements OnInit {
   }
 
 
-
+   //fetches Users and populates the table
   getUsers(){
     this.stopRefresh();
     let observer = this.userService.getUsers().ref
     .onSnapshot(querySnapshot => {
       querySnapshot.docChanges().forEach(change => {
+        if(change.doc.data().active!= false){
         this.userArr =[...this.userArr,{
           id: change.doc.id,
           name: change.doc.data().name,
@@ -79,7 +79,7 @@ export class UserListComponent implements OnInit {
           role:change.doc.data().role,
           points:change.doc.data().points,
           remaining:change.doc.data().remaining
-        }]
+        }]}
       })
     });
     this.startRefresh();  

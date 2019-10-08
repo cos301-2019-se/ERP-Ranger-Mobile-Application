@@ -4,7 +4,7 @@
     "source": "functions"
   },
   "hosting": {
-    "public": "dist",
+    "public": "dist/erp-ranger-admin-portal",
     "ignore": [
       "firebase.json",
       "**/.*",

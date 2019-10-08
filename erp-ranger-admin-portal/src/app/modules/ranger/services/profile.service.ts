@@ -8,6 +8,7 @@ export class ProfileService {
 
   constructor(private fireStore: AngularFirestore) { }
 
+  // Retrieve user name of supplied ID
   getUserName(id: string) {
     var docRef = this.fireStore.collection("users").doc(id).ref;
     return docRef;

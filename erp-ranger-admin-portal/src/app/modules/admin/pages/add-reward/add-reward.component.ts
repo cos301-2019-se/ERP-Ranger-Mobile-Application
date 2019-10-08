@@ -18,6 +18,8 @@ export class AddRewardComponent implements OnInit {
 
   constructor(private rewardService : RewardService) { }
   
+
+  //The formgroup is set with all different formcontrol types and validator requirements
   ngOnInit() {
     this.addForm = new FormGroup({
       'cost': new FormControl('', [
@@ -37,7 +39,7 @@ export class AddRewardComponent implements OnInit {
     });
     
   }
-
+  //When the add button is clicked, this adds a reward to the database
   add(){
     var name = this.addForm.get('name').value;
     this.rewardService.addReward(
