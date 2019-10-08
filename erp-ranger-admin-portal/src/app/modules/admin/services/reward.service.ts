@@ -13,6 +13,8 @@ export class RewardService {
 
   constructor(private fireStore: AngularFirestore, private storage: AngularFireStorage) { }
 
+
+  //adds a reward to the database
   addReward(name, cost, url, imgUrl){
     var self = this;
     this.fireStore.collection('rewards').add({
@@ -49,18 +51,46 @@ export class RewardService {
       
   }
 
+  //returns a reward based on its ID
   getReward(id: String) {
     return this.fireStore.doc<Reward>(`rewards/${id}`).snapshotChanges();
     
   }
 
+  //edits a reward in the database
+  setReward(id: String,name:String, cost:String ,url : String,imgUrl: String) {
+    var self = this;
+    this.fireStore.doc('rewards/'+ id).update({
+      name: name,
+      cost: cost,
+      url: url
+    }).then(function(docRef){      
+      if(imgUrl != "")
+      {
+        var storageRef = firebase.storage().ref('rewards/' + id + "/imgProduct");
+        console.log(imgUrl);
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'blob';
+        xhr.onload = function(event){
+          var blob = xhr.response;
+          storageRef.put(blob);
+        };
+        xhr.open('GET', imgUrl+"");
+        xhr.send();
+      
+      }
+      
 
+
+      
+
+    })
+    
+  }
+
+  //deletes a reward from the database
   deleteReward(id){
-    // this.fireStore.collection('reward').doc(id).delete().then(function(){
-    //   console.log("Successful delete " + id);
-    // }).catch(function(error){
-    //   console.log("Error deleting");
-    // });
+    
     this.fireStore.doc('rewards/' + id).delete().then(function(){
       location.reload();
     }).catch(function(err){
@@ -70,7 +100,7 @@ export class RewardService {
 
 
 
-
+  //fetches all rewards
   getRewards(){
     return this.fireStore.collection("rewards");
   }

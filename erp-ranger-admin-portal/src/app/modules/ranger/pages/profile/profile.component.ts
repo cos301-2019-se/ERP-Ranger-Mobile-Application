@@ -13,6 +13,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 export class ProfileComponent implements OnInit {
   id;
   report;
+  profilePic;
 
   constructor(private profile: ProfileService, private route: ActivatedRoute, private users: UserService, private storage: AngularFireStorage, private angularFireAuth: AngularFireAuth) { }
 
@@ -26,6 +27,21 @@ export class ProfileComponent implements OnInit {
     this.id = this.angularFireAuth.auth.currentUser.uid;
     this.profile.getUserDetails(this.id).subscribe(result => {
       this.report = result;
+
+      this.storage.ref('users/' + this.id + '/'+  this.id).getDownloadURL().subscribe( result => {
+        this.profilePic = result;
+        var picField = <HTMLImageElement>document.getElementById("picture");        
+        picField.src = this.profilePic;
+    },(err)=> {
+      this.profilePic = "https://firebasestorage.googleapis.com/v0/b/erp-ranger-app.appspot.com/o/users%2Fdefault%2Fdefault.png?alt=media&token=fa61e670-6070-49b8-ac82-4dbb9161b39f";
+      var picField = <HTMLImageElement>document.getElementById("picture");        
+      picField.src = this.profilePic});
     });
+  }
+
+  // Display profile picture of user currently logged in
+  showImg(){
+    var picField = <HTMLImageElement>document.getElementById("picture");
+    picField.style.display = "visible";
   }
 }

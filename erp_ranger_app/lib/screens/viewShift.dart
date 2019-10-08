@@ -15,17 +15,18 @@ class ViewShift extends StatefulWidget {
 }
 
 class ViewShiftState extends State<ViewShift> {
-  static Firestore db = Firestore.instance;
-  static CollectionReference shiftRef = db.collection('shifts');
-  Auth shiftAuth = new Auth();
-  String user;
-  QuerySnapshot querySnapshot;
-  List<DocumentSnapshot> shiftListToday = new List<DocumentSnapshot>();
-  List<DocumentSnapshot> shiftListFuture = new List<DocumentSnapshot>();
-  int shiftsToday = -1;
-  int shiftsFuture = -1;
-  bool fetching = true;
+  static Firestore _db = Firestore.instance;
+  static CollectionReference _shiftRef = _db.collection('shifts');
+  Auth _shiftAuth = new Auth();
+  String _user;
+  QuerySnapshot _querySnapshot;
+  List<DocumentSnapshot> _shiftListToday = new List<DocumentSnapshot>();
+  List<DocumentSnapshot> _shiftListFuture = new List<DocumentSnapshot>();
+  int _shiftsToday = -1;
+  int _shiftsFuture = -1;
+  bool _fetching = true;
 
+  //Calls the initial functions that get the appropriate shifts.
   void initialFunctions(BuildContext context){
     getDocs();
     setState(() {
@@ -33,45 +34,47 @@ class ViewShiftState extends State<ViewShift> {
     });
   }
 
+  //reloads the context of the screen in case of any variable changes
   void resetState(){
     setState(() {
 
     });
   }
 
+  //gets the relevant shifts from the database
   Future<void> getDocs() async {
-    user = await shiftAuth.getUserUid();
-    querySnapshot = await db.collection('shifts').where('user', isEqualTo: user).getDocuments();
+    _user = await _shiftAuth.getUserUid();
+    _querySnapshot = await _db.collection('shifts').where('user', isEqualTo: _user).getDocuments();
     List<DocumentSnapshot> temp = new List<DocumentSnapshot>();
 
-    for (int i = 0; i < querySnapshot.documents.length; i++) {
-      if(querySnapshot.documents.elementAt(i).data['start'].toDate().year == DateTime.now().year && querySnapshot.documents.elementAt(i).data['start'].toDate().month == DateTime.now().month && querySnapshot.documents.elementAt(i).data['start'].toDate().day == DateTime.now().day) {
-        temp.add(querySnapshot.documents.elementAt(i));
+    for (int i = 0; i < _querySnapshot.documents.length; i++) {
+      if(_querySnapshot.documents.elementAt(i).data['start'].toDate().year == DateTime.now().year && _querySnapshot.documents.elementAt(i).data['start'].toDate().month == DateTime.now().month && _querySnapshot.documents.elementAt(i).data['start'].toDate().day == DateTime.now().day) {
+        temp.add(_querySnapshot.documents.elementAt(i));
       }
     }
 
     temp.sort((a, b) => a.data['start'].compareTo(b.data['start']));
 
     for(int i = 0; i < temp.length; i++){
-      shiftListToday.add(temp.elementAt(i));
+      _shiftListToday.add(temp.elementAt(i));
     }
 
     temp.clear();
 
-    for(int i = 0; i < querySnapshot.documents.length; i++){
-      if(querySnapshot.documents.elementAt(i).data['start'].toDate().year == DateTime.now().year && (querySnapshot.documents.elementAt(i).data['start'].toDate().month > DateTime.now().month || (querySnapshot.documents.elementAt(i).data['start'].toDate().month == DateTime.now().month && querySnapshot.documents.elementAt(i).data['start'].toDate().day > DateTime.now().day))){
-        temp.add(querySnapshot.documents.elementAt(i));
+    for(int i = 0; i < _querySnapshot.documents.length; i++){
+      if(_querySnapshot.documents.elementAt(i).data['start'].toDate().year == DateTime.now().year && (_querySnapshot.documents.elementAt(i).data['start'].toDate().month > DateTime.now().month || (_querySnapshot.documents.elementAt(i).data['start'].toDate().month == DateTime.now().month && _querySnapshot.documents.elementAt(i).data['start'].toDate().day > DateTime.now().day))){
+        temp.add(_querySnapshot.documents.elementAt(i));
       }
     }
 
     temp.sort((a, b) => a.data['start'].compareTo(b.data['start']));
 
     for (int i = 0; i < temp.length; i++){
-      shiftListFuture.add(temp.elementAt(i));
+      _shiftListFuture.add(temp.elementAt(i));
     }
 
     setState(() {
-      this.fetching = false;
+      this._fetching = false;
     });
   }
 
@@ -81,20 +84,20 @@ class ViewShiftState extends State<ViewShift> {
       body: new Column(
         children: <Widget>[
           _showTodayBanner(),
-          this.fetching == true ? _showFetching() : new Container(),
+          this._fetching == true ? _showFetching() : new Container(),
           new Expanded(
             child: new ListView.builder(
-              itemCount: shiftListToday.length,
+              itemCount: _shiftListToday.length,
               itemBuilder: (BuildContext context, int index) {
                 return displayShiftToday();
               }
             ),
           ),
           _showFutureBanner(),
-        this.fetching == true ? _showFetching() : new Container(),
+        this._fetching == true ? _showFetching() : new Container(),
           new Expanded(
             child: new ListView.builder(
-                itemCount: shiftListFuture.length,
+                itemCount: _shiftListFuture.length,
                 itemBuilder: (BuildContext context, int index) {
                   return displayShiftFuture();
                 }
@@ -111,8 +114,11 @@ class ViewShiftState extends State<ViewShift> {
   }
 
   Widget displayShiftToday() {
-    shiftsToday++;
-    if(shiftListToday.elementAt(shiftsToday).data['start'].compareTo(Timestamp.fromDate(DateTime.now())) < 0){
+    _shiftsToday++;
+    if(_shiftListToday.elementAt(_shiftsToday).data['start'].compareTo(Timestamp.fromDate(DateTime.now())) < 0){
+      if(_shiftsToday == _shiftListToday.length){
+        _shiftsToday = 0;
+      }
       return new Card(
           elevation: 1.0,
           margin: new EdgeInsets.all(8.0),
@@ -128,15 +134,18 @@ class ViewShiftState extends State<ViewShift> {
                 SizedBox(height: 40.0),
                 Center(
                   child: new Text(
-                      ('Start: ' + shiftListToday.elementAt(shiftsToday).data['start'].toDate().toString() + '\n' + 'End: ' +
-                          shiftListToday.elementAt(shiftsToday).data['end'].toDate().toString())
+                      ('Start: ' + _shiftListToday.elementAt(_shiftsToday).data['start'].toDate().toString() + '\n' + 'End: ' +
+                          _shiftListToday.elementAt(_shiftsToday).data['end'].toDate().toString())
                   ),
                 ),
                 SizedBox(height: 30.0),
               ],
             ),
           ));
-    } else if(shiftsToday%2 == 0 && shiftListToday.elementAt(shiftsToday).data['start'].compareTo(Timestamp.fromDate(DateTime.now())) >= 0) {
+    } else if(_shiftsToday%2 == 0 && _shiftListToday.elementAt(_shiftsToday).data['start'].compareTo(Timestamp.fromDate(DateTime.now())) >= 0) {
+      if(_shiftsToday == _shiftListToday.length){
+        _shiftsToday = 0;
+      }
       return new Card(
           elevation: 1.0,
           margin: new EdgeInsets.all(8.0),
@@ -152,8 +161,8 @@ class ViewShiftState extends State<ViewShift> {
                 SizedBox(height: 40.0),
                 Center(
                   child: new Text(
-                      ('Start: ' + shiftListToday.elementAt(shiftsToday).data['start'].toDate().toString() + '\n' + 'End: ' +
-                          shiftListToday.elementAt(shiftsToday).data['end'].toDate().toString())
+                      ('Start: ' + _shiftListToday.elementAt(_shiftsToday).data['start'].toDate().toString() + '\n' + 'End: ' +
+                          _shiftListToday.elementAt(_shiftsToday).data['end'].toDate().toString())
                   ),
                 ),
                 SizedBox(height: 30.0),
@@ -161,6 +170,9 @@ class ViewShiftState extends State<ViewShift> {
             ),
           ));
     } else {
+      if(_shiftsToday == _shiftListToday.length){
+        _shiftsToday = 0;
+      }
       return new Card(
           elevation: 1.0,
           margin: new EdgeInsets.all(8.0),
@@ -176,8 +188,8 @@ class ViewShiftState extends State<ViewShift> {
                 SizedBox(height: 40.0),
                 Center(
                   child: new Text(
-                      ('Start: ' + shiftListToday.elementAt(shiftsToday).data['start'].toDate().toString() + '\n' + 'End: ' +
-                          shiftListToday.elementAt(shiftsToday).data['end'].toDate().toString())
+                      ('Start: ' + _shiftListToday.elementAt(_shiftsToday).data['start'].toDate().toString() + '\n' + 'End: ' +
+                          _shiftListToday.elementAt(_shiftsToday).data['end'].toDate().toString())
                   ),
                 ),
                 SizedBox(height: 30.0),
@@ -188,10 +200,11 @@ class ViewShiftState extends State<ViewShift> {
   }
 
   Widget displayShiftFuture(){
-    shiftsFuture++;
-    print('shift list today length: ' + shiftListToday.length.toString());
-    print('shifts today: ' + shiftsToday.toString());
-    if(shiftsFuture%2 == 0 && shiftListFuture.elementAt(shiftsFuture).data['start'].compareTo(Timestamp.fromDate(DateTime.now())) >= 0) {
+    _shiftsFuture++;
+    if(_shiftsFuture%2 == 0 && _shiftListFuture.elementAt(_shiftsFuture).data['start'].compareTo(Timestamp.fromDate(DateTime.now())) >= 0) {
+      if(_shiftsFuture == _shiftListFuture.length){
+        _shiftsFuture = 0;
+      }
       return new Card(
           elevation: 1.0,
           margin: new EdgeInsets.all(8.0),
@@ -207,8 +220,8 @@ class ViewShiftState extends State<ViewShift> {
                 SizedBox(height: 40.0),
                 Center(
                   child: new Text(
-                      ('Start: ' + shiftListFuture.elementAt(shiftsFuture).data['start'].toDate().toString() + '\n' + 'End: ' +
-                          shiftListFuture.elementAt(shiftsFuture).data['end'].toDate().toString())
+                      ('Start: ' + _shiftListFuture.elementAt(_shiftsFuture).data['start'].toDate().toString() + '\n' + 'End: ' +
+                          _shiftListFuture.elementAt(_shiftsFuture).data['end'].toDate().toString())
                   ),
                 ),
                 SizedBox(height: 30.0),
@@ -216,6 +229,9 @@ class ViewShiftState extends State<ViewShift> {
             ),
           ));
     } else {
+      if(_shiftsFuture == _shiftListFuture.length){
+        _shiftsFuture = 0;
+      }
       return new Card(
           elevation: 1.0,
           margin: new EdgeInsets.all(8.0),
@@ -231,8 +247,8 @@ class ViewShiftState extends State<ViewShift> {
                 SizedBox(height: 40.0),
                 Center(
                   child: new Text(
-                      ('Start: ' + shiftListFuture.elementAt(shiftsFuture).data['start'].toDate().toString() + '\n' + 'End: ' +
-                          shiftListFuture.elementAt(shiftsFuture).data['end'].toDate().toString())
+                      ('Start: ' + _shiftListFuture.elementAt(_shiftsFuture).data['start'].toDate().toString() + '\n' + 'End: ' +
+                          _shiftListFuture.elementAt(_shiftsFuture).data['end'].toDate().toString())
                   ),
                 ),
                 SizedBox(height: 30.0),
