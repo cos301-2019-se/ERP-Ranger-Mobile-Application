@@ -28,6 +28,31 @@ th.mat-header-cell{
 .mat-cell{
   text-align: center;
 }
+.raised-button{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size:20px;
+  color:white;
+  
+    
+}
+.fab-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  margin: 0px;
+}
+button{
+  margin:0px;
+}
+
+.fab-button:hover {
+  cursor: pointer;
+  
+}
+
+
 
 #delete-icon{
   color: #121B41;
@@ -37,8 +62,15 @@ th.mat-header-cell{
   color: #AA0000;
 }
 
+#edit-icon{
+  color: #121B41;
+}
 
-#delete-icon:hover{
+#edit-icon:hover{
+  color: #AA0000;
+}
+
+mat-icon:hover{
   cursor: pointer;
 }
 
@@ -122,8 +154,4 @@ th.mat-header-cell{
 cursor: pointer;
 background-color: rgba(0,0,0,0.05);
 
-}
-
-mat-icon:hover{
-  color:#AA0000 ;
 }

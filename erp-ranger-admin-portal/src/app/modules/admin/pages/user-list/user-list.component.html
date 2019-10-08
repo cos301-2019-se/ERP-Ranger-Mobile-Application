@@ -1,3 +1,4 @@
+<h1>Ranger List</h1>
 <table mat-table [dataSource]="userArr" class="mat-elevation-z8">
 
   <!-- Position Column -->
@@ -46,7 +47,7 @@
 
   <ng-container matColumnDef="edit">
     <th mat-header-cell *matHeaderCellDef> Edit </th>
-    <td mat-cell *matCellDef="let element"> <a href="/admin/user/{{ element.id }}"> <mat-icon>edit</mat-icon></a> </td>
+    <td mat-cell *matCellDef="let element"> <a href="/admin/user/{{ element.id }}"> <mat-icon id="edit-icon">edit</mat-icon></a> </td>
   </ng-container>
 
   <ng-container matColumnDef="delete">
@@ -57,10 +58,15 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
-<a routerLink="add">
-  <button mat-raised-button class="raised-button" color="primary">Add New User</button>
-</a>
 
+
+<div class="fab-button">
+  <a routerLink="add">
+    <button mat-fab color="primary">
+      <mat-icon>add</mat-icon>
+    </button>
+  </a>
+</div>
 <mat-card id="overlay-confirm-delete">
     <button class="hide-overlay-btn" (click)=hideOverlay()>
         <mat-icon>close</mat-icon>
