@@ -1,10 +1,14 @@
-agm-map {
+/*agm-map {
     height: 600px;
     width: 100%;
     min-height: 100%;
+}*/
+
+* {
+  font-family: Lato;
 }
 
-
-  * {
-    font-family: Lato;
-  }
+.page-container{
+  overflow: hidden;
+  height: 100vh;
+}

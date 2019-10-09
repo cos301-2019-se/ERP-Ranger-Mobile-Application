@@ -1,0 +1,46 @@
+.page-container {
+  overflow: hidden;
+  min-width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.page-container > div {
+  min-height: 100vh;
+  min-width: 50%;
+  max-width: 50%;
+}
+
+.data-container h1,
+.data-container h2 {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.data-container h2 {
+  margin-block-start: 5px;
+  margin-block-end: 5px;
+}
+
+agm-map {
+  height: 100vh;
+}
+
+.agm-title {
+  margin-block-start: 0px;
+  margin-block-end: 10px;
+}
+
+.agm-link {
+  width: 100%;
+}
+
+.agm-button {
+  width: 100%;
+}
+
+.map-container {
+  height: 100vh;
+}
