@@ -1,4 +1,7 @@
-<mat-tab-group mat-stretch-tabs class="example-stretched-tabs mat-elevation-z4">
+<h1>
+  Notifications
+</h1>
+<mat-tab-group mat-stretch-tabs class="example-stretched-tabs mat-elevation-z0">
   <mat-tab label="Report Types">
     <div class="content">
       <div *ngIf="reportTypes">
@@ -60,10 +63,14 @@
           <ng-container matColumnDef="edit">
             <mat-header-cell *matHeaderCellDef>Edit</mat-header-cell>
             <mat-cell *matCellDef="let element">
-              <a routerLink="/admin/type/{{ element.id }}">
-                <button mat-raised-button color="primary" class="edit-button">Edit</button>
+              <a class="control" routerLink="/admin/type/{{ element.id }}">
+                <mat-icon>edit</mat-icon>
+                <!--<button mat-raised-button color="primary" class="edit-button">Edit</button>-->
               </a>
-              <button mat-raised-button color="warn" (click)="deleteReportType(element.id)">Delete</button>
+              <a class="control" (click)="deleteReportType(element.id)">
+                <mat-icon>delete</mat-icon>
+              </a>
+              <!--<button mat-raised-button color="warn" (click)="deleteReportType(element.id)">Delete</button>-->
             </mat-cell>
           </ng-container>
 
@@ -111,9 +118,12 @@
 
           <!-- Edit Column -->
           <ng-container matColumnDef="edit">
-            <mat-header-cell *matHeaderCellDef>Edit</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
             <mat-cell *matCellDef="let element">
-              <button mat-raised-button color="warn" (click)="deleteReportReceiver(element.id)">Delete</button>
+              <!--<button mat-raised-button color="warn" (click)="deleteReportReceiver(element.id)">Delete</button>-->
+              <a class="control" (click)="deleteReportReceiver(element.id)">
+                <mat-icon>delete</mat-icon>
+              </a>
             </mat-cell>
           </ng-container>
 
