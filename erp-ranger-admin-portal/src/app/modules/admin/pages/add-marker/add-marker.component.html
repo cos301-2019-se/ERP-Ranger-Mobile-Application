@@ -21,12 +21,20 @@
         [disableDefaultUI]="false"
         [zoomControl]="false"
         (mapClick)="mapClicked($event)">
-
+        <agm-kml-layer
+          [url]="kml"
+          [clickable]="defaultui">
+        </agm-kml-layer>
         <agm-marker 
             *ngFor="let m of markerArr"            
             [latitude]="m.payload.doc.data().location.geopoint.latitude"
             [longitude]="m.payload.doc.data().location.geopoint.longitude"
-            [label]="m.payload.doc.data().name">
+            [label]="m.payload.doc.data().name"
+            [iconUrl] = "{url : 'assets/images/markers.png',
+            scaledSize:{
+              width:40,
+              height:40
+            }}">
             
             
             
@@ -36,7 +44,7 @@
             <strong>Points :  {{m.payload.doc.data().points}}</strong>
           </agm-info-window>
           <div>
-            {{setHighMarker(m.payload.doc.data().id)}}
+            {{setIDMarker(m.payload.doc.data().id)}}
           </div>
         </agm-marker>
         

@@ -1,0 +1,8 @@
+<div id="map">
+
+</div>
+<div class="fab-button" *ngIf="(park && !parks) && !fixed">
+  <button mat-fab color="primary" (click)="zoomToPark()">
+    <mat-icon>my_location</mat-icon>
+  </button>
+</div>

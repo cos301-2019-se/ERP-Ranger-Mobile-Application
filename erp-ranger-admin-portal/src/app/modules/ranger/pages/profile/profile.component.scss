@@ -1,0 +1,31 @@
+mat-card {
+    margin: 10px; 
+}
+  
+  
+  * {
+    font-family: Lato;
+    font-size: 17px;
+  }
+  
+  a {
+    color: darkblue;
+  }
+
+  .container {
+    display: flex;
+  }
+
+  .img-icon{
+    display: inline-block;
+    position: relative;
+    width:20%;
+    height:20%;
+    top: 2%;
+  }
+
+  .img-icon img{
+    position: relative;
+    width: 100%;
+    
+  }

@@ -55,4 +55,7 @@ class Auth {
     return this._preferences.getString('user');
   }
 
+  FirebaseAuth getAuth() {
+    return this._firebaseAuth;
+  }
 }

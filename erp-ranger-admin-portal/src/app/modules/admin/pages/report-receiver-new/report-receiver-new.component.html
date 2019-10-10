@@ -1,0 +1,45 @@
+<div class="page-container">
+  <mat-card class="content-card mat-elevation-z8 animated slideInUp">
+    <mat-card-content>
+      <form [formGroup]="reportReceiverForm" #formDir="ngForm" (ngSubmit)="create()">
+        <h2>Notification Receivers</h2>
+        <div>
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Admin</mat-label>
+              <input matInput placeholder="Admin" type="text" id="user" class="form-control" formControlName="user" required [matAutocomplete]="autoUser">
+            </mat-form-field>
+            <mat-autocomplete #autoUser="matAutocomplete">
+              <mat-option *ngFor="let option of filteredUsers | async" [value]="option.name" (onSelectionChange)="setDocId($event, 'user', option.id)">
+                {{ option.name }}
+              </mat-option>
+            </mat-autocomplete>
+          </div>
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Type</mat-label>
+              <input matInput placeholder="Type" type="text" id="type" class="form-control" formControlName="type" required [matAutocomplete]="autoType">
+            </mat-form-field>
+            <mat-autocomplete #autoType="matAutocomplete">
+              <mat-option *ngFor="let option of filteredTypes | async" [value]="option.name" (onSelectionChange)="setDocId($event, 'type', option.id)">
+                {{ option.name }}
+              </mat-option>
+            </mat-autocomplete>
+          </div>
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Park</mat-label>
+              <input matInput placeholder="Park" type="text" id="park" class="form-control" formControlName="park" required [matAutocomplete]="autoPark">
+            </mat-form-field>
+            <mat-autocomplete #autoPark="matAutocomplete">
+              <mat-option *ngFor="let option of filteredParks | async" [value]="option.name" (onSelectionChange)="setDocId($event, 'park', option.id)">
+                {{ option.name }}
+              </mat-option>
+            </mat-autocomplete>
+          </div>
+        </div>
+        <button mat-raised-button color="primary" type="submit" [disabled]="reportReceiverForm.invalid" class="button create-button">Add New Notification</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
