@@ -8,6 +8,10 @@ export class ReportService {
 
   constructor(private fireStore: AngularFirestore) { }
 
+  getAllReports(){
+    return this.fireStore.collection('reports');
+  }
+
   getReports() {
     return this.fireStore.collection('reports').snapshotChanges();
   }
