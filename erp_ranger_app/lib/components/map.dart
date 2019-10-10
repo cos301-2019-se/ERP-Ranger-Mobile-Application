@@ -76,13 +76,26 @@ class MapState extends State<MapComponent> {
   }
 
   void _onMapCreated(GoogleMapController controller) {
-    _animateToPark();
+    //_animateToPark();
+    _animateToUser();
     _updateMarkers();
     setState(() {
       _mapController = controller;
     });
   }
 
+  //moves the view to the location of the user
+  _animateToUser() async {
+    var pos = await _location.getLocation();
+
+    _mapController.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: LatLng(pos.latitude, pos.longitude),
+          zoom: 13.0,
+        )
+    )
+    );
+  }
   //moves the view to the location of the park
   _animateToPark() async {
     DocumentSnapshot document = await _firestore.collection('parks').document(await Park.getParkId()).get();
