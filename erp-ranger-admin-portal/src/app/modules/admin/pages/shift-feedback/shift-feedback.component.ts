@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, ViewChild, TemplateRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef, ViewChild, TemplateRef, OnInit, ViewEncapsulation } from '@angular/core';
 import { ShiftService} from '../../services/shift.service';
 import { shiftInitState } from '@angular/core/src/view';
 import { UserService} from '../../../../services/user.service';
@@ -14,6 +14,7 @@ import { elementStart } from '@angular/core/src/render3';
 import { CalendarDayViewEventComponent } from 'angular-calendar/modules/day/calendar-day-view-event.component';
 import { google } from '@agm/core/services/google-maps-types';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { ReportService } from '../../services/report.service';
 
 const colors: any = {
   red: {
@@ -34,6 +35,7 @@ const colors: any = {
   selector: 'app-shift-feedback',
   templateUrl: './shift-feedback.component.html',
   styleUrls: ['./shift-feedback.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ShiftFeedbackComponent implements OnInit {  
   shiftsAll;
@@ -41,13 +43,14 @@ export class ShiftFeedbackComponent implements OnInit {
   temp = 0;
   counter = 0;
   refreshInt;
+  reports : reportType[] =[];
   ngOnInit() {
     this.displayShifts();
     this.refreshInt = setInterval(function(){this.events = this.events;},1000);
   }
 
 
-  constructor(private shifts: ShiftService, private modal: NgbModal, private cdr: ChangeDetectorRef, private storage: AngularFireStorage) {}
+  constructor(private shifts: ShiftService, private report : ReportService, private modal: NgbModal, private cdr: ChangeDetectorRef, private storage: AngularFireStorage) {}
 
   
   
@@ -73,6 +76,7 @@ export class ShiftFeedbackComponent implements OnInit {
             console.log("Patrol not found ");
             
           } else{
+            
             var endTime = doc.data().end;
             var startTime = doc.data().start;
             var parkID = doc.data().park;
@@ -95,8 +99,8 @@ export class ShiftFeedbackComponent implements OnInit {
                   } else{     
                     var parkName = parkDoc.data().name;
                     var start = startTime.toDate();                   
-                    var end = endTime.toDate();
-                    this.addEventP(start,end,change.doc.id+ "," + userDoc.data().uid,userName,parkName, feedBackInfo);
+                    var end = endTime.toDate();                    
+                    this.addEventP(start,end,change.doc.id+ "," + userDoc.data().uid+","+patrolID,userName,parkName, feedBackInfo);
                   }
                 })
                 .catch(err => {
@@ -115,6 +119,16 @@ export class ShiftFeedbackComponent implements OnInit {
           console.log("Error getting document");         
         })
       }});
+    });
+    let obs = this.report.getAllReports().ref
+    .onSnapshot(querySnapshot => {
+      querySnapshot.docChanges().forEach(change => {
+        if(change.doc.data().patrol){
+          this.reports.push({ patrol: change.doc.data().patrol,
+            type: change.doc.data().type});   
+            console.log(change.doc.data().patrol);
+        }          
+      })
     });
 
     
@@ -190,8 +204,21 @@ export class ShiftFeedbackComponent implements OnInit {
   }
   handleEvent(action: string, event: CalendarEvent): void {
     //Do something here when clicking an event   
+    document.getElementById("card-footer").innerHTML="";
     var fid =  event.id.toString().substring(0,event.id.toString().indexOf(","));
     var uid = event.id.toString().substring(event.id.toString().indexOf(",")+1);
+    var pid = uid.substring(uid.indexOf(",")+1);
+    var uid = uid.substring(0,uid.indexOf(","));
+    for(var x =0;x< this.reports.length;x++){
+      console.log(pid + "=?" + this.reports[x].patrol);
+      if(pid == this.reports[x].patrol){
+        document.getElementById("card-footer").innerHTML +="<span class='footer-label'>"+ this.reports[x].type + "</span>";
+        
+      }
+    }
+      
+    
+    console.log(uid);
     let docRef = this.shifts.getFeedbackID(fid + ""); 
     let getFB = docRef.get()
     .then(fDoc => {
@@ -199,8 +226,7 @@ export class ShiftFeedbackComponent implements OnInit {
         console.log("Feedback doc not found ");
         
       } else{     
-        var id = event.id.toString().substring(event.id.toString().indexOf(","));
-        console.log(id);
+        var id = event.id.toString().substring(event.id.toString().indexOf(","));        
         this.storage.ref('users/' + uid + '/'+  uid).getDownloadURL().subscribe( result => {
           var profilePic = result;
           document.getElementById("prof-pic").style.backgroundImage = "url(" + profilePic+ ")";
@@ -231,7 +257,7 @@ export class ShiftFeedbackComponent implements OnInit {
     }
     return time;
   }
-  addEventP( patrolDate: Date, endDate : Date, id, name : string,park : string, info: string): void {
+  addEventP( patrolDate: Date, endDate : Date, id, name : string,park : string, info: string): void {   
     this.events = [
       ...this.events,
       {
@@ -260,4 +286,9 @@ export class ShiftFeedbackComponent implements OnInit {
   }
   
   
+}
+
+interface reportType{
+  patrol?,
+  type
 }
