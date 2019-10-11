@@ -1,5 +1,5 @@
 mat-card {
-    margin: 10px; 
+    margin: 10px;
 }
 
 h1, h3 {
@@ -8,17 +8,17 @@ h1, h3 {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-agm-map {
+app-park-map {
     height: 600px;
     width: 100%;
     min-height: 100%;
 }
-  
-  
+
+
   * {
     font-family: Lato;
   }
-  
+
   a {
     color: darkblue;
   }
@@ -31,3 +31,7 @@ agm-map {
     max-height: 300px;
     margin: 0.5rem;
   }
+
+.map-container {
+  height: 400px;
+}

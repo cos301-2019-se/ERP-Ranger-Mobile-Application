@@ -14,14 +14,14 @@ import { MatPaginator, MatSort } from '@angular/material';
 export class ReportOverviewComponent implements OnInit {
 
   // Set initial zoom intensity
-  zoom: number = 13;
+  /*zoom: number = 13;*/
   park: Park;
 
   // Default map load location - currently Rietvlei dam TODO change to be dynamic
-  lat: number = -25.876910;
-  lng: number = 28.273253;
+  /*lat: number = -25.876910;
+  lng: number = 28.273253;*/
   // tslint:disable-next-line: max-line-length
-  kml = 'https://gist.githubusercontent.com/Jtfnel/77b53014741ec9fce2ffc68d210cdf56/raw/cd8d5bbf2476c48512cb6d44694a52289aa52999/rietvlei.kml';
+  // kml = 'https://gist.githubusercontent.com/Jtfnel/77b53014741ec9fce2ffc68d210cdf56/raw/cd8d5bbf2476c48512cb6d44694a52289aa52999/rietvlei.kml';
   defaultui;
   reportArr :  reportRow[] = [];
   markers;
@@ -79,7 +79,7 @@ export class ReportOverviewComponent implements OnInit {
         }
       }
     };
-    //this.setSize();
+    // this.setSize();
     this.displayReports();
   }
 
@@ -141,9 +141,9 @@ export class ReportOverviewComponent implements OnInit {
   }
 
   // Set size of AGM map
-  setSize(){
+  /*setSize(){
     document.getElementById("map-agm").style.height = (document.body.offsetHeight-32) + "px";
-  }
+  }*/
 
   //Applies filter to table
   search(filterVal: string){
