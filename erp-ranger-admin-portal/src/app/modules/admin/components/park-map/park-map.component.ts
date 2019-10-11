@@ -14,12 +14,16 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() markers;
   @Input() rangers;
   @Input() reports;
+  @Input() report;
   @Input() fixed: boolean;
+  @Input() center;
+  @Input() zoom = 10;
 
   storedChanges: SimpleChange;
 
   size = 200;
   map: mapboxgl.Map;
+  // popupIsOpen = false;
 
   pulsingDotReport;
   pulsingDotRanger;
@@ -39,6 +43,9 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
     if (this.map) {
       if (changes['reports'] && (changes['reports'].currentValue !== changes['reports'].previousValue)) {
         this.setupReports(changes['reports'].currentValue);
+      }
+      if (changes['report'] && (changes['report'].currentValue !== changes['report'].previousValue)) {
+        this.setupReport(changes['report'].currentValue);
       }
       if (changes['rangers'] && (changes['rangers'].currentValue !== changes['rangers'].previousValue)) {
         this.setupRangers(changes['rangers'].currentValue);
@@ -73,7 +80,13 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
   setupMap() {
     mapboxgl.accessToken = environment.mapbox.accessToken;
     let center = null;
-    if (this.park) {
+    if (this.center) {
+      center = [
+        this.center.longitude,
+        this.center.latitude
+      ];
+      console.log(center);
+    } else if (this.park) {
       center = [
         this.park.fence.geoJson.coordinates[0][0][0],
         this.park.fence.geoJson.coordinates[0][0][1]
@@ -82,19 +95,19 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
       center = [
         28.278051304132134,
         -25.77998666415725
-      ]
+      ];
     }
     this.map = new mapboxgl.Map({
       container: 'map',
       // style: 'mapbox://styles/mapbox/streets-v11',
-      style: 'mapbox://styles/erp-rangers/ck11chqnc0eds1cugiybx7eyl',
-      // style: 'mapbox://styles/erpngo/cjwrwfig29f9z1cqtsqmsnegp',
+      // style: 'mapbox://styles/erp-rangers/ck11chqnc0eds1cugiybx7eyl',
+      style: 'mapbox://styles/erpngo/ck1j6095i5t301conykwr63dl',
       center: center,
-      zoom: 10
+      zoom: this.zoom
     });
     this.setupDots();
     if (this.storedChanges) {
-      //this.ngOnChanges(this.storedChanges);
+      // this.ngOnChanges(this.storedChanges);
       this.storedChanges = null;
     }
   }
@@ -125,24 +138,28 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
           },
           'layout': {},
           'paint': {
-            'fill-color': '#fc4e03',
-            'fill-opacity': 0.15
+            'fill-color': '#9ff74d',
+            'fill-opacity': 0.2
           }
         });
         this.zoomToPark();
-        this.mapRefresh();
       } else if (this.parks) {
 
       }
 
-      // Display markers in a park
+      // Display reports in a park
       this.setupReports(this.reports);
 
       // Display rangers in a park
       this.setupRangers(this.rangers);
 
-      // Display reports in a park
+      // Display markers in a park
       this.setupMarkers(this.markers);
+
+      // Display report in a park
+      this.setupReport(this.report);
+
+      this.mapRefresh();
 
     });
   }
@@ -191,7 +208,7 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   setupReports(reports) {
-    if (reports) {
+    if (reports && this.map) {
       if (this.map.getLayer('reports')) {
         this.map.removeLayer('reports');
       }
@@ -206,14 +223,11 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
           'data': {
             'type': 'FeatureCollection',
             'features': reports.map(report => {
-              console.log(report.payload.doc.data());
               return {
                 'type': 'Feature',
                 'properties': {
                   'uid': report.payload.doc.id,
-                  // 'external': l.providerTag,
-                  // 'animal': l.animal.id,
-                  // 'locationUpdate': l.location.updated
+                  'type': report.payload.doc.data().type,
                 },
                 'geometry': {
                   'type': 'Point',
@@ -231,11 +245,98 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
           'icon-allow-overlap': true
         }
       });
+
+      this.map.on('click', 'reports', (e) => {
+        /*if (this.popupIsOpen) {
+          return;
+        }*/
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        let description = '<h2>Report: ' + e.features[0].properties.type + '</h2>';
+        description += '<a href="/admin/report/' + e.features[0].properties.uid + '">';
+        description += '<button mat-raised-button color="primary">Open Report</button>';
+        description += '</a>';
+
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+          coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        const popup = new mapboxgl.Popup()
+          .setLngLat(coordinates)
+          .setHTML(description)
+          .addTo(this.map);
+        /*popup.on('close', function(e) {
+          this.popupIsOpen = false;
+          console.log(this.popupIsOpen);
+        });
+        this.popupIsOpen = true;*/
+      });
+
+      // Change the cursor to a pointer when the mouse is over the places layer.
+      this.map.on('mouseenter', 'reports', () => {
+        this.map.getCanvas().style.cursor = 'pointer';
+      });
+
+      // Change it back to a pointer when it leaves.
+      this.map.on('mouseleave', 'reports', () => {
+        this.map.getCanvas().style.cursor = '';
+      });
+    }
+  }
+
+  setupReport(report) {
+    if (report && this.map) {
+      if (this.map.getLayer('report')) {
+        this.map.removeLayer('report');
+      }
+      if (this.map.getSource('report')) {
+        this.map.removeSource('report');
+      }
+      console.log(report);
+      this.map.addLayer({
+        'id': 'report',
+        'type': 'symbol',
+        'source': {
+          'type': 'geojson',
+          'data': {
+            'type': 'FeatureCollection',
+            'features': [{
+              'type': 'Feature',
+              'properties': {
+                'uid': report
+              },
+              'geometry': {
+                'type': 'Point',
+                'coordinates': [
+                  report.location.geopoint.longitude,
+                  report.location.geopoint.latitude
+                ]
+              }
+            }]
+          }
+        },
+        'layout': {
+          'icon-image': 'pulsing-dot-report',
+          'icon-allow-overlap': true
+        }
+      });
+      /*const el = document.createElement('div');
+      el.id = 'marker';
+
+      // create the marker
+      new mapboxgl.Marker(el)
+        .setLngLat([
+          report.location.geopoint.longitude,
+          report.location.geopoint.latitude
+        ])
+        .addTo(this.map);*/
     }
   }
 
   setupRangers(rangers) {
-    if (rangers) {
+    if (rangers && this.map) {
       if (this.map.getLayer('rangers')) {
         this.map.removeLayer('rangers');
       }
@@ -255,9 +356,8 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
                 'type': 'Feature',
                 'properties': {
                   'uid': ranger.id,
-                  // 'external': l.providerTag,
-                  // 'animal': l.animal.id,
-                  // 'locationUpdate': l.location.updated
+                  'name': ranger.ranger.name,
+                  'number': ranger.ranger.number
                 },
                 'geometry': {
                   'type': 'Point',
@@ -275,11 +375,48 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
           'icon-allow-overlap': true
         }
       });
+
+      this.map.on('click', 'rangers', (e) => {
+        /*if (this.popupIsOpen) {
+          console.log('Cant open');
+          return;
+        }*/
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        let description = '<h2>Ranger: ' + e.features[0].properties.name + '</h2>';
+        description += '<h4>Number: ' + e.features[0].properties.number + '</h4>';
+
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+          coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        const popup = new mapboxgl.Popup()
+          .setLngLat(coordinates)
+          .setHTML(description)
+          .addTo(this.map);
+        /*popup.on('close', function(e) {
+          this.popupIsOpen = false;
+          console.log(this.popupIsOpen);
+        });
+        this.popupIsOpen = true;*/
+      });
+
+      // Change the cursor to a pointer when the mouse is over the places layer.
+      this.map.on('mouseenter', 'rangers', () => {
+        this.map.getCanvas().style.cursor = 'pointer';
+      });
+
+      // Change it back to a pointer when it leaves.
+      this.map.on('mouseleave', 'rangers', () => {
+        this.map.getCanvas().style.cursor = '';
+      });
     }
   }
 
   setupMarkers(markers) {
-    if (markers) {
+    if (markers && this.map) {
       if (this.map.getLayer('markers')) {
         this.map.removeLayer('markers');
       }

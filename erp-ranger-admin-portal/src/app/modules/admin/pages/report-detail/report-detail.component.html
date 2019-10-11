@@ -18,37 +18,20 @@
       <mat-card-content class="container">
         <div *ngIf="photo1" class ="image">
           <img [src]="photo1" alt="">
-        </div> 
+        </div>
         <div *ngIf="photo2" class ="image">
             <img [src]="photo2" alt="">
-          </div> 
+          </div>
           <div *ngIf="photo3" class ="image">
               <img [src]="photo3" alt="">
-            </div> 
+            </div>
       </mat-card-content>
   </mat-card>
   <mat-card class="content-card mat-elevation-z8 animated slideInUp">
       <mat-card-content *ngIf="report">
-        <!--Map generated to display the location of the reported incident by making use of a marker-->
-          <agm-map 
-          [latitude]="report.location.geopoint.latitude"
-          [longitude]="report.location.geopoint.longitude"
-          [zoom]="zoom"
-          [disableDefaultUI]="false"
-          [zoomControl]="false">
-        
-          <agm-marker 
-              [latitude]="report.location.geopoint.latitude"
-              [longitude]="report.location.geopoint.longitude"
-              [label]="R">
-              
-            <agm-info-window>
-              {{ report.type }} - {{ report.report }}
-            </agm-info-window>
-            
-          </agm-marker>
-          
-        </agm-map>
+        <div class="map-container">
+          <app-park-map [center]="report.location.geopoint" [zoom]="zoom" [fixed]="true" [report]="report"></app-park-map>
+        </div>
       </mat-card-content>
     </mat-card>
 </div>
