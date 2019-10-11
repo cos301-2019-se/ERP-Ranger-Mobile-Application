@@ -1,10 +1,16 @@
-mat-drawer-container, mat-drawer, mat-drawer-content {
+mat-drawer-container, mat-drawer {
   height: 100%;
-  background-color: #fafafa;
+  background-color: #121B41;
+}
+
+mat-drawer-content {
+  height: 100%;
+  /*background-color: #fafafa;*/
+  background-color: #fff;
 }
 
 mat-drawer {
-  min-width: 230px; 
+  min-width: 230px;
 }
 
 mat-toolbar {
@@ -28,6 +34,7 @@ mat-toolbar {
 .drawer-logo {
   margin-top: 10px;
   width: 140px;
+  filter: contrast(100) invert(100);
 }
 
 .main-container {

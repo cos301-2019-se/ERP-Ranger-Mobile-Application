@@ -14,8 +14,8 @@ import * as firebase from 'firebase';
 })
 export class ReportDetailComponent implements OnInit {
 
-  
-  zoom: number = 13;
+
+  zoom: number = 16;
 
   report;
   user;
