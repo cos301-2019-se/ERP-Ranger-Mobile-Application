@@ -11,6 +11,7 @@ import 'package:erp_ranger_app/services/park.dart';
 import 'package:erp_ranger_app/screens/dashboard.dart';
 import 'package:compressimage/compressimage.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:erp_ranger_app/services/patrolData.dart';
 
 class ReportScreen extends StatefulWidget {
   @override
@@ -39,6 +40,7 @@ class ReportState extends State<ReportScreen> {
   Auth tempAuth = new Auth();
   String user;
   String park;
+  String patrol;
 
   //Sends all the given data to the database.
   void _performReport() async {
@@ -48,6 +50,7 @@ class ReportState extends State<ReportScreen> {
 
     park = await Park.getParkId();
     user = await tempAuth.getUserUid();
+    patrol = await patrolData.getPatrolId();
 
     var _userPos = await _location.getLocation();
     _userPointLocation = geoFlutterFire.point(//latitude: -25.762415, longitude: 28.234624);
@@ -56,6 +59,7 @@ class ReportState extends State<ReportScreen> {
     DocumentReference result = await Firestore.instance.collection('reports').add({
         "location": _userPointLocation.data,
         "park": park,
+        "patrol": patrol,
         "report": _reportDetails,
         "time": _now,
         "type": _reportType,
