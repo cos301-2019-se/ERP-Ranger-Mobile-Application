@@ -16,7 +16,7 @@ a{
   padding-right:13px;
   font-size:20px;
   color:white;
-    
+
 }
 
 
@@ -28,6 +28,39 @@ th.mat-header-cell{
 .mat-cell{
   text-align: center;
 }
+.raised-button{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size:20px;
+  color:white;
+  
+    
+}
+
+.mat-elevation-z8{
+  box-shadow: 0px 0px 0px 0px;
+}
+
+.fab-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  margin: 0px;
+  box-shadow: 0 0 0 0;
+}
+
+
+button{
+  margin:0px;
+}
+
+.fab-button:hover {
+  cursor: pointer;
+  
+}
+
+
 
 #delete-icon{
   color: #121B41;
@@ -37,8 +70,15 @@ th.mat-header-cell{
   color: #AA0000;
 }
 
+#edit-icon{
+  color: #121B41;
+}
 
-#delete-icon:hover{
+#edit-icon:hover{
+  color: #AA0000;
+}
+
+mat-icon:hover{
   cursor: pointer;
 }
 
@@ -75,7 +115,7 @@ th.mat-header-cell{
   border-radius: 5px;
   background-color: #3f51b5;
   font-size: 1.8em;
-  
+
 }
 
 .confirm-option:hover{
@@ -111,7 +151,7 @@ th.mat-header-cell{
   border:0px;
   right:3px;
   top:3px;
-  
+
   background-color: rgba(255,255,255,0);
   border-radius: 2px;
   width: 50px;
@@ -125,5 +165,25 @@ background-color: rgba(0,0,0,0.05);
 }
 
 mat-icon:hover{
-  color:#AA0000 ;
+  color: #8b745b;
+}
+
+h1 {
+  margin-block-start: 15px;
+  margin-block-end: 15px;
+  margin-left: 20px;
+}
+
+.fab-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+.fab-button button {
+  background-color: #121B41;
+}
+
+.fab-button button mat-icon {
+  color: #ffffff;
 }

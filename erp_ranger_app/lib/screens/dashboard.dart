@@ -47,6 +47,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     else {
       formattedDateTime = '00:00:00';
     }
+    _setButtonText();
     setState(() {
       _timeString = formattedDateTime;
     });

@@ -1,12 +1,14 @@
 :host {
   width: 100%;
   max-width: 100%;
+  
 }
 
 nav {
   max-width: 100%;
   align-self: flex-start;
   overflow: hidden;
+  
 }
 
 nav ul {
@@ -25,16 +27,13 @@ nav ul li a {
   flex-direction: row;
   align-items: center;
   text-decoration: none;
-  color: #000;
+  color: #fafafa;
   font-size: 1.05rem;
-  border-left-style: solid;
-  border-left-width: 4px;
-  border-left-color: #FAFAFA;
 }
 
 nav ul li a:hover {
-  border-left-color: #121B41;
-  background-color: #DADADA;
+  background-color: #fafafa;
+  color: #121B41;
   cursor: pointer;
 }
 
@@ -48,8 +47,7 @@ mat-icon {
 
 .bottom{
   position: absolute;
-  display: inline-block;
-  bottom:0;
-  width: 100%;
-  
+  width:100%;
+  bottom:0px;
+
 }
