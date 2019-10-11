@@ -1,0 +1,34 @@
+/*agm-map {
+    height: 600px;
+    width: 100%;
+    min-height: 100%;
+}*/
+
+* {
+  font-family: Lato;
+}
+
+.page-container{  
+  overflow: hidden;
+  height: 100vh;
+}
+
+.mat-table{
+  width:100%;
+}
+
+.mat-form-field{
+  width:100%;
+  text-align: center;
+}
+td a{
+  text-decoration: none;
+  color: #121B41;
+}
+
+
+
+.mat-cell{
+  
+  width:25%;
+}

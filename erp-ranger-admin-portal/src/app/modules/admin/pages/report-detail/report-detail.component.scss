@@ -1,0 +1,33 @@
+mat-card {
+    margin: 10px; 
+}
+
+h1, h3 {
+  margin-block-end: 0px;
+  margin-block-start: 0px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+agm-map {
+    height: 600px;
+    width: 100%;
+    min-height: 100%;
+}
+  
+  
+  * {
+    font-family: Lato;
+  }
+  
+  a {
+    color: darkblue;
+  }
+
+  .container {
+    display: flex;
+  }
+
+  .image img {
+    max-height: 300px;
+    margin: 0.5rem;
+  }

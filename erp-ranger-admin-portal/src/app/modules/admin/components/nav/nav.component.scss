@@ -1,0 +1,53 @@
+:host {
+  width: 100%;
+  max-width: 100%;
+  
+}
+
+nav {
+  max-width: 100%;
+  align-self: flex-start;
+  overflow: hidden;
+  
+}
+
+nav ul {
+  max-width: 100%;
+  margin: 0px;
+  padding: 0px;
+  margin-top: 30px;
+  list-style-type: none;
+}
+
+nav ul li a {
+  max-width: 100%;
+  padding-left: 10px;
+  height: 45px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-decoration: none;
+  color: #fafafa;
+  font-size: 1.05rem;
+}
+
+nav ul li a:hover {
+  background-color: #fafafa;
+  color: #121B41;
+  cursor: pointer;
+}
+
+span {
+  margin-top: 5px;
+}
+
+mat-icon {
+  margin-right: 10px;
+}
+
+.bottom{
+  position: absolute;
+  width:100%;
+  bottom:0px;
+
+}

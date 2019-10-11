@@ -1,0 +1,18 @@
+<div class="page-container">
+  <mat-card class="content-card mat-elevation-z8 animated slideInUp">
+      <mat-card-content *ngIf="report">
+          <div id="image-div" class="img-icon" ><img (onload)="showImg()" id="picture" src="" style="display:hidden;">
+          </div>
+          <p>
+            Ranger's name : <strong> {{ report.name }} </strong>
+            <br>
+            Ranger's email address: <strong> {{ report.email }} </strong>
+            <br>
+            Ranger's phone number: <strong> {{ report.number }} </strong>
+          </p>
+      </mat-card-content>
+      <a [routerLink] = "['/ranger/profile', id]">
+          <button mat-raised-button color="primary">Edit Ranger details</button>
+        </a>
+    </mat-card>
+</div>
