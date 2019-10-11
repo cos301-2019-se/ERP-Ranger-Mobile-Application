@@ -10,7 +10,7 @@ Our project is to create a mobile application to assist ERP rangers with various
 - <a href="https://github.com/cos301-2019-se/ERP-Ranger-Mobile-Application/blob/master/documentation/COS_301_Capstone_Demo_4_SRS.pdf" target="_blank">SRS Document</a>
 - <a href="https://github.com/cos301-2019-se/ERP-Ranger-Mobile-Application/blob/master/documentation/COS301_Coding_standards.pdf" target="_blank">Coding Standards</a> 
 - <a href="https://github.com/cos301-2019-se/ERP-Ranger-Mobile-Application/blob/master/documentation/COS_301_Capstone_Demo_User_Manual_2_0.pdf" target="_blank">User Manual</a>
-- <a href="https://github.com/cos301-2019-se/ERP-Ranger-Mobile-Application/blob/master /documentation/COS_301_Testing_standards.pdf" target="_blank">Testing Policy</a>
+- <a href="https://github.com/cos301-2019-se/ERP-Ranger-Mobile-Application/blob/master/documentation/COS_301_Testing_standards.pdf" target="_blank">Testing Policy</a>
 
 ## Contributing
 <a href="https://github.com/cos301-2019-se/ERP-Ranger-Mobile-Application/blob/master/CONTRIBUTING.md" target="_blank">View Contribution Guide</a>
