@@ -4,53 +4,34 @@
     <!--Card container generated only if there are more info to show of an exisitng report-->
     <mat-card-content *ngIf="report&&user">
       <!--Info based on exisiting report selected on the Report Overview screen's map-->
-      <p>
        <!--some string: {{report.location.geopoint.latitude}} -->
-        Type of report: <strong> {{ report.type }} </strong>
+        <h1>Type of report: {{ report.type }}</h1>
         <br>
-        Time of report: <strong> {{ report.time.toDate() | date:'dd/MM/yyyy @ HH:mm:ss' }} </strong>
+        <h3>Time of report: {{ report.time.toDate() | date:'dd/MM/yyyy @ HH:mm:ss' }} </h3>
         <br>
-        Reported by: <strong> {{ user }} </strong>
+        <h3>Reported by: {{ user }} </h3>
         <br>
-        Incident: <strong> {{ report.report }} </strong>
+        <h3>Incident: {{ report.report }} </h3>
         <br>
-        Geopoints: <strong> Longitude: {{ report.location.geopoint.longitude }} / Latitude: {{ report.location.geopoint.latitude }} </strong>
-      </p>
+        <h3>Geopoints: Longitude: {{ report.location.geopoint.longitude }} / Latitude: {{ report.location.geopoint.latitude }}</h3>
     </mat-card-content>
       <mat-card-content class="container">
         <div *ngIf="photo1" class ="image">
           <img [src]="photo1" alt="">
-        </div> 
+        </div>
         <div *ngIf="photo2" class ="image">
             <img [src]="photo2" alt="">
-          </div> 
+          </div>
           <div *ngIf="photo3" class ="image">
               <img [src]="photo3" alt="">
-            </div> 
+            </div>
       </mat-card-content>
   </mat-card>
   <mat-card class="content-card mat-elevation-z8 animated slideInUp">
       <mat-card-content *ngIf="report">
-        <!--Map generated to display the location of the reported incident by making use of a marker-->
-          <agm-map 
-          [latitude]="report.location.geopoint.latitude"
-          [longitude]="report.location.geopoint.longitude"
-          [zoom]="zoom"
-          [disableDefaultUI]="false"
-          [zoomControl]="false">
-        
-          <agm-marker 
-              [latitude]="report.location.geopoint.latitude"
-              [longitude]="report.location.geopoint.longitude"
-              [label]="R">
-              
-            <agm-info-window>
-              {{ report.type }} - {{ report.report }}
-            </agm-info-window>
-            
-          </agm-marker>
-          
-        </agm-map>
+        <div class="map-container">
+          <app-park-map [center]="report.location.geopoint" [zoom]="zoom" [fixed]="true" [report]="report"></app-park-map>
+        </div>
       </mat-card-content>
     </mat-card>
 </div>

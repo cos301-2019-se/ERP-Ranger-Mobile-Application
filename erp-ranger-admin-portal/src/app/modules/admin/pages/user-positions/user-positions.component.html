@@ -1,14 +1,18 @@
 <div class="page-container">
-  <div class="overlay-select">
+  <div class="map-container">
+    <app-park-map [park]="riet" [fixed]="false" [rangers]="rangerList"></app-park-map>
+  </div>
+</div>
+  <!--<div class="overlay-select">
       <form>
         <div>
           <label for="rietvlei_radio">Rietvlei</label>
           <input type="radio" name="park" id="rietvlei_radio" checked (click)= "setRietvlei()">
         </div>
-        <!-- <div>
+         <div>
             <label for="op_radio">OtherPark</label>
             <input type="radio" name="park" id="op_radio"  (click)= "setOtherPark()">
-        </div> -->
+        </div>
       </form>
     </div>
   <mat-card class="content-card mat-elevation-z8 animated slideInUp">
@@ -21,17 +25,23 @@
         [disableDefaultUI]="false"
         [zoomControl]="false"
         (mapClick)="mapClicked($event)">
-
+        <agm-kml-layer
+          [url]="kml"
+          [clickable]="defaultui">
+      </agm-kml-layer>
         <agm-marker
             *ngFor="let m of posArr"
             [latitude]="m.latitude"
             [longitude]="m.longitude"
-            [label]="m.userName">
+
+            [iconUrl]="m.icon">
+
+            >
 
 
 
           <agm-info-window>
-            <!--<strong>Marker ID :  {{m.id}}</strong>-->
+            <div><strong>Name :  {{m.userName}}</strong></div>
             <div><strong>Time :  {{m.time}}</strong></div>
             <div><strong>Lat : {{m.latitude}}</strong></div>
             <div><strong>Long : {{m.longitude}}</strong></div>
@@ -43,6 +53,9 @@
 
 
       </agm-map>
+      <div class="map-container">
+        <app-park-map [park]="riet" [fixed]="false" [rangers]="rangerList"></app-park-map>
+      </div>
     </mat-card-content>
   </mat-card>
-</div>
+</div>-->

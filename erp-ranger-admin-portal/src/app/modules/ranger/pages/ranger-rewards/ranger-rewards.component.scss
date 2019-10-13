@@ -1,0 +1,135 @@
+.the-most {
+    position: fixed;
+    z-index: 1;
+    bottom: 0;
+    left: 0;
+    width: 50vw;
+    max-width: 200px;
+    padding: 10px;
+    
+    img {
+      max-width: 100%;
+    }
+  }
+  
+  .page-container {
+      min-width: 100%;
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+    }
+    
+  .img-icon{
+    position: relative;
+    width:40%;
+    top: 2%;
+    left:60%;
+  }
+  
+  .img-icon img{
+    position: relative;
+    width: 100%;
+    
+  }
+  
+  .header-div{
+    position: relative;
+    padding-bottom: 20px;
+    width:100%;
+    min-height: 80px;
+    overflow: hidden;
+  }
+  .header-text{
+    position: fixed;
+  }
+    
+    .content-card {
+      margin-top: 20px;
+      width: 400px;
+      max-width: 80%;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+    }
+    
+    .login-logo {
+      width: 200px;
+      margin-bottom: 15px;
+    }
+    
+    h3 {
+      width: 100%;
+      text-align: center;
+    }
+    
+    mat-card-content {
+      width: 100%;
+    }
+    
+    form {
+      min-width: 100%;
+    }
+    
+    .form-group {
+      width: 100%;
+    }
+    
+    mat-form-field {
+      width: 100%;
+    }
+    
+    mat-form-field mat-icon {
+      margin-right: 10px;
+    }
+    
+    .login-button {
+      width: 100%;
+    }
+
+    div {
+      width: 500px;
+    }
+     
+    h2 {
+      font: 400 30px/1.5 Helvetica, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+     
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+     
+    li {
+      font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
+      border-bottom: 1px solid #ccc;
+    }
+     
+    li:last-child {
+      border: none;
+    }
+     
+    li a {
+      text-decoration: none;
+      color: #000;
+      display: block;
+      width: 400px;
+     
+      -webkit-transition: font-size 0.3s ease, background-color 0.3s ease;
+      -moz-transition: font-size 0.3s ease, background-color 0.3s ease;
+      -o-transition: font-size 0.3s ease, background-color 0.3s ease;
+      -ms-transition: font-size 0.3s ease, background-color 0.3s ease;
+      transition: font-size 0.3s ease, background-color 0.3s ease;
+    }
+     
+    li a:hover {
+      font-size: 20px;
+      background: #f6f6f6;
+    }
+
+    * {
+      font-size: 16px;
+    }

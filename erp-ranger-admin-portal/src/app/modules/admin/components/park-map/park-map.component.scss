@@ -1,0 +1,22 @@
+#map {
+  height: 100%;
+}
+
+.fab-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+.fab-button button {
+  background-color: #121B41;
+}
+
+.fab-button button mat-icon {
+  color: #ffffff;
+}
+
+.mapboxgl-popup {
+  max-width: 400px;
+  font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}

@@ -3,18 +3,23 @@ const admin = require('firebase-admin');
 
 const db = admin.firestore();
 
+/**
+ * onActivation triggers when a marker is activated by a ranger and then assigns the points
+ * to the ranger as a reward and then redistributing the reward amongst other markers inside
+ * the park.
+ */
 exports = module.exports = functions.firestore.document('marker_log/{logId}').onCreate((eventSnapshot, context) => {
 
   console.info(eventSnapshot.data());
   const markerRef = db.doc('markers/' + eventSnapshot.data().marker);
-  markerRef.get()
+  return markerRef.get()
     .then((marker) => {
       const score = marker.data().points;
       if (score > 0) {
         const parkRef = db.doc('parks/' + marker.data().park);
         parkRef.get()
           .then((park) => {
-            // Setup new points
+            // Calculate the amount of points that are going to be added to other markers
             const count = park.data().markers;
             let tempScore = score;
             let points = new Array(count - 1);
@@ -28,13 +33,14 @@ exports = module.exports = functions.firestore.document('marker_log/{logId}').on
               }
             }
 
-            // Apply new points
+            // Add the points to each marker in the park
             const markersRef = db.collection('markers')
               .where('park', '==', marker.data().park)
               .where('active', '==', true);
             markersRef.get()
               .then((markers) => {
                 let j = 0;
+                // Loop through all the markers and distribute points.
                 for (let i = 0; (i < markers.docs.length) && (j <= points.length); i++) {
                   let value = 0;
                   if (markers.docs[i].id != marker.data().id) {
@@ -52,7 +58,7 @@ exports = module.exports = functions.firestore.document('marker_log/{logId}').on
                         console.error('OtherMarkerRef Error');
                         console.error(error);
                       });
-                  } else {
+                  } else { // If it is the marker that was activated set it to zero points
                     db.doc('markers/' + markers.docs[i].id)
                       .update({
                         points: 0
@@ -65,7 +71,7 @@ exports = module.exports = functions.firestore.document('marker_log/{logId}').on
                 console.error(error);
               });
 
-            // Applying the reward
+            // Applying the reward to the marker log file so it can be added to the users points
             db.doc('marker_log/' + eventSnapshot.id).update({
               reward: score
             });
@@ -83,7 +89,5 @@ exports = module.exports = functions.firestore.document('marker_log/{logId}').on
       console.error('MarkerRef Error');
       console.error(error);
     });
-
-  return 0;
 
 });

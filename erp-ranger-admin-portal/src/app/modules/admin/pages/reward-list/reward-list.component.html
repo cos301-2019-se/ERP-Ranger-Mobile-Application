@@ -1,3 +1,4 @@
+<h1>Rewards List</h1>
 <table mat-table [dataSource]="rewardArr" class="mat-elevation-z8">
 
   <ng-container matColumnDef="id">
@@ -19,12 +20,43 @@
     <th mat-header-cell *matHeaderCellDef> URL </th>
     <td mat-cell *matCellDef="let element"><a href="{{element.url}}"> {{element.url}}</a> </td>
   </ng-container>
+  
+  <ng-container matColumnDef="edit">
+    <th mat-header-cell *matHeaderCellDef> Edit </th>
+    <td mat-cell *matCellDef="let element"> <a href="/admin/reward/{{ element.id }}"> <mat-icon id="edit-icon">edit</mat-icon></a> </td>
+  </ng-container>
+
+  <ng-container matColumnDef="delete">
+    <th mat-header-cell *matHeaderCellDef> Delete </th>
+    <td mat-cell *matCellDef="let element"> <mat-icon id="delete-icon" (click)="deleteConfirm(element.id)">delete</mat-icon> </td>
+  </ng-container>
 
 
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
-<a routerLink="add">
-  <button mat-raised-button class="raised-button" color="primary">Add Reward</button>
-</a>
+
+  <!-- <button mat-raised-button class="raised-button" color="primary"><mat-icon>add</mat-icon></button> -->
+  <div class="fab-button">
+    <a routerLink="/admin/reward/add">
+      <button mat-fab color="primary">
+        <mat-icon>add</mat-icon>
+      </button>
+    </a>
+  </div>
+
+
+
+<mat-card id="overlay-confirm-delete">
+  <button class="hide-overlay-btn" (click)=hideOverlay()>
+      <mat-icon>close</mat-icon>
+  </button>
+  <div class="confirm"><strong>Confirm</strong></div>
+  <div class="confirm-msg">Are you sure you want to delete <span id="delete-user"></span></div>
+  <div class="confirm-options">
+    <div class="click-confirm mat-caption"> <div class="confirm-option" (click)="confirmedDelete()">Yes</div></div>
+    <div class="click-confirm mat-caption"> <div class="confirm-option" (click)="hideOverlay()">No</div></div>
+  </div>
+</mat-card>
+

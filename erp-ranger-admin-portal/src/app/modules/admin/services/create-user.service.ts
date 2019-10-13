@@ -20,6 +20,7 @@ export class CreateUserService {
 
   }
 
+  //Creates a user in the authenticated database and then uses this ID to create a documents with this id in the users collection
   register(email: string, password : string, name: string, number: string){  
     var config = {apiKey: "AIzaSyArcavcPL0-hdLcbknUGGx9xdX6NR1AJ0o",
         authDomain: "erp-ranger-app.firebaseapp.com",

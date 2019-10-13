@@ -47,8 +47,20 @@
     background-size: cover;
   }
 
-  .overlay{
+  mat-card-footer{
     position: absolute;
+    bottom: 30px;
+    left: 0%;
+  }
+
+  
+  
+  .header-views{
+    background-color: #121B41;
+  }
+
+  mat-card.overlay{
+    position: fixed;
     // text-align: center;    
     left: 30%;
     top:30%;
@@ -109,4 +121,30 @@
     cursor: pointer;
     background-color: rgba(0,0,0,0.05);
     
+}
+#card-footer{
+  
+  margin-left: 10px;
+  width:100%;
+}
+.footer-label{
+  color: #121B41;
+  margin-right: 10px;
+  margin-bottom: 0px;
+  padding: 8px;
+  border: 1px solid #121B41;
+  border-radius: 5px;
+  color: white;  
+  border: 1px solid white;
+  background-color: #121B41;
+  
+}
+
+
+
+.footer-label:hover{
+  color: #121B41;
+  border: 1px solid #121B41;
+  background-color: white;
+  cursor: default;
 }

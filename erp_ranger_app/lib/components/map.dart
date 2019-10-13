@@ -76,13 +76,26 @@ class MapState extends State<MapComponent> {
   }
 
   void _onMapCreated(GoogleMapController controller) {
-    _animateToPark();
+    //_animateToPark();
+    _animateToUser();
     _updateMarkers();
     setState(() {
       _mapController = controller;
     });
   }
 
+  //moves the view to the location of the user
+  _animateToUser() async {
+    var pos = await _location.getLocation();
+
+    _mapController.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: LatLng(pos.latitude, pos.longitude),
+          zoom: 13.0,
+        )
+    )
+    );
+  }
   //moves the view to the location of the park
   _animateToPark() async {
     DocumentSnapshot document = await _firestore.collection('parks').document(await Park.getParkId()).get();
@@ -221,9 +234,10 @@ class MapState extends State<MapComponent> {
     }
   }
 
-  //adsd the marker points to firebase
+  //adds the marker points to firebase
   void _logMarker(String id, GeoPoint pos) async{
     if(await patrolData.getIsOnPatrol()) {
+      String patrol = await patrolData.getPatrolId();
       String user = await Auth().getUserUid();
       var _userPos = await _location.getLocation();
       var _latAngleDist = (((_userPos.latitude-pos.latitude).abs())/360)*2*pi*6378000;
@@ -236,9 +250,21 @@ class MapState extends State<MapComponent> {
           "reward": 0,
           "time": new DateTime.now(),
           "user": user,
+          "patrol": patrol,
         });
         //markersData.addMarker(id);
         _updateMarkers();
+        showDialog(context: context, child:
+        SimpleDialog(
+          title: new Text(
+              'Activated Marker',
+              style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.black
+              )
+          ),
+        )
+        );
       }
       else {
         showDialog(context: context, child:
@@ -246,6 +272,7 @@ class MapState extends State<MapComponent> {
           title: new Text(
               'You must be within 10m of the marker',
               style: TextStyle(
+                  fontSize: 20.0,
                   color: Colors.red
               )
           ),
