@@ -37,12 +37,20 @@ th.mat-header-cell{
   
     
 }
+
+.mat-elevation-z8{
+  box-shadow: 0px 0px 0px 0px;
+}
+
 .fab-button {
   position: fixed;
   bottom: 20px;
   right: 20px;
   margin: 0px;
+  box-shadow: 0 0 0 0;
 }
+
+
 button{
   margin:0px;
 }

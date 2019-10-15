@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ReportTypeService } from '../../services/report-type.service';
-import { ParkService } from '../../services/park.service';
+import { ParkService } from '../../../../services/park.service';
 import { UserService } from 'src/app/services/user.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ReportReceiversService } from '../../services/report-receivers.service';

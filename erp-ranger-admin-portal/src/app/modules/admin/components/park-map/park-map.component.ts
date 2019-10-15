@@ -1,12 +1,14 @@
-import { Component, OnInit, Input, AfterViewInit, OnChanges, SimpleChange } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, OnChanges, SimpleChange, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import * as mapboxgl from 'mapbox-gl';
 import { Park } from 'src/app/models/Park.model';
 import { environment } from 'src/environments/environment';
+import { Color } from 'src/app/models/Color.model';
 
 @Component({
   selector: 'app-park-map',
   templateUrl: './park-map.component.html',
-  styleUrls: ['./park-map.component.scss']
+  styleUrls: ['./park-map.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() park: Park;
@@ -14,9 +16,16 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() markers;
   @Input() rangers;
   @Input() reports;
+  @Input() report;
   @Input() fixed: boolean;
+  @Input() center;
+  @Input() zoom = 10;
+  @Input() createMarkers = false;
+  // tslint:disable-next-line: no-output-on-prefix
+  @Output() onCreateMarker: EventEmitter<any> = new EventEmitter<any>();
 
   storedChanges: SimpleChange;
+  create: Boolean;
 
   size = 200;
   map: mapboxgl.Map;
@@ -32,6 +41,12 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
   ngAfterViewInit() {
     this.fixParkData();
     this.setupMap();
+    if (this.createMarkers) {
+      this.rangers = null;
+      this.reports = null;
+      this.report = null;
+      this.setupMarkerCreationMode(this.createMarkers);
+    }
     this.buildMapBase();
   }
 
@@ -39,6 +54,9 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
     if (this.map) {
       if (changes['reports'] && (changes['reports'].currentValue !== changes['reports'].previousValue)) {
         this.setupReports(changes['reports'].currentValue);
+      }
+      if (changes['report'] && (changes['report'].currentValue !== changes['report'].previousValue)) {
+        this.setupReport(changes['report'].currentValue);
       }
       if (changes['rangers'] && (changes['rangers'].currentValue !== changes['rangers'].previousValue)) {
         this.setupRangers(changes['rangers'].currentValue);
@@ -49,6 +67,9 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
       if (changes['fixed'] && (changes['fixed'].currentValue !== changes['fixed'].previousValue)) {
         this.fixed = changes['fixed'].currentValue;
         this.mapRefresh();
+      }
+      if (changes['park'] && (changes['park'].currentValue !== changes['park'].previousValue)) {
+        this.setupPark(changes['park'].currentValue);
       }
     } else {
       this.storedChanges = changes;
@@ -73,28 +94,33 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
   setupMap() {
     mapboxgl.accessToken = environment.mapbox.accessToken;
     let center = null;
-    if (this.park) {
+    if (this.center) {
+      center = [
+        this.center.longitude,
+        this.center.latitude
+      ];
+    } else if (this.park) {
       center = [
         this.park.fence.geoJson.coordinates[0][0][0],
         this.park.fence.geoJson.coordinates[0][0][1]
       ];
     } else {
-      center = [
+      center = [ // EPI Use Africa Menlyn Office
         28.278051304132134,
         -25.77998666415725
-      ]
+      ];
     }
     this.map = new mapboxgl.Map({
       container: 'map',
       // style: 'mapbox://styles/mapbox/streets-v11',
-      style: 'mapbox://styles/erp-rangers/ck11chqnc0eds1cugiybx7eyl',
-      // style: 'mapbox://styles/erpngo/cjwrwfig29f9z1cqtsqmsnegp',
+      // style: 'mapbox://styles/erp-rangers/ck11chqnc0eds1cugiybx7eyl',
+      style: 'mapbox://styles/erpngo/ck1j6095i5t301conykwr63dl',
       center: center,
-      zoom: 10
+      zoom: this.zoom
     });
     this.setupDots();
     if (this.storedChanges) {
-      //this.ngOnChanges(this.storedChanges);
+      // this.ngOnChanges(this.storedChanges);
       this.storedChanges = null;
     }
   }
@@ -110,41 +136,41 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
 
       // Display fence for a park or for multiple parks
       if (this.park && !this.parks) {
-        this.map.addLayer({
-          'id': this.park.id,
-          'type': 'fill',
-          'source': {
-            'type': 'geojson',
-            'data': {
-              'type': 'Feature',
-              'geometry': {
-                'type': this.park.fence.geoJson.type,
-                'coordinates': this.park.fence.geoJson.coordinates
-              }
-            }
-          },
-          'layout': {},
-          'paint': {
-            'fill-color': '#fc4e03',
-            'fill-opacity': 0.15
-          }
-        });
+        this.setupPark(this.park);
         this.zoomToPark();
-        this.mapRefresh();
       } else if (this.parks) {
 
       }
 
-      // Display markers in a park
+      // Display reports in a park
       this.setupReports(this.reports);
 
       // Display rangers in a park
       this.setupRangers(this.rangers);
 
-      // Display reports in a park
+      // Display markers in a park
       this.setupMarkers(this.markers);
 
+      // Display report in a park
+      this.setupReport(this.report);
+
+      this.mapRefresh();
+
     });
+  }
+
+  changeMarkerCreationMode() {
+    this.create = !this.create;
+  }
+
+  setupMarkerCreationMode(createMarkers) {
+    if (this.createMarkers) {
+      this.map.on('click', (e) => {
+        if (this.create) {
+          this.onCreateMarker.emit(e);
+        }
+      });
+    }
   }
 
   mapRefresh() {
@@ -190,8 +216,45 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
 
+  closePopups() {
+    const popUps = document.getElementsByClassName('mapboxgl-popup');
+    if (popUps[0]) {
+      popUps[0].remove();
+    }
+  }
+
+  setupPark(park) {
+    if (park && this.map) {
+      if (this.map.getLayer('park')) {
+        this.map.removeLayer('park');
+      }
+      if (this.map.getSource('park')) {
+        this.map.removeSource('park');
+      }
+      this.map.addLayer({
+        'id': 'park',
+        'type': 'fill',
+        'source': {
+          'type': 'geojson',
+          'data': {
+            'type': 'Feature',
+            'geometry': {
+              'type': park.fence.geoJson.type,
+              'coordinates': park.fence.geoJson.coordinates
+            }
+          }
+        },
+        'layout': {},
+        'paint': {
+          'fill-color': '#9ff74d',
+          'fill-opacity': 0.2
+        }
+      });
+    }
+  }
+
   setupReports(reports) {
-    if (reports) {
+    if (reports && this.map) {
       if (this.map.getLayer('reports')) {
         this.map.removeLayer('reports');
       }
@@ -206,14 +269,11 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
           'data': {
             'type': 'FeatureCollection',
             'features': reports.map(report => {
-              console.log(report.payload.doc.data());
               return {
                 'type': 'Feature',
                 'properties': {
-                  'uid': report.payload.doc.id,
-                  // 'external': l.providerTag,
-                  // 'animal': l.animal.id,
-                  // 'locationUpdate': l.location.updated
+                  'id': report.payload.doc.id,
+                  'type': report.payload.doc.data().type,
                 },
                 'geometry': {
                   'type': 'Point',
@@ -231,11 +291,80 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
           'icon-allow-overlap': true
         }
       });
+
+      this.map.on('click', 'reports', (e) => {
+        this.closePopups();
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        let description = '<h2>Report: ' + e.features[0].properties.type + '</h2>';
+        description += '<a href="/admin/report/' + e.features[0].properties.id + '">';
+        description += '<button id="popup-button" color="primary" class="mat-raised-button">Open Report</button>';
+        description += '</a>';
+
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+          coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        const popup = new mapboxgl.Popup()
+          .setLngLat(coordinates)
+          .setHTML(description)
+          .addTo(this.map);
+      });
+
+      // Change the cursor to a pointer when the mouse is over the places layer.
+      this.map.on('mouseenter', 'reports', () => {
+        this.map.getCanvas().style.cursor = 'pointer';
+      });
+
+      // Change it back to a pointer when it leaves.
+      this.map.on('mouseleave', 'reports', () => {
+        this.map.getCanvas().style.cursor = '';
+      });
+    }
+  }
+
+  setupReport(report) {
+    if (report && this.map) {
+      if (this.map.getLayer('report')) {
+        this.map.removeLayer('report');
+      }
+      if (this.map.getSource('report')) {
+        this.map.removeSource('report');
+      }
+      this.map.addLayer({
+        'id': 'report',
+        'type': 'symbol',
+        'source': {
+          'type': 'geojson',
+          'data': {
+            'type': 'FeatureCollection',
+            'features': [{
+              'type': 'Feature',
+              'properties': {
+                'id': report
+              },
+              'geometry': {
+                'type': 'Point',
+                'coordinates': [
+                  report.location.geopoint.longitude,
+                  report.location.geopoint.latitude
+                ]
+              }
+            }]
+          }
+        },
+        'layout': {
+          'icon-image': 'pulsing-dot-report',
+          'icon-allow-overlap': true
+        }
+      });
     }
   }
 
   setupRangers(rangers) {
-    if (rangers) {
+    if (rangers && this.map) {
       if (this.map.getLayer('rangers')) {
         this.map.removeLayer('rangers');
       }
@@ -250,14 +379,12 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
           'data': {
             'type': 'FeatureCollection',
             'features': rangers.map(ranger => {
-              console.log(ranger);
               return {
                 'type': 'Feature',
                 'properties': {
-                  'uid': ranger.id,
-                  // 'external': l.providerTag,
-                  // 'animal': l.animal.id,
-                  // 'locationUpdate': l.location.updated
+                  'id': ranger.id,
+                  'name': ranger.ranger.name,
+                  'number': ranger.ranger.number
                 },
                 'geometry': {
                   'type': 'Point',
@@ -275,11 +402,40 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
           'icon-allow-overlap': true
         }
       });
+
+      this.map.on('click', 'rangers', (e) => {
+        this.closePopups();
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        let description = '<h2>Ranger: ' + e.features[0].properties.name + '</h2>';
+        description += '<h4>Number: ' + e.features[0].properties.number + '</h4>';
+
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+          coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        const popup = new mapboxgl.Popup()
+          .setLngLat(coordinates)
+          .setHTML(description)
+          .addTo(this.map);
+      });
+
+      // Change the cursor to a pointer when the mouse is over the places layer.
+      this.map.on('mouseenter', 'rangers', () => {
+        this.map.getCanvas().style.cursor = 'pointer';
+      });
+
+      // Change it back to a pointer when it leaves.
+      this.map.on('mouseleave', 'rangers', () => {
+        this.map.getCanvas().style.cursor = '';
+      });
     }
   }
 
   setupMarkers(markers) {
-    if (markers) {
+    if (markers && this.map) {
       if (this.map.getLayer('markers')) {
         this.map.removeLayer('markers');
       }
@@ -294,14 +450,12 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
           'data': {
             'type': 'FeatureCollection',
             'features': markers.map(marker => {
-              console.log(marker.payload.doc.data());
               return {
                 'type': 'Feature',
                 'properties': {
-                  'uid': marker.payload.doc.id,
-                  // 'external': l.providerTag,
-                  // 'animal': l.animal.id,
-                  // 'locationUpdate': l.location.updated
+                  'id': marker.payload.doc.id,
+                  'name': marker.payload.doc.data().name,
+                  'points': marker.payload.doc.data().points
                 },
                 'geometry': {
                   'type': 'Point',
@@ -319,14 +473,69 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
           'icon-allow-overlap': true
         }
       });
+
+      this.map.on('click', 'markers', (e) => {
+        if (this.create) {
+          return;
+        }
+        this.closePopups();
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        let description = '<h2>Marker: ' + e.features[0].properties.name + '</h2>';
+        description += '<h3>Points: ' + e.features[0].properties.points + '</h3>';
+
+        // Ensure that if the map is zoomed out such that multiple
+        // copies of the feature are visible, the popup appears
+        // over the copy being pointed to.
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+          coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+
+        const popup = new mapboxgl.Popup()
+          .setLngLat(coordinates)
+          .setHTML(description)
+          .addTo(this.map);
+      });
+
+      // Change the cursor to a pointer when the mouse is over the places layer.
+      this.map.on('mouseenter', 'markers', () => {
+        this.map.getCanvas().style.cursor = 'pointer';
+      });
+
+      // Change it back to a pointer when it leaves.
+      this.map.on('mouseleave', 'markers', () => {
+        this.map.getCanvas().style.cursor = '';
+      });
     }
   }
 
   setupDots() {
-    const localMap = this.map;
-    const size = 100;
+    this.pulsingDotReport = this.createDot(
+      this.map,
+      115,
+      { red: 255, green: 200, blue: 200 },
+      { red: 227, green: 54, blue: 54 },
+      true
+    );
 
-    this.pulsingDotReport = {
+    this.pulsingDotRanger = this.createDot(
+      this.map,
+      110,
+      { red: 103, green: 245, blue: 112 },
+      { red: 0, green: 163, blue: 11 },
+      true
+    );
+
+    this.pulsingDotMarker = this.createDot(
+      this.map,
+      100,
+      { red: 0, green: 10, blue: 194 },
+      { red: 0, green: 10, blue: 194 },
+      false
+    );
+  }
+
+  createDot(map, size, outer: Color, inner: Color, pulse: Boolean) {
+    return {
       width: size,
       height: size,
       data: new Uint8Array(size * size * 4),
@@ -347,18 +556,24 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
         const context = this.context;
 
         // draw outer circle
-        context.clearRect(0, 0, this.width, this.height);
-        context.beginPath();
-        context.arc(this.width / 2, this.height / 2, outerRadius, 0, Math.PI * 2);
-        context.fillStyle = 'rgba(255, 200, 200,' + (1 - t) + ')';
-        context.fill();
+        if (pulse) {
+          context.clearRect(0, 0, this.width, this.height);
+          context.beginPath();
+          context.arc(this.width / 2, this.height / 2, outerRadius, 0, Math.PI * 2);
+          context.fillStyle = 'rgba(' + outer.red + ',' + outer.green + ',' + outer.blue + ',' + (1 - t) + ')';
+          context.fill();
+        }
 
         // draw inner circle
         context.beginPath();
         context.arc(this.width / 2, this.height / 2, radius, 0, Math.PI * 2);
-        context.fillStyle = 'rgba(227, 54, 54, 1)';
+        context.fillStyle = 'rgba(' + inner.red + ',' + inner.green + ',' + inner.blue + ',1)';
         context.strokeStyle = 'white';
-        context.lineWidth = 2 + 4 * (1 - t);
+        if (pulse) {
+          context.lineWidth = 2 + 4 * (1 - t);
+        } else {
+          context.lineWidth = 2 + 4 * 1;
+        }
         context.fill();
         context.stroke();
 
@@ -366,101 +581,7 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
         this.data = context.getImageData(0, 0, this.width, this.height).data;
 
         // keep the map repainting
-        localMap.triggerRepaint();
-
-        // return 'true' to let the map know that the image was updated
-        return true;
-      }
-    };
-
-    this.pulsingDotRanger = {
-      width: size,
-      height: size,
-      data: new Uint8Array(size * size * 4),
-
-      onAdd: function() {
-        const canvas = document.createElement('canvas');
-        canvas.width = this.width;
-        canvas.height = this.height;
-        this.context = canvas.getContext('2d');
-      },
-
-      render: function() {
-        const duration = 1000;
-        const t = (performance.now() % duration) / duration;
-
-        const radius = size / 2 * 0.3;
-        const outerRadius = size / 2 * 0.7 * t + radius;
-        const context = this.context;
-
-        // draw outer circle
-        context.clearRect(0, 0, this.width, this.height);
-        context.beginPath();
-        context.arc(this.width / 2, this.height / 2, outerRadius, 0, Math.PI * 2);
-        context.fillStyle = 'rgba(103, 245, 112,' + (1 - t) + ')';
-        context.fill();
-
-        // draw inner circle
-        context.beginPath();
-        context.arc(this.width / 2, this.height / 2, radius, 0, Math.PI * 2);
-        context.fillStyle = 'rgba(0, 163, 11, 1)';
-        context.strokeStyle = 'white';
-        context.lineWidth = 2 + 4 * (1 - t);
-        context.fill();
-        context.stroke();
-
-        // update this image's data with data from the canvas
-        this.data = context.getImageData(0, 0, this.width, this.height).data;
-
-        // keep the map repainting
-        localMap.triggerRepaint();
-
-        // return 'true' to let the map know that the image was updated
-        return true;
-      }
-    };
-
-    this.pulsingDotMarker = {
-      width: size,
-      height: size,
-      data: new Uint8Array(size * size * 4),
-
-      onAdd: function() {
-        const canvas = document.createElement('canvas');
-        canvas.width = this.width;
-        canvas.height = this.height;
-        this.context = canvas.getContext('2d');
-      },
-
-      render: function() {
-        const duration = 1000;
-        const t = (performance.now() % duration) / duration;
-
-        const radius = size / 2 * 0.3;
-        const outerRadius = size / 2 * 0.7 * t + radius;
-        const context = this.context;
-
-        // draw outer circle
-        context.clearRect(0, 0, this.width, this.height);
-        context.beginPath();
-        context.arc(this.width / 2, this.height / 2, outerRadius, 0, Math.PI * 2);
-        context.fillStyle = 'rgba(0, 10, 194, 0)';
-        context.fill();
-
-        // draw inner circle
-        context.beginPath();
-        context.arc(this.width / 2, this.height / 2, radius, 0, Math.PI * 2);
-        context.fillStyle = 'rgba(0, 10, 194, 1)';
-        context.strokeStyle = 'white';
-        context.lineWidth = 2 + 4 * (1 - t);
-        context.fill();
-        context.stroke();
-
-        // update this image's data with data from the canvas
-        this.data = context.getImageData(0, 0, this.width, this.height).data;
-
-        // keep the map repainting
-        localMap.triggerRepaint();
+        map.triggerRepaint();
 
         // return 'true' to let the map know that the image was updated
         return true;

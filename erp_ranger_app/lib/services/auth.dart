@@ -31,6 +31,7 @@ class Auth {
   Future<void> signOut() async {
     await this._init();
     this._preferences.remove('user');
+    this._preferences.remove('park');
     return this._firebaseAuth.signOut();
   }
 

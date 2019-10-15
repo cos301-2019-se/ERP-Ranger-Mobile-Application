@@ -14,6 +14,8 @@ import 'package:erp_ranger_app/screens/leaderboard.dart';
 import 'package:erp_ranger_app/screens/ranger.dart';
 import 'dart:async';
 import 'package:erp_ranger_app/services/patrolData.dart';
+import 'package:erp_ranger_app/services/park.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class DashboardScreen extends StatefulWidget {
@@ -29,11 +31,92 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String _patrolButtonText;
   bool _loadedPatrol=false;
   Timer _timer;
+  String _dropdownValue;
+  Park _parks = new Park();
 
   @override
   void initState() {
+    checkPark();
     _timer = Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
     super.initState();
+  }
+
+  Future<void> checkPark() async{
+    _dropdownValue = await Park.getParkId();
+
+    if(_dropdownValue==null){
+      await showDialog(context: context, child:
+      SimpleDialog(
+          title: new Text("Please select a park."),
+          children: <Widget>[
+            new Padding(
+                padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+                child: _showParksDropdown()
+            ),
+            new Padding(
+                padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 0.0),
+                child: SizedBox(
+                    height: 40.0,
+                    child: new Text(
+                        'You can change this in the profile section.',
+                        style: TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.black
+                        )
+                    )
+                )
+            ),
+          ],
+        ));
+    }
+  }
+
+  Widget _showParksDropdown() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+      child: new Container(
+          padding: EdgeInsets.fromLTRB(12.0, 3.0, 12.0, 3.0),
+          decoration: ShapeDecoration(
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                      width: 1.0,
+                      style: BorderStyle.solid
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(5.0))
+              )
+          ),
+          child: new StreamBuilder(
+              stream: this._parks.read().snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return new Text("Loading...");
+                  default:
+                    return new DropdownButtonHideUnderline(
+                        child: new DropdownButton<String>(
+                          hint: new Text("Select a park"),
+                          isExpanded: true,
+                          value: _dropdownValue,
+                          items: snapshot.data.documents.map((document) =>
+                          new DropdownMenuItem<String>(
+                            child: new Text(document['name']),
+                            value: document.documentID,
+                          )
+                          ).toList(),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              _dropdownValue = newValue;
+                              Park.setParkId(newValue);
+                              Navigator.pop(context);
+                            });
+                          },
+                        )
+                    );
+                }
+              }
+          )
+      ),
+    );
   }
 
   //calculates the time since a patrol began
@@ -47,6 +130,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     else {
       formattedDateTime = '00:00:00';
     }
+    _setButtonText();
     setState(() {
       _timeString = formattedDateTime;
     });

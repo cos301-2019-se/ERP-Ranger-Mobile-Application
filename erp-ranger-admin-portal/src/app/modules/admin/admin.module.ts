@@ -34,6 +34,7 @@ import { ReportTypeUpdateComponent } from './pages/report-type-update/report-typ
 import { ReportReceiverNewComponent } from './pages/report-receiver-new/report-receiver-new.component';
 import { EditRewardComponent } from './pages/edit-reward/edit-reward.component';
 import { ParkMapComponent } from './components/park-map/park-map.component';
+import { ChangeParkComponent } from './pages/change-park/change-park.component';
 
 @NgModule({
 
@@ -41,7 +42,7 @@ import { ParkMapComponent } from './components/park-map/park-map.component';
     ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, AddMarkerComponent,
     ReportOverviewComponent, AddUserComponent, UserPositionsComponent, UserListComponent, RewardListComponent,
     AddRewardComponent, EditUserComponent, NotificationListComponent, ReportTypeNewComponent, ReportTypeUpdateComponent,
-    ReportReceiverNewComponent, EditRewardComponent, ParkMapComponent
+    ReportReceiverNewComponent, EditRewardComponent, ParkMapComponent, ChangeParkComponent
   ],
 
   imports: [

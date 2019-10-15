@@ -4,14 +4,46 @@
 
 .fab-button {
   position: fixed;
+}
+
+.top-right {
+  top: 20px;
+  right: 20px;
+}
+
+.bottom-right {
   bottom: 20px;
   right: 20px;
 }
 
 .fab-button button {
-  background-color: #121B41;
+  background-color: #121B41 !important;
 }
 
 .fab-button button mat-icon {
   color: #ffffff;
+}
+
+.mapboxgl-popup {
+  max-width: 400px;
+  font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+
+.mapboxgl-popup-content {
+  color: #fff;
+  background-color: #121B41;
+}
+
+.mapboxgl-popup-tip {
+  border-top-color: #121B41 !important;
+}
+
+.mapboxgl-popup-close-button {
+  color: #fff;
+}
+
+#popup-button {
+  width: 100%;
+  color: #121B41;
+  background-color: #fff;
 }
