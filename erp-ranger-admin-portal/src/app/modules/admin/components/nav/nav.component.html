@@ -1,5 +1,11 @@
 <nav>
   <ul>
+    <li class="park">
+      <a routerLink="changepark">
+        <mat-icon>edit</mat-icon>
+        <span>{{ park.name }}</span>
+      </a>
+    </li>
     <li>
       <a routerLink="dashboard">
         <mat-icon>dashboard</mat-icon>
@@ -55,7 +61,7 @@
       </a>
     </li>
     <li class="bottom">
-      <a  (click)="logout()">
+      <a (click)="logout()">
         <mat-icon>undo</mat-icon>
         <span>Logout</span>
       </a>

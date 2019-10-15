@@ -450,7 +450,6 @@ export class ParkMapComponent implements OnInit, AfterViewInit, OnChanges {
           'data': {
             'type': 'FeatureCollection',
             'features': markers.map(marker => {
-              console.log(marker.payload.doc.data());
               return {
                 'type': 'Feature',
                 'properties': {
