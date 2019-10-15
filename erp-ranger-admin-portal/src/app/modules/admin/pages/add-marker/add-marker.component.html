@@ -1,19 +1,19 @@
-<div class="page-container">
+<!--<div class="page-container">
   <div class="overlay-select">
       <form>
         <div>
           <label for="rietvlei_radio">Rietvlei</label>
           <input type="radio" name="park" id="rietvlei_radio" checked (click)= "setRietvlei()">
         </div>
-        <!-- <div>
+        <div>
             <label for="op_radio">OtherPark</label>
             <input type="radio" name="park" id="op_radio"  (click)= "setOtherPark()">
-        </div> -->
+        </div>
       </form>
     </div>
   <mat-card class="content-card mat-elevation-z8 animated slideInUp">
     <mat-card-content>
-      <agm-map 
+      <agm-map
         id="map-agm"
         [latitude]="lat"
         [longitude]="lng"
@@ -25,8 +25,8 @@
           [url]="kml"
           [clickable]="defaultui">
         </agm-kml-layer>
-        <agm-marker 
-            *ngFor="let m of markerArr"            
+        <agm-marker
+            *ngFor="let m of markerArr"
             [latitude]="m.payload.doc.data().location.geopoint.latitude"
             [longitude]="m.payload.doc.data().location.geopoint.longitude"
             [label]="m.payload.doc.data().name"
@@ -35,9 +35,9 @@
               width:40,
               height:40
             }}">
-            
-            
-            
+
+
+
           <agm-info-window>
             <strong>Marker ID :  {{m.payload.doc.data().id}}</strong>
             <div></div>
@@ -47,9 +47,19 @@
             {{setIDMarker(m.payload.doc.data().id)}}
           </div>
         </agm-marker>
-        
-      
+
+
       </agm-map>
+      <app-park-map [park]="riet" [fixed]="false" [markers]="markerArr"></app-park-map>
     </mat-card-content>
   </mat-card>
+</div>-->
+
+<div class="page-container">
+  <app-park-map
+    [park]="park"
+    [fixed]="false"
+    [markers]="markerArr"
+    [createMarkers]="true"
+    (onCreateMarker)="createMarker($event)"></app-park-map>
 </div>
