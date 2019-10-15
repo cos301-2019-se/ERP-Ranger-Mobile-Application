@@ -1,17 +1,16 @@
 :host {
   width: 100%;
   max-width: 100%;
-  
 }
 
 nav {
-  max-width: 100%;
+  max-width: 240px;
   align-self: flex-start;
   overflow: hidden;
-  
 }
 
 nav ul {
+  width: 100%;
   max-width: 100%;
   margin: 0px;
   padding: 0px;
@@ -47,7 +46,16 @@ mat-icon {
 
 .bottom{
   position: absolute;
-  width:100%;
-  bottom:0px;
+  width: 100%;
+  bottom: 0px;
+}
 
+.park {
+  height: auto;
+  margin-bottom: 30px;
+}
+
+.park a {
+  height: auto;  
+  text-align: center;
 }
