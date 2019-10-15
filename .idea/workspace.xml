@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="189a1ed5-9897-41ee-8227-866def39c079" name="Default Changelist" comment="" />
+    <list default="true" id="189a1ed5-9897-41ee-8227-866def39c079" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/erp-ranger-admin-portal/src/app/modules/admin/pages/report-overview/report-overview.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/erp-ranger-admin-portal/src/app/modules/admin/pages/report-overview/report-overview.component.scss" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +46,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="77" />
     <option name="y" value="-8" />
     <option name="width" value="1400" />
@@ -125,7 +127,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1096" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
       <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.3336887" />
