@@ -73,7 +73,7 @@ class ReportState extends State<ReportScreen> {
         "time": _now,
         "type": _reportType,
         "user": user,
-        "Handled" : _handled,
+        "handled" : _handled,
       }).then((result) => {
       _sendImages(result),
       Fluttertoast.showToast(msg: "Success"),
