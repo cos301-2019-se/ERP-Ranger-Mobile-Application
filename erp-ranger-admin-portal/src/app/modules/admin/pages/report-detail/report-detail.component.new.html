@@ -1,0 +1,37 @@
+<div class="page-container animated slideInUp">
+  <div class="data-container" *ngIf="report">
+    <div class="info-container" *ngIf="report&&user">
+      <h1>Type: {{ report.type }}</h1>
+      <br>
+      <h3>Time of report: {{ report.time.toDate() | date:'dd/MM/yyyy @ HH:mm:ss' }} </h3>
+      <br>
+      <h3>Reported by: {{ user }} </h3>
+      <br>
+      <h3>Incident: {{ report.report }} </h3>
+      <br>
+      <h3>Geopoints: Longitude: {{ report.location.geopoint.longitude }} / Latitude: {{ report.location.geopoint.latitude }}</h3>
+    </div>
+    <div class="image-container">
+      <h1>Images</h1>
+      <div class="images">
+        <div class="image" *ngFor="let image of _album; let i=index">
+          <img [src]="image.src" (click)="open(i)" />
+        </div>
+      </div>
+    </div>
+    <div class="option-container">
+      <h1>Options</h1>
+      <div class="button-container">
+        <button mat-raised-button color="primary" (click)="comingSoon()">Print PDF</button><br>
+        <button mat-raised-button color="primary" (click)="comingSoon()">Download PDF</button><br>
+        <button mat-raised-button color="primary" (click)="comingSoon()">Share via Email</button><br>
+        <button mat-raised-button color="primary" (click)="comingSoon()">Share via SMS</button><br>
+        <button mat-raised-button color="primary" (click)="comingSoon()">Share via Whatsapp</button><br>
+        <button mat-raised-button color="warn" (click)="closeReport()">Close Report</button><br>
+      </div>
+    </div>
+  </div>
+  <div class="map-container" *ngIf="report">
+    <app-park-map [center]="report.location.geopoint" [zoom]="zoom" [fixed]="true" [report]="report"></app-park-map>
+  </div>
+</div>

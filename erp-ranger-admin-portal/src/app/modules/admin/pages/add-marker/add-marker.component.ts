@@ -8,6 +8,8 @@ import {
 import {
   AddMarkerService
 } from '../../services/add-marker.service';
+import { Park } from 'src/app/models/Park.model';
+import { ParkService } from 'src/app/services/park.service';
 
 @Component({
   selector: 'app-add-marker',
@@ -22,7 +24,7 @@ export class AddMarkerComponent implements OnInit {
   markerArr;
   kml = 'https://gist.githubusercontent.com/Jtfnel/77b53014741ec9fce2ffc68d210cdf56/raw/cd8d5bbf2476c48512cb6d44694a52289aa52999/rietvlei.kml';
   defaultui;
-
+  park: Park;
 
   currentMarker: number = 0;
 
@@ -60,22 +62,26 @@ export class AddMarkerComponent implements OnInit {
       this.addMarker(tempLat, tempLong);
       this.getMarkers();
   }
-  constructor(private markers: AddMarkerService) {}
+  constructor(private markers: AddMarkerService, private parkService: ParkService) {}
 
   ngOnInit() {
+      this.park = this.parkService.getParkLocal();
       this.getMarkers();
       this.setRietvlei();
-      this.setSize();
+      // this.setSize();
   }
 
-  //Asks for a name of the marker to create 
+  createMarker(event) {
+    this.addMarker(event.lngLat.lat, event.lngLat.lng);
+  }
+
+  //Asks for a name of the marker to create
   addMarker(la: number, lo: number) {
       var name = prompt("Marker Name:");
       if(name!="" && name !=null){
         this.markers.addMarker(this.currentMarker + "", la, lo, name, this.parkID);
         this.currentMarker++;
       }
-      
   }
 
   //fetches all existing markers

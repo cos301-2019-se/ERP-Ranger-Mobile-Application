@@ -1,7 +1,7 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ReportService } from '../../services/report.service';
 import { ReportTypeService } from '../../services/report-type.service';
-import { ParkService } from '../../services/park.service';
+import { ParkService } from '../../../../services/park.service';
 import { PositionService } from '../../services/position.service';
 import { UserService } from 'src/app/services/user.service';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
@@ -25,6 +25,8 @@ export class DashboardComponent implements OnInit {
   }];
   park;
   zoom = 11;
+  mapReportList = [];
+  mapRangerList = [];
   reportTypes = [];
   reportList = [];
   rangerList = [];
@@ -67,6 +69,7 @@ export class DashboardComponent implements OnInit {
       }
     }
   };
+  riet;
 
   @ViewChildren(MatPaginator) paginator = new QueryList<MatPaginator>();
 
@@ -80,15 +83,12 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.getPark();
-    this.getReportTypes();
-    this.displayPositions();
   }
 
   getPark() {
-    const park = 'iwGnWNuDC3m1hRzNNBT5'; // @TODO: Fix to use settings
-    this.parkService.readPark(park).subscribe((result) => {
-      this.park = result.payload.data();
-    });
+    this.park = this.parkService.getParkLocal();
+    this.getReportTypes();
+    this.displayPositions();
   }
 
   getReportTypes() {
@@ -120,7 +120,8 @@ export class DashboardComponent implements OnInit {
   }
 
   displayReports() {
-    this.reportService.getReports().subscribe((results) => {
+    this.reportService.getReports(this.park.id, false).subscribe((results) => {
+      this.mapReportList = results;
       this.reportList = [];
       for (let i = 0; i < results.length; i++) {
         this.reportList.push(results[i].payload.doc.data());
@@ -134,7 +135,7 @@ export class DashboardComponent implements OnInit {
   }
 
   displayPositions() {
-    this.rangerService.getPositions().snapshotChanges().subscribe((results) => {
+    this.rangerService.getPositions(this.park.id).snapshotChanges().subscribe((results) => {
       const temp = [];
       this.rangerList = [];
       for (let i = 0; i < results.length; i++) {

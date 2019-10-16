@@ -11,7 +11,7 @@ export class UserListComponent implements OnInit {
   userArr: User[] =[];
   userToDel;
   refresher;
-  displayedColumns: string[] = ['id','name','number','email','active','role','points','remaining','edit',
+  displayedColumns: string[] = [/*'id',*/'name','number','email','active','role','points','remaining','edit',
   'delete'
   ];
   constructor(private userService : UserService) { }
@@ -19,7 +19,7 @@ export class UserListComponent implements OnInit {
   ngOnInit() {
     this.startRefresh();
     this.getUsers();
-    
+
   }
   //Finds a user in the array and returns their name
   findUserWithID(id) : string{
@@ -43,10 +43,10 @@ export class UserListComponent implements OnInit {
   }
   //confirm overlay when deleting reward
   deleteConfirm(user){
-    this.userToDel = user;    
+    this.userToDel = user;
     document.getElementById("overlay-confirm-delete").style.visibility = "visible";
     document.getElementById("delete-user").innerHTML=this.findUserWithID(this.userToDel);
-    
+
 
   }
   //hides the confirm overlay
@@ -82,7 +82,7 @@ export class UserListComponent implements OnInit {
         }]}
       })
     });
-    this.startRefresh();  
+    this.startRefresh();
   }
 
 }

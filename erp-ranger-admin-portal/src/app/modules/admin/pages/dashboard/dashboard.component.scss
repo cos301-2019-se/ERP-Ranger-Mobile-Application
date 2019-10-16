@@ -7,14 +7,25 @@
   flex-direction: row;
 }
 
+.mat-flat-button.mat-primary, .mat-raised-button.mat-primary, .mat-fab.mat-primary, .mat-mini-fab.mat-primary{
+  background-color: #121B41;
+}
+
 .page-container > div {
   min-height: 100vh;
   min-width: 50%;
   max-width: 50%;
 }
 
-.data-container {
-  padding: 8px;
+.data-container h1,
+.data-container h2 {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.data-container h2 {
+  margin-block-start: 5px;
+  margin-block-end: 5px;
 }
 
 agm-map {
@@ -32,4 +43,9 @@ agm-map {
 
 .agm-button {
   width: 100%;
+  background-color: #121B41 !important;
+}
+
+.map-container {
+  height: 100vh;
 }

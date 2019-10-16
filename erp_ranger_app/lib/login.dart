@@ -73,7 +73,7 @@ class LoginState extends State<LoginScreen> {
       if (!this._valid) {
         return;
       }
-      this._valid = ((this._park != null) && (this._park.length == 20));
+      //this._valid = ((this._park != null) && (this._park.length == 20));
     });
   }
   
@@ -91,7 +91,7 @@ class LoginState extends State<LoginScreen> {
               this._valid == false ? _showValidationError() : new Container(),
               _showEmailInput(),
               _showPasswordInput(),
-              _showParksDropdown(),
+              //_showParksDropdown(),
               _showLoginButton(),
               this._attempting == true ? _showAttempting() : new Container(),
             ],
