@@ -3,6 +3,7 @@ import { ReportTypeService } from '../../services/report-type.service';
 import { ReportType } from 'src/app/models/ReportType.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { ReportReceiversService } from '../../services/report-receivers.service';
+import { ParkService } from 'src/app/services/park.service';
 
 @Component({
   selector: 'app-notification-list',
@@ -11,6 +12,7 @@ import { ReportReceiversService } from '../../services/report-receivers.service'
 })
 export class NotificationListComponent implements OnInit {
 
+  park;
   displayedColumns: string[] = ['importance', 'type', 'sms', 'email', 'web', 'api', 'edit'];
   displayedColumnsReceivers: string[] = ['park', 'user', 'type', 'edit'];
   reportTypes: ReportType[] = [];
@@ -20,10 +22,12 @@ export class NotificationListComponent implements OnInit {
 
   constructor(
     private reportTypeService: ReportTypeService,
-    private reportReceiverService: ReportReceiversService
+    private reportReceiverService: ReportReceiversService,
+    private parkService: ParkService
   ) { }
 
   ngOnInit() {
+    this.park = this.parkService.getParkLocal();
     this.getReportTypes();
     this.getReportReceivers();
   }
@@ -72,8 +76,7 @@ export class NotificationListComponent implements OnInit {
    * Get the list of admins that receive report notifications for the specific park
    */
   getReportReceivers() {
-    const park = 'iwGnWNuDC3m1hRzNNBT5'; // @TODO: Change to park value in settings.
-    this.reportReceiverService.getReportReceivers(park).subscribe((results) => {
+    this.reportReceiverService.getReportReceivers(this.park.id).subscribe((results) => {
       this.reportReceivers = [];
       for (let i = 0; i < results.length; i++) {
         this.reportTypeService.readReportType(results[i].payload.doc.data()['type']).subscribe((result) => {
