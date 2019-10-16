@@ -138,7 +138,7 @@ export class UserPositionsComponent implements OnInit {
 
   getPositions(){
     var self = this;
-    let observer = this.pService.getPositions().ref
+    let observer = this.pService.getPositions(this.park.id).ref
     .onSnapshot(querySnapshot => {
         querySnapshot.docChanges().forEach(change => {
 
@@ -213,7 +213,7 @@ export class UserPositionsComponent implements OnInit {
   }
 
   displayPositions() {
-    this.pService.getPositions().snapshotChanges().subscribe((results) => {
+    this.pService.getPositions(this.park.id).snapshotChanges().subscribe((results) => {
       const temp = [];
       this.rangerList = [];
       for (let i = 0; i < results.length; i++) {

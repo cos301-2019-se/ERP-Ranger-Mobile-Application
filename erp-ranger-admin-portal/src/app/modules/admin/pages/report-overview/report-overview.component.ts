@@ -35,7 +35,7 @@ export class ReportOverviewComponent implements OnInit {
   constructor(private reports: ReportService,private shifts:ShiftService, private parks: ParkService) {}
 
   ngOnInit() {
-    this.park = this.parks.getParkLocal(); 
+    this.park = this.parks.getParkLocal();
     // this.setSize();
     this.displayReports();
   }
@@ -43,37 +43,37 @@ export class ReportOverviewComponent implements OnInit {
   timeToString(d: Date){
     return (d+"").substring(0,(d+"").indexOf("GMT")-1);
   }
-  
+
 
 
 
   // Retrieve all reports submitted to the database and add all markers to the map
   displayReports() {
-    this.reports.getReports().subscribe(result => {      
+    this.reports.getReports(this.park.id, false).subscribe(result => {
       this.markers = result;
       this.reportArr = [];
       for (let i = 0; i < result.length; i++) {
         var parkID = String(result[i].payload.doc.data()['park']);
         var userID = String(result[i].payload.doc.data()['user']);
-        let docRef = this.shifts.getUserName(userID);        
+        let docRef = this.shifts.getUserName(userID);
         let getUser = docRef.get()
         .then(userDoc => {
           if(!result){
             console.log("User not found ");
-            
-          } else{     
+
+          } else{
             var userName = userDoc.data().name;
-            let docRef = this.shifts.getParkName(parkID);        
+            let docRef = this.shifts.getParkName(parkID);
             let getPark = docRef.get()
             .then(parkDoc => {
               if(!parkDoc.exists){
                 console.log("Park not found ");
-                
-              } else{    
-                if (parkID == this.park.id ){                  
+
+              } else{
+                if (parkID == this.park.id ){
                     var d = new Date(result[i].payload.doc.data()['time'].toDate());
                     var da = (d+"").substring(0,(d+"").indexOf("GMT")-1);
-                    var parkName = parkDoc.data().name;               
+                    var parkName = parkDoc.data().name;
                     this.reportArr[i] = {
                       id: String(result[i].payload.doc.id),
                       park: parkName,
@@ -82,7 +82,7 @@ export class ReportOverviewComponent implements OnInit {
                       type: String(result[i].payload.doc.data()['type']),
                       reportInfo : String(result[i].payload.doc.data()['report'])
                     };
-                    
+
                     this.dataSource = new MatTableDataSource(this.reportArr);
                     this.dataSource.sort = this.sort;
                     this.dataSource.paginator = this.paginator;
@@ -90,18 +90,18 @@ export class ReportOverviewComponent implements OnInit {
                 }
             })
             .catch(err => {
-              console.log("Error getting document");         
+              console.log("Error getting document");
             });
           }
         })
         .catch(err => {
-          console.log("Error getting document");         
+          console.log("Error getting document");
         });
 
-        
-      }      
+
+      }
     });
-    
+
   }
 
   // Set size of AGM map

@@ -83,12 +83,12 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.getPark();
-    this.getReportTypes();
-    this.displayPositions();
   }
 
   getPark() {
     this.park = this.parkService.getParkLocal();
+    this.getReportTypes();
+    this.displayPositions();
   }
 
   getReportTypes() {
@@ -120,7 +120,7 @@ export class DashboardComponent implements OnInit {
   }
 
   displayReports() {
-    this.reportService.getReports().subscribe((results) => {
+    this.reportService.getReports(this.park.id, false).subscribe((results) => {
       this.mapReportList = results;
       this.reportList = [];
       for (let i = 0; i < results.length; i++) {
@@ -135,7 +135,7 @@ export class DashboardComponent implements OnInit {
   }
 
   displayPositions() {
-    this.rangerService.getPositions().snapshotChanges().subscribe((results) => {
+    this.rangerService.getPositions(this.park.id).snapshotChanges().subscribe((results) => {
       const temp = [];
       this.rangerList = [];
       for (let i = 0; i < results.length; i++) {
