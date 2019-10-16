@@ -47,7 +47,7 @@ class ReportState extends State<ReportScreen> {
   String patrol;
   Key _scaffoldKey;
   List<String> _reportTypes = new List<String>();
-  bool _loading;
+  bool _loading = true;
 
   //Sends all the given data to the database.
   void _performReport() async {
@@ -72,7 +72,8 @@ class ReportState extends State<ReportScreen> {
         "type": _reportType,
         "user": user,
       }).then((result) => {
-      Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Success'))),
+      _sendImages(result),
+      //Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Success'))),
       Timer(this._delayTime, () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen()));}),
     });
 
@@ -224,27 +225,20 @@ class ReportState extends State<ReportScreen> {
 
   Widget _showReportTypeList() {
     if(_loading) {
-      return Card(
-        child: new Padding(
-          padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-          child: new DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              value: _reportType,
-              onChanged: (String value) {
-                setState(() {
-                  _reportType = value;
-                });
-              },
-              items: <String>['loading'].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
+      return Padding(
+          padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+          child: Container(
+            alignment: Alignment.center,
+            height: 50.0,
+            width: 50.0,
+            child: SizedBox(
+              child: CircularProgressIndicator(
+                strokeWidth: 3.0,
+              ),
+              height: 50.0,
+              width: 50.0,
             ),
-          ),
-
-        ),
+          )
       );
     } else {
       return Card(
