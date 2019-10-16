@@ -5,7 +5,7 @@ import { UserService } from 'src/app/services/user.service';
 import { FirebaseStorage } from '@angular/fire';
 import { AngularFireStorage } from '@angular/fire/storage';
 import * as firebase from 'firebase';
-import { Lightbox } from 'ngx-lightbox';
+import { LightboxConfig, Lightbox } from 'ngx-lightbox';
 
 
 @Component({
@@ -25,11 +25,12 @@ export class ReportDetailComponent implements OnInit {
   photo2;
   photo3;
 
-  constructor(private reports: ReportService, private route: ActivatedRoute, private users: UserService, private storage: AngularFireStorage, private _lightbox: Lightbox) { }
+  constructor(private reports: ReportService, private route: ActivatedRoute, private users: UserService, private storage: AngularFireStorage, private _lightbox: Lightbox, private _lightboxConfig: LightboxConfig) {
+      _lightboxConfig.fadeDuration = 1;
+   }
 
   ngOnInit() {
     this.displayReports();
-    this.pushImagesToArray();
   }
 
   // Function used to retrieve info of each individual marker placed on the map by rangers
@@ -47,28 +48,32 @@ export class ReportDetailComponent implements OnInit {
       }).catch(function(error) { console.log(error.code)});*/
       this.storage.ref('reports/' + this.id + '/1.jpeg').getDownloadURL().subscribe( result => {
           this.photo1 = result;
+          const album = {
+            src: this.photo1
+          };
+          this._album.push(album);
       });
         this.storage.ref('reports/' + this.id + '/2.jpeg').getDownloadURL().subscribe( result => {
           this.photo2 = result;
+          const album = {
+            src: this.photo2
+          };
+          this._album.push(album);
         });
           this.storage.ref('reports/' + this.id + '/3.jpeg').getDownloadURL().subscribe( result => {
             this.photo3 = result;
+          const album = {
+            src: this.photo3
+          };
+          this._album.push(album);
           });
     });
 
   }
 
-  pushImagesToArray() {
-    const src = this.photo1;
-    const album = {
-      src: src
-    };
-    this._album.push(album);
-  }
-
   open(index: number): void {
     // open lightbox
-    this._lightbox.open(this._album, index);
+    this._lightbox.open(this._album, index, { wrapAround: true, fitImageInViewPort : true });
   }
  
   close(): void {
