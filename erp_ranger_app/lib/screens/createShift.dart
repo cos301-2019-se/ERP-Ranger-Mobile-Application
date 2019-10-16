@@ -237,7 +237,9 @@ class ShiftState extends State<CreateShift> {
           "user": user,
         }).then((result) => {
               Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Success'))),
-              Timer(this._delayTime, () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen()));}),
+              Timer(this._delayTime, () {
+                Navigator.pop(context);
+                Navigator.push(context, new MaterialPageRoute(builder: (context) => new DashboardScreen()));}),
             })
         .catchError((err) => print(err));
   }

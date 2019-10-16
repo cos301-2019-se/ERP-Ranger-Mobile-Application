@@ -13,6 +13,7 @@ import 'package:erp_ranger_app/screens/dashboard.dart';
 import 'package:compressimage/compressimage.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:erp_ranger_app/services/patrolData.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ReportScreen extends StatefulWidget {
   @override
@@ -45,7 +46,8 @@ class ReportState extends State<ReportScreen> {
   String user;
   String park;
   String patrol;
-  Key _scaffoldKey;
+  bool _handled = false;
+  final GlobalKey _scaffoldKey = new GlobalKey<ScaffoldState>();
   List<String> _reportTypes = new List<String>();
   bool _loading = true;
 
@@ -71,10 +73,15 @@ class ReportState extends State<ReportScreen> {
         "time": _now,
         "type": _reportType,
         "user": user,
+        "Handled" : _handled,
       }).then((result) => {
       _sendImages(result),
+      Fluttertoast.showToast(msg: "Success"),
+      //_scaffoldKey.currentState.showSnackBar(new SnackBar(content: new Text('Success'))),
       //Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Success'))),
-      Timer(this._delayTime, () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen()));}),
+      Timer(this._delayTime, () {
+        Navigator.pop(context);
+        Navigator.push(context, new MaterialPageRoute(builder: (context) => new DashboardScreen()));}),
     });
 
 
