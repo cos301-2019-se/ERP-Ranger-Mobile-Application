@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:erp_ranger_app/services/auth.dart';
 import 'package:erp_ranger_app/services/park.dart';
 import 'package:erp_ranger_app/screens/dashboard.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CreateShift extends StatefulWidget {
   @override
@@ -236,7 +237,7 @@ class ShiftState extends State<CreateShift> {
           "start": start,
           "user": user,
         }).then((result) => {
-              Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Success'))),
+              Fluttertoast.showToast(msg: 'Shift booked', gravity: ToastGravity.BOTTOM),
               Timer(this._delayTime, () {
                 Navigator.pop(context);
                 Navigator.push(context, new MaterialPageRoute(builder: (context) => new DashboardScreen()));}),

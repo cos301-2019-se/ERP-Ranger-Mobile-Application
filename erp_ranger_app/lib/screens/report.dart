@@ -76,7 +76,7 @@ class ReportState extends State<ReportScreen> {
         "handled" : _handled,
       }).then((result) => {
       _sendImages(result),
-      Fluttertoast.showToast(msg: "Success"),
+      Fluttertoast.showToast(msg: "Success", gravity: ToastGravity.BOTTOM),
       //_scaffoldKey.currentState.showSnackBar(new SnackBar(content: new Text('Success'))),
       //Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Success'))),
       Timer(this._delayTime, () {
