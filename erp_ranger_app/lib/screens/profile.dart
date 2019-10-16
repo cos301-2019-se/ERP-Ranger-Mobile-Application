@@ -7,6 +7,7 @@ import 'package:erp_ranger_app/services/auth.dart';
 import 'package:erp_ranger_app/services/park.dart';
 import 'package:erp_ranger_app/screens/dashboard.dart';
 import 'package:erp_ranger_app/services/userData.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ProfileScreen extends StatefulWidget{
   @override
@@ -101,6 +102,7 @@ class ProfileState extends State<ProfileScreen> {
   Future<void> sendPasswordEmail() async{
     _profileAuth.getAuth().sendPasswordResetEmail(email: this._email);
     this._passwordChange = false;
+    Fluttertoast.showToast(msg: 'Password reset email sent', gravity: ToastGravity.BOTTOM);
     setState(() {
 
     });
