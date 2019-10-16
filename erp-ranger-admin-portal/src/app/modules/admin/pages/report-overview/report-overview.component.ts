@@ -6,6 +6,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ShiftService } from '../../services/shift.service';
 import { MatPaginator, MatSort } from '@angular/material';
 import { ParkService } from 'src/app/services/park.service';
+import { FormControl, FormGroup } from '@angular/forms';
+
+
 
 @Component({
   selector: 'app-report-overview',
@@ -27,14 +30,82 @@ export class ReportOverviewComponent implements OnInit {
   reportArr :  reportRow[] = [];
   markers;
   dataSource = new MatTableDataSource(this.reportArr);
-  displayedColumns: string[] = ['type', 'park','time','ranger'];
+  displayedColumns: string[] = ['type', 'park','time','ranger','handled'];
+  typeFilter = new FormControl('');
+  genFilter = new FormControl ('');
+  rangerFilter = new FormControl ('');
+  dayFilter = new FormControl ('');
+  monthFilter = new FormControl ('');
+  yearFilter = new FormControl ('');
+  handled = new FormGroup({
+    handledBool: new FormControl()
+  });
+  hBool = true;
+  filterValues = {
+    type : '',
+    reportInfo : '',
+    ranger: '',
+    day:'',
+    month:'',
+    year:'',
+    handled:''
+  };
 
   @ViewChild(MatPaginator) paginator:MatPaginator;
   @ViewChild(MatSort) sort:MatSort;
 
-  constructor(private reports: ReportService,private shifts:ShiftService, private parks: ParkService) {}
+  constructor(private reports: ReportService,private shifts:ShiftService, private parks: ParkService) {
+    this.dataSource.data = this.reportArr;
+    this.dataSource.filterPredicate = this.tableFilter();
+  }
 
   ngOnInit() {
+    this.typeFilter.valueChanges
+      .subscribe(
+        type => {
+          this.filterValues.type = type.toLowerCase();          
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      );
+      this.genFilter.valueChanges
+      .subscribe(
+        info => {
+          this.filterValues.reportInfo = info.toLowerCase();          
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      );
+      this.rangerFilter.valueChanges
+      .subscribe(
+        ranger => {
+          this.filterValues.ranger = ranger.toLowerCase();          
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      );
+      this.dayFilter.valueChanges
+      .subscribe(
+        day => {
+          this.filterValues.day = day;          
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      );
+      this.monthFilter.valueChanges
+      .subscribe(
+        month => {
+          this.filterValues.month = month;          
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      );
+      this.yearFilter.valueChanges
+      .subscribe(
+        year => {
+          this.filterValues.year = year;          
+          this.dataSource.filter = JSON.stringify(this.filterValues);
+        }
+      );
+      this.handled.valueChanges.subscribe( handled => {
+        this.filterValues.handled = handled.handledBool;
+        this.dataSource.filter = JSON.stringify(this.filterValues);
+      })
     this.park = this.parks.getParkLocal(); 
     // this.setSize();
     this.displayReports();
@@ -43,8 +114,26 @@ export class ReportOverviewComponent implements OnInit {
   timeToString(d: Date){
     return (d+"").substring(0,(d+"").indexOf("GMT")-1);
   }
-  
 
+  tableFilter(): (data: any, filter: string) => boolean {
+    let filterFunction = function(data, filter): boolean {
+      let searchTerms = JSON.parse(filter);
+      var d = new Date (data.time);    
+      var day = d.getDate();
+      var month = d.getMonth()+1;
+      var year = d.getFullYear();        
+      return data.type.toLowerCase().indexOf(searchTerms.type) !== -1        
+      && data.reportInfo.toLowerCase().indexOf(searchTerms.reportInfo) !==-1
+      && data.ranger.toLowerCase().indexOf(searchTerms.ranger) !==-1
+      && ((day == searchTerms.day) || !(searchTerms.day))
+      && ((month == searchTerms.month) || !(searchTerms.month))
+      && ((year == searchTerms.year) || !(searchTerms.year))
+      && ((data.handled == false)|| (searchTerms.handled == true))
+    }
+    return filterFunction;
+  } 
+  
+  
 
 
   // Retrieve all reports submitted to the database and add all markers to the map
@@ -80,12 +169,15 @@ export class ReportOverviewComponent implements OnInit {
                       time: d,
                       ranger: userName,
                       type: String(result[i].payload.doc.data()['type']),
-                      reportInfo : String(result[i].payload.doc.data()['report'])
+                      reportInfo : String(result[i].payload.doc.data()['report']),
+                      handled: result[i].payload.doc.data()['handled']
                     };
-                    
+                  
+                    this.dataSource.data = this.reportArr;
                     this.dataSource = new MatTableDataSource(this.reportArr);
                     this.dataSource.sort = this.sort;
                     this.dataSource.paginator = this.paginator;
+                    this.dataSource.filterPredicate = this.tableFilter();
                   }
                 }
             })
@@ -95,7 +187,7 @@ export class ReportOverviewComponent implements OnInit {
           }
         })
         .catch(err => {
-          console.log("Error getting document");         
+          console.log("Error getting document" + err);         
         });
 
         
@@ -125,5 +217,6 @@ export interface reportRow{
   time:Date,
   ranger:string,
   type:string,
-  reportInfo:string
+  reportInfo:string,
+  handled:boolean
 }

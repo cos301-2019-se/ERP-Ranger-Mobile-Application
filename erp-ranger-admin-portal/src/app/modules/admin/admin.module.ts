@@ -35,6 +35,7 @@ import { ReportReceiverNewComponent } from './pages/report-receiver-new/report-r
 import { EditRewardComponent } from './pages/edit-reward/edit-reward.component';
 import { ParkMapComponent } from './components/park-map/park-map.component';
 import { ChangeParkComponent } from './pages/change-park/change-park.component';
+import { MatFormField, MatFormFieldModule, MatInputModule, MatCheckboxModule } from '@angular/material';
 
 @NgModule({
 
@@ -49,6 +50,9 @@ import { ChangeParkComponent } from './pages/change-park/change-park.component';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    MatFormFieldModule,
+    MatCheckboxModule,
+    MatInputModule,
     MatTableModule,
     MatSortModule,
     RxReactiveFormsModule,
