@@ -1,5 +1,7 @@
 import { Component, ChangeDetectorRef, ViewChild, TemplateRef, OnInit } from '@angular/core';
 import { ShiftService} from '../../services/shift.service';
+import { ParkService } from 'src/app/services/park.service';
+import { Park } from 'src/app/models/Park.model';
 import { shiftInitState } from '@angular/core/src/view';
 import { UserService} from '../../../../services/user.service';
 import {firestore} from 'firebase/app';
@@ -41,12 +43,14 @@ export class ShiftListComponent implements OnInit {
   temp = 0;
   counter = 0;
   refreshInt;
+  park : Park;
   ngOnInit() {
+    this.park = this.parks.getParkLocal(); 
     this.displayShifts();    
     this.refreshInt = setInterval(function(){this.events = this.events},1000);
   }
 
-  constructor(private shifts: ShiftService, private modal: NgbModal, private cdr: ChangeDetectorRef) {}
+  constructor(private shifts: ShiftService, private modal: NgbModal, private cdr: ChangeDetectorRef, private parks: ParkService) {}
 
   
   
@@ -59,45 +63,47 @@ export class ShiftListComponent implements OnInit {
     .onSnapshot(querySnapshot => {
       querySnapshot.docChanges().forEach(change => {
         //console.log(change.doc.data());
-        var name :string;        
-        var id = change.doc.id;      
-        var t = new Date(1970,0,1);
-        t.setSeconds(change.doc.data().end.seconds.toString());
-        t.setHours(t.getHours() + 2);
-        var t2 = new Date(1970,0,1);
-        t2.setSeconds(change.doc.data().start.seconds.toString());
-        t2.setHours(t2.getHours() + 2);
-        let docRef = this.shifts.getUserName(change.doc.data().user);        
-        let getUser = docRef.get()
-        .then(doc => {
-          if(!doc.exists){
-            console.log("User not found ");
-            
-          } else{
-            name = doc.data().name ;
-            let parkRef = this.shifts.getParkName(change.doc.data().park);
-            let getPark = parkRef.get()
-            .then(doc => {
-              if(!doc.exists){
-                console.log("Park not found ");                
-              }
-              else{
-                var park= doc.data().name ;                
-                this.addEventP(t2,t,id, name,park);
-                
-              }
-            })  
-            .catch(err => {
-              console.log("Error getting document");         
-            })          
-          }
-        })
-        .catch(err => {
-          console.log("Error getting document");         
-        });
-        i++;
+        if(change.doc.data().park == this.park.id){
+          var name :string;        
+          var id = change.doc.id;      
+          var t = new Date(1970,0,1);
+          t.setSeconds(change.doc.data().end.seconds.toString());
+          t.setHours(t.getHours() + 2);
+          var t2 = new Date(1970,0,1);
+          t2.setSeconds(change.doc.data().start.seconds.toString());
+          t2.setHours(t2.getHours() + 2);
+          let docRef = this.shifts.getUserName(change.doc.data().user);        
+          let getUser = docRef.get()
+          .then(doc => {
+            if(!doc.exists){
+              console.log("User not found ");
+              
+            } else{
+              name = doc.data().name ;
+              let parkRef = this.shifts.getParkName(change.doc.data().park);
+              
+              let getPark = parkRef.get()
+              .then(doc => {
+                if(!doc.exists){
+                  console.log("Park not found ");                
+                }
+                else{
+                  var park= doc.data().name ;                
+                  this.addEventP(t2,t,id, name,park);
+                  
+                }
+              })  
+              .catch(err => {
+                console.log("Error getting document");         
+              })          
+            }
+          })
+          .catch(err => {
+            console.log("Error getting document");         
+          });
+          i++;
+        }});
       });
-    });
 
     
   }

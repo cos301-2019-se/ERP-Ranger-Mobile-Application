@@ -35,8 +35,8 @@ import { ReportReceiverNewComponent } from './pages/report-receiver-new/report-r
 import { EditRewardComponent } from './pages/edit-reward/edit-reward.component';
 import { ParkMapComponent } from './components/park-map/park-map.component';
 import { ChangeParkComponent } from './pages/change-park/change-park.component';
-import { MatFormField, MatFormFieldModule, MatInputModule, MatCheckboxModule } from '@angular/material';
-
+import { MatFormField, MatFormFieldModule, MatInputModule, MatCheckboxModule, MatPaginatorModule, MatTabsModule, MatOptionModule, MatAutocomplete} from '@angular/material';
+import { MatSelectModule, MatAutocompleteModule } from '@angular/material';
 @NgModule({
 
   declarations: [DashboardComponent, ReportDetailComponent, ShiftFeedbackComponent,
@@ -54,7 +54,12 @@ import { MatFormField, MatFormFieldModule, MatInputModule, MatCheckboxModule } f
     MatCheckboxModule,
     MatInputModule,
     MatTableModule,
+    MatTabsModule,
+    MatSelectModule,
+    MatAutocompleteModule,
+    MatOptionModule,
     MatSortModule,
+    MatPaginatorModule,
     RxReactiveFormsModule,
     AdminRoutingModule,
     MaterialModule,

@@ -28,8 +28,9 @@ export class ReportOverviewComponent implements OnInit {
   // kml = 'https://gist.githubusercontent.com/Jtfnel/77b53014741ec9fce2ffc68d210cdf56/raw/cd8d5bbf2476c48512cb6d44694a52289aa52999/rietvlei.kml';
   defaultui;
   reportArr :  reportRow[] = [];
+  reportArrTable :  reportRow[] = [];
   markers;
-  dataSource = new MatTableDataSource(this.reportArr);
+  dataSource = new MatTableDataSource(this.reportArrTable);
   displayedColumns: string[] = ['type', 'park','time','ranger','handled'];
   typeFilter = new FormControl('');
   genFilter = new FormControl ('');
@@ -55,7 +56,7 @@ export class ReportOverviewComponent implements OnInit {
   @ViewChild(MatSort) sort:MatSort;
 
   constructor(private reports: ReportService,private shifts:ShiftService, private parks: ParkService) {
-    this.dataSource.data = this.reportArr;
+    this.dataSource.data = this.reportArrTable;
     this.dataSource.filterPredicate = this.tableFilter();
   }
 
@@ -109,6 +110,7 @@ export class ReportOverviewComponent implements OnInit {
     this.park = this.parks.getParkLocal(); 
     // this.setSize();
     this.displayReports();
+    this.displayReportsTable();
   }
 
   timeToString(d: Date){
@@ -173,9 +175,64 @@ export class ReportOverviewComponent implements OnInit {
                       handled: result[i].payload.doc.data()['handled']
                     };
                   
-                    this.dataSource.data = this.reportArr;
+                    
+                  }
+                }
+            })
+            .catch(err => {
+              console.log("Error getting document");
+            });
+          }
+        })
+        .catch(err => {
+          console.log("Error getting document");
+        });
 
-                    this.dataSource = new MatTableDataSource(this.reportArr);
+
+      }
+    });
+
+  }
+
+  displayReportsTable() {
+    this.reports.getReports().subscribe(result => {
+      this.markers = result;
+      this.reportArrTable = [];
+      for (let i = 0; i < result.length; i++) {
+        var parkID = String(result[i].payload.doc.data()['park']);
+        var userID = String(result[i].payload.doc.data()['user']);
+        let docRef = this.shifts.getUserName(userID);
+        let getUser = docRef.get()
+        .then(userDoc => {
+          if(!result){
+            console.log("User not found ");
+
+          } else{
+            var userName = userDoc.data().name;
+            let docRef = this.shifts.getParkName(parkID);
+            let getPark = docRef.get()
+            .then(parkDoc => {
+              if(!parkDoc.exists){
+                console.log("Park not found ");
+
+              } else{
+                if (parkID == this.park.id ){
+                    var d = new Date(result[i].payload.doc.data()['time'].toDate());
+                    var da = (d+"").substring(0,(d+"").indexOf("GMT")-1);
+                    var parkName = parkDoc.data().name;
+                    this.reportArrTable[i] = {
+                      id: String(result[i].payload.doc.id),
+                      park: parkName,
+                      time: d,
+                      ranger: userName,
+                      type: String(result[i].payload.doc.data()['type']),
+                      reportInfo : String(result[i].payload.doc.data()['report']),
+                      handled: result[i].payload.doc.data()['handled']
+                    };
+                  
+                    this.dataSource.data = this.reportArrTable;
+
+                    this.dataSource = new MatTableDataSource(this.reportArrTable);
                     this.dataSource.sort = this.sort;
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.filterPredicate = this.tableFilter();
