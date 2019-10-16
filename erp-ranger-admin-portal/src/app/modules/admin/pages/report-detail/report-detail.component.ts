@@ -5,6 +5,7 @@ import { UserService } from 'src/app/services/user.service';
 import { FirebaseStorage } from '@angular/fire';
 import { AngularFireStorage } from '@angular/fire/storage';
 import * as firebase from 'firebase';
+import { Lightbox } from 'ngx-lightbox';
 
 
 @Component({
@@ -13,7 +14,7 @@ import * as firebase from 'firebase';
   styleUrls: ['./report-detail.component.scss']
 })
 export class ReportDetailComponent implements OnInit {
-
+  private _album: Array<any> = [];
 
   zoom: number = 16;
 
@@ -24,10 +25,11 @@ export class ReportDetailComponent implements OnInit {
   photo2;
   photo3;
 
-  constructor(private reports: ReportService, private route: ActivatedRoute, private users: UserService, private storage: AngularFireStorage) { }
+  constructor(private reports: ReportService, private route: ActivatedRoute, private users: UserService, private storage: AngularFireStorage, private _lightbox: Lightbox) { }
 
   ngOnInit() {
     this.displayReports();
+    this.pushImagesToArray();
   }
 
   // Function used to retrieve info of each individual marker placed on the map by rangers
@@ -55,5 +57,24 @@ export class ReportDetailComponent implements OnInit {
     });
 
   }
+
+  pushImagesToArray() {
+    const src = this.photo1;
+    const album = {
+      src: src
+    };
+    this._album.push(album);
+  }
+
+  open(index: number): void {
+    // open lightbox
+    this._lightbox.open(this._album, index);
+  }
+ 
+  close(): void {
+    // close lightbox programmatically
+    this._lightbox.close();
+  }
+
   
 }
