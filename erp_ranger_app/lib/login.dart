@@ -1,6 +1,8 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:erp_ranger_app/screens/dashboard.dart';
 import 'package:erp_ranger_app/services/auth.dart';
+import 'package:erp_ranger_app/services/park.dart';
 import 'package:erp_ranger_app/services/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +25,22 @@ class LoginState extends State<LoginScreen> {
   bool _attempting = false;
   bool _error = false;
   bool _valid = true;
+  String dropdownValue;
+  Park _parks;
+  String _park = null;
+
+  LoginState() {
+    this._checkLogin();
+    this._parks = new Park();
+  }
+
+  void _checkLogin() async {
+    Auth tempAuth = new Auth(); // Temporary solution because widget.auth.checkUserLogin() doesn't work.
+    bool isLoggedIn = await tempAuth.checkUserLogin();
+    if (isLoggedIn) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
+    }
+  }
 
   void _performLogin() async {
     this._validate();
@@ -34,6 +52,7 @@ class LoginState extends State<LoginScreen> {
       });
       try {
         String uid = await widget.auth.signIn(_email, _password);
+        Park.setParkId(this._park);
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
       } on PlatformException catch (e) {
         setState(() {
@@ -47,10 +66,14 @@ class LoginState extends State<LoginScreen> {
   void _validate() {
     setState(() {
       this._valid = Validator.email(_email);
-      if(!this._valid) {
+      if (!this._valid) {
         return;
       }
       this._valid = Validator.password(_password);
+      if (!this._valid) {
+        return;
+      }
+      //this._valid = ((this._park != null) && (this._park.length == 20));
     });
   }
   
@@ -68,6 +91,7 @@ class LoginState extends State<LoginScreen> {
               this._valid == false ? _showValidationError() : new Container(),
               _showEmailInput(),
               _showPasswordInput(),
+              //_showParksDropdown(),
               _showLoginButton(),
               this._attempting == true ? _showAttempting() : new Container(),
             ],
@@ -135,20 +159,66 @@ class LoginState extends State<LoginScreen> {
       child: SizedBox(
         height: 40.0,
         child: new RaisedButton(
-          elevation: 5.0,
-          shape: new RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(5.0)
-          ),
-          color: Colors.blue,
-          child: Text(
-            'Login',
-            style: TextStyle(
-              fontSize: 20.0,
-              color: Colors.white
-            )
-          ),
-          onPressed: this._attempting == false? _performLogin : null,
+            elevation: 5.0,
+            shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(5.0)),
+            color: Color.fromRGBO(18, 27, 65, 1.0),
+            child: Text(
+                'Login',
+                style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.white
+                )
+            ),
+            onPressed: this._attempting == false? _performLogin : null,
+        )
+      ),
+    );
+  }
+
+  Widget _showParksDropdown() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+      child: new Container(
+        padding: EdgeInsets.fromLTRB(12.0, 3.0, 12.0, 3.0),
+        decoration: ShapeDecoration(
+          shape: RoundedRectangleBorder(
+            side: BorderSide(
+              width: 1.0,
+              style: BorderStyle.solid
+            ),
+            borderRadius: BorderRadius.all(Radius.circular(5.0))
+          )
         ),
+        child: new StreamBuilder(
+          stream: this._parks.read().snapshots(),
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return new Text("Loading...");
+              default:
+                return new DropdownButtonHideUnderline(
+                  child: new DropdownButton<String>(
+                    hint: new Text("Select a Park"),
+                    isExpanded: true,
+                    value: dropdownValue,
+                    items: snapshot.data.documents.map((document) =>
+                    new DropdownMenuItem<String>(
+                      child: new Text(document['name']),
+                      value: document.documentID,
+                    )
+                    ).toList(),
+                    onChanged: (String newValue) {
+                      setState(() {
+                        dropdownValue = newValue;
+                        this._park = newValue;
+                      });
+                    },
+                  )
+                );
+            }
+          }
+        )
       ),
     );
   }

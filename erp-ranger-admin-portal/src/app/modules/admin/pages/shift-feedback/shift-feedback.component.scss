@@ -1,0 +1,150 @@
+.linkClass{
+    color:white;
+    text-decoration: none;
+  }
+  
+  .header-views{
+    margin-left: 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;  
+    zoom:1;
+    display: inline-block;
+    // padding-top: 8px;
+    padding-left: 15px;
+    padding-right:15px;
+    height: 40px;
+    background-color:#3f51b5;
+    border-right: 0px solid black;
+    border-radius: 2px;
+    color:white;
+    font-size: 1.5em;
+    vertical-align: middle;
+  }
+  
+  .inner-span{
+    display: inline-block;
+    vertical-align:  middle;
+    text-align: center;
+    margin:auto;
+  }
+  .inner-div{
+    width:100%;
+    height:100%;      
+    position: relative;
+    display: flex;
+
+    
+  }
+  
+  .header-views:hover{
+    cursor: pointer;
+    background-color:#5F6dc2;
+  }
+
+  .eg-header-img{
+    background-image: url();
+    background-size: cover;
+  }
+
+  mat-card-footer{
+    position: absolute;
+    bottom: 30px;
+    left: 0%;
+  }
+
+  
+  
+  .header-views{
+    background-color: #121B41;
+  }
+
+  mat-card.overlay{
+    position: fixed;
+    // text-align: center;    
+    left: 30%;
+    top:30%;
+    visibility: hidden; 
+    border-radius: 0px;  
+    // border: 1px solid rgba(0,0,0,1);;     
+    z-index: 100;
+    width:40%;
+    height:40%;
+    // background-color: rgba(255,255,255, 0.9);
+    display: inline-block;
+  }
+  // .overlay-inner-div{
+  //     width:100%;
+  //     height:100%;      
+  //     position: relative;
+  //     display: flex;
+
+      
+  // }
+
+   #overlay-span{
+     
+    font-size: 1.2em;
+   }
+
+  // #overlay-span{
+  //     display: inline-block;
+  //     vertical-align:  middle;
+  //     text-align: center;
+  //     margin:auto;
+  // }
+
+  mat-card-actions button{
+    position: absolute;
+    bottom: 10px;
+    left:5px;
+    font-size: 2em;
+  }  
+
+  mat-card-actions button:hover{
+    background-color: rgba(0,0,0,0.05);
+  }
+  .hide-overlay-btn{
+      z-index: 101;
+      position: absolute;
+      border:0px;
+      right:3px;
+      top:3px;
+      
+      background-color: rgba(255,255,255,0);
+      border-radius: 2px;
+      width: 50px;
+      height:50px;
+      font-size: 2em;
+  }
+  .hide-overlay-btn:hover{
+    cursor: pointer;
+    background-color: rgba(0,0,0,0.05);
+    
+}
+#card-footer{
+  
+  margin-left: 10px;
+  width:100%;
+}
+.footer-label{
+  color: #121B41;
+  margin-right: 10px;
+  margin-bottom: 0px;
+  padding: 8px;
+  border: 1px solid #121B41;
+  border-radius: 5px;
+  color: white;  
+  border: 1px solid white;
+  background-color: #121B41;
+  
+}
+
+
+
+.footer-label:hover{
+  color: #121B41;
+  border: 1px solid #121B41;
+  background-color: white;
+  cursor: default;
+}

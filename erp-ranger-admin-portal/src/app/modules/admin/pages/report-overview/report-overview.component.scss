@@ -1,14 +1,81 @@
-agm-map {
+/*agm-map {
     height: 600px;
     width: 100%;
     min-height: 100%;
+}*/
+
+* {
+  font-family: Lato;
 }
+
+.page-container{  
+  overflow: hidden;
+  height: 94vh;
+}
+
+.mat-tab-label-container{
+  height:4vh;
+}
+
+.mat-table{
+  width:100%;
+}
+
+.mat-form-field{
+  width:100%;
+  text-align: center;
+}
+td a{
+  text-decoration: none;
+  color: #121B41;
+}
+
+.dayfilter{
+  width:3.5%; 
+  margin-left: 26%;
   
+}
+
+.filter{
   
-  * {
-    font-family: Lato;
-  }
+  width:23%;
+  margin-left: 1%;
+  margin-right: 1%;
   
-  a {
-    color: darkblue;
-  }
+}
+
+.datefilter{
+  width:3.5%;
+  margin-left:0%;
+  margin-right: 0%;
+}
+
+.yearfilter{
+  width:6%;
+  margin-right : 7%;
+}
+
+.right-align{
+  margin-left:1%;
+}
+
+.header{
+  padding:5px;
+}
+
+.mat-cell{
+  
+  width:25%;
+}
+
+.mat-cell.ranger{
+  width:18%;
+}
+
+.mat-cell.handled{
+  width:7%;
+}
+
+.cb-form{
+  margin-left:20px;
+}

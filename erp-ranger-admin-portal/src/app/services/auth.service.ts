@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { auth } from 'firebase';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-
+import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
-import { switchMap, map, startWith, tap, filter } from 'rxjs/operators';
+import { switchMap, map, tap } from 'rxjs/operators';
 import { User } from '../models/User.model';
 import { UserService } from './user.service';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { ParkService } from './park.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +22,7 @@ export class AuthService {
     private fireStore: AngularFirestore,
     private router: Router,
     private u: UserService,
+    private p: ParkService
   ) {
     this.user = this.fireAuth.authState.pipe(
       switchMap(user => {
@@ -50,16 +50,22 @@ export class AuthService {
     return this.fireAuth.auth
       .signInWithEmailAndPassword(email, password)
       .then(credential => {
-        this.setupSession(credential.user.uid);
         localStorage.setItem('user', JSON.stringify(credential.user.uid));
+        this.p.getParks(1).subscribe(response => {
+          const park = response[0].payload.doc.data();
+          this.p.setParkLocal(park);
+          this.setupSession(credential.user.uid);
+        });
       })
       .catch(error => this.handleError(error));
   }
 
   logout() {
     this.fireAuth.auth.signOut().then(() => {
+      this.p.deleteParkLocal();
       this.router.navigate(['/']);
     });
+    location.reload();
   }
 
   setupSession(uid: String) {

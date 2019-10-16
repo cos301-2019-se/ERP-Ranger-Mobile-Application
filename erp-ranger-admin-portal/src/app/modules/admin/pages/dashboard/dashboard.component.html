@@ -1,3 +1,117 @@
-<p>
-  dashboard works!
-</p>
+<div class="page-container">
+  <div class="data-container" *ngIf="park">
+    <h1>{{ park.name }}</h1>
+
+    <h2>Open Reports</h2>
+    <div>
+      <div *ngIf="reportList" class="mat-elevation-z0">
+        <mat-table [dataSource]="dataSourceReports">
+          <!--  Column -->
+          <ng-container matColumnDef="importance">
+            <mat-header-cell *matHeaderCellDef>Importance</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.info.importance }}
+            </mat-cell>
+        </ng-container>
+
+          <!--  Column -->
+          <ng-container matColumnDef="type">
+            <mat-header-cell *matHeaderCellDef>Type</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.type }}
+            </mat-cell>
+        </ng-container>
+
+          <!--  Column -->
+          <ng-container matColumnDef="view">
+            <mat-header-cell *matHeaderCellDef>View</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <a class="agm-link" [routerLink]="['/admin/report', element.id]">
+                <button class="agm-button" mat-raised-button color="primary">More Info</button>
+              </a>
+            </mat-cell>
+        </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumnsReports"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumnsReports;"></mat-row>
+        </mat-table>
+        <mat-paginator [pageSizeOptions]="[5]"></mat-paginator>
+      </div>
+    </div>
+
+    <h2>Rangers On Patrol</h2>
+    <div>
+      <div *ngIf="userList" class="mat-elevation-z0">
+        <mat-table [dataSource]="dataSourceUsers">
+          <!--  Column -->
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.name }}
+            </mat-cell>
+          </ng-container>
+
+          <!--  Column -->
+          <ng-container matColumnDef="number">
+            <mat-header-cell *matHeaderCellDef>Number</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.number }}
+            </mat-cell>
+          </ng-container>
+
+          <!--  Column -->
+          <ng-container matColumnDef="email">
+            <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.email }}
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumnsRangers"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumnsRangers;"></mat-row>
+        </mat-table>
+        <mat-paginator [pageSizeOptions]="[5]"></mat-paginator>
+      </div>
+    </div>
+  </div>
+  <div class="map-container">
+    <!--<agm-map *ngIf="park"
+      id="map-agm"
+      [latitude]="park.center.latitude"
+      [longitude]="park.center.longitude"
+      [zoom]="zoom"
+      [disableDefaultUI]="defaultui"
+      [styles]="mapStyles"
+      [streetViewControl]="defaultui"
+      [fitBounds]="!defaultui">
+      <agm-kml-layer
+        [url]="kml"
+        [clickable]="defaultui">
+      </agm-kml-layer>
+
+      <agm-marker
+        *ngFor="let m of reportList"
+        [latitude]="m.location.geopoint.latitude"
+        [longitude]="m.location.geopoint.longitude"
+        [iconUrl]="m.icon">
+        <agm-info-window>
+          <h2 class="agm-title">{{ m.type }}</h2>
+          <a class="agm-link" [routerLink]="['/admin/report', m.id]">
+            <button class="agm-button" mat-raised-button color="primary">More Info</button>
+          </a>
+        </agm-info-window>
+      </agm-marker>
+
+      <agm-marker
+        *ngFor="let m of rangerList"
+        [latitude]="m.location.geopoint.latitude"
+        [longitude]="m.location.geopoint.longitude"
+        [iconUrl]="iconRanger">
+        <agm-info-window *ngIf="m.ranger">
+          <h2 class="agm-title">{{ m.ranger.name }}</h2>
+        </agm-info-window>
+      </agm-marker>
+    </agm-map>>-->
+    <app-park-map [park]="park" [fixed]="false" [rangers]="rangerList" [reports]="mapReportList"></app-park-map>
+  </div>
+</div>

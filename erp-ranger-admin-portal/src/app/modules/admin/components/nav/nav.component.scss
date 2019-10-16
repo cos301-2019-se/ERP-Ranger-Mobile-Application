@@ -4,11 +4,13 @@
 }
 
 nav {
-  max-width: 100%;
+  max-width: 240px;
   align-self: flex-start;
+  overflow: hidden;
 }
 
 nav ul {
+  width: 100%;
   max-width: 100%;
   margin: 0px;
   padding: 0px;
@@ -24,16 +26,14 @@ nav ul li a {
   flex-direction: row;
   align-items: center;
   text-decoration: none;
-  color: #000;
+  color: #fafafa;
   font-size: 1.05rem;
-  border-left-style: solid;
-  border-left-width: 4px;
-  border-left-color: #FAFAFA;
 }
 
 nav ul li a:hover {
-  border-left-color: #121B41;
-  background-color: #DADADA;
+  background-color: #fafafa;
+  color: #121B41;
+  cursor: pointer;
 }
 
 span {
@@ -42,4 +42,20 @@ span {
 
 mat-icon {
   margin-right: 10px;
+}
+
+.bottom{
+  position: absolute;
+  width: 100%;
+  bottom: 0px;
+}
+
+.park {
+  height: auto;
+  margin-bottom: 30px;
+}
+
+.park a {
+  height: auto;  
+  text-align: center;
 }
