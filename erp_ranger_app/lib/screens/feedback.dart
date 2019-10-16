@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:erp_ranger_app/services/patrolData.dart';
 import 'package:erp_ranger_app/services/tracker.dart';
-import 'package:erp_ranger_app/screens/patrol.dart';
+import 'package:erp_ranger_app/services/park.dart';
 import 'package:erp_ranger_app/services/auth.dart';
 
 class FeedbackScreen extends StatefulWidget {
@@ -74,9 +74,13 @@ class FeedbackState extends State<FeedbackScreen> {
   void _performFeedback() async {
     String patrol = await patrolData.getPatrolId();
     _now = new DateTime.now();
+    String user = await tempAuth.getUserUid();
+    String park = await Park.getParkId();
     await Firestore.instance.collection('feedback').add({
       "patrol": patrol,
-      "feedback": _feedbackDetails
+      "feedback": _feedbackDetails,
+      "user": user,
+      "park": park
     });
     await Firestore.instance.collection('patrol').document(patrol).updateData({'end': _now});
     _feedbackTextFieldController.clear();
