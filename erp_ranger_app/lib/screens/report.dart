@@ -24,26 +24,30 @@ class ReportState extends State<ReportScreen> {
       new TextEditingController();
   final Geoflutterfire geoFlutterFire = Geoflutterfire();
 
-  Location location = new Location();
-  GeoFirePoint userPointLocation;
-  DateTime now = DateTime.now();
-  String reportDetails;
-  String reportType = "Intruder";
-  File imageOne;
-  bool flagOne = false;
-  File imageTwo;
-  bool flagTwo = false;
-  File imageThree;
-  bool flagThree = false;
-  bool reportFlag = false;
-  bool uploading = false;
-  Duration delayTime = new Duration(seconds: 2);
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  Location _location = new Location();
+  GeoFirePoint _userPointLocation;
+  DateTime _now = DateTime.now();
+  String _reportDetails;
+  String _reportType = "Intruder";
+  File _imageOne;
+  bool _flagOne = false;
+  File _imageTwo;
+  bool _flagTwo = false;
+  File _imageThree;
+  bool _flagThree = false;
+  bool _reportFlag = false;
+  bool _uploading = false;
+  Duration _delayTime = new Duration(seconds: 2);
+  QuerySnapshot _querySnapshot;
+  static Firestore _db = Firestore.instance;
 
   Auth tempAuth = new Auth();
   String user;
   String park;
   String patrol;
+  Key _scaffoldKey;
+  List<String> _reportTypes = new List<String>();
+  bool _loading;
 
   //Sends all the given data to the database.
   void _performReport() async {
@@ -59,7 +63,7 @@ class ReportState extends State<ReportScreen> {
     _userPointLocation = geoFlutterFire.point(//latitude: -25.762415, longitude: 28.234624);
         latitude: _userPos.latitude, longitude: _userPos.longitude);
     _now = new DateTime.now();
-    DocumentReference result = await Firestore.instance.collection('reports').add({
+    var result = await Firestore.instance.collection('reports').add({
         "location": _userPointLocation.data,
         "park": park,
         "patrol": patrol,
@@ -68,10 +72,8 @@ class ReportState extends State<ReportScreen> {
         "type": _reportType,
         "user": user,
       }).then((result) => {
-        _sendImages(result),
-        reportTextFieldController.clear(),
-        _scaffoldKey.currentState.showSnackBar(new SnackBar(content: new Text('Success'))),
-        Timer(this.delayTime, () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen()));})
+      Scaffold.of(this.context).showSnackBar(new SnackBar(content: new Text('Success'))),
+      Timer(this._delayTime, () {Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen()));}),
     });
 
 
@@ -169,6 +171,30 @@ class ReportState extends State<ReportScreen> {
     }
   }
 
+  Future<void> getCategories() async {
+    _querySnapshot = await _db.collection('report_types').getDocuments();
+
+    for (int i = 0; i < _querySnapshot.documents.length; i++) {
+      _reportTypes.add(_querySnapshot.documents.elementAt(i).data['type']);
+    }
+
+    setState(() {
+      this._loading = false;
+    });
+  }
+
+  void initialFunctions(BuildContext context){
+    getCategories();
+    setState(() {
+
+    });
+  }
+
+  @override
+  void initState(){
+    initialFunctions(context);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -197,33 +223,53 @@ class ReportState extends State<ReportScreen> {
   }
 
   Widget _showReportTypeList() {
-    return Card(
-      child: new Padding(
-        padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-        child: new DropdownButtonHideUnderline(
-          child: DropdownButton<String>(
-          value: _reportType,
-          onChanged: (String value) {
-            setState(() {
-              _reportType = value;
-            });
-          },
-          items: <String>[
-            'Damage to property',
-            'Harmed animal',
-            'Intruder',
-            'Other'
-          ].map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-        ),
-      ),
+    if(_loading) {
+      return Card(
+        child: new Padding(
+          padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+          child: new DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: _reportType,
+              onChanged: (String value) {
+                setState(() {
+                  _reportType = value;
+                });
+              },
+              items: <String>['loading'].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          ),
 
-      ),
-    );
+        ),
+      );
+    } else {
+      return Card(
+        child: new Padding(
+          padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+          child: new DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: _reportType,
+              onChanged: (String value) {
+                setState(() {
+                  _reportType = value;
+                });
+              },
+              items: _reportTypes.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          ),
+
+        ),
+      );
+    }
   }
 
   Widget _showImagePicker() {

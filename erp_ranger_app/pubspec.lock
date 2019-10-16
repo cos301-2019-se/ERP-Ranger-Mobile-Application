@@ -260,7 +260,7 @@ packages:
       name: table_calendar
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   term_glyph:
     dependency: transitive
     description:
@@ -281,7 +281,7 @@ packages:
       name: tuple
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.3"
   typed_data:
     dependency: transitive
     description:
