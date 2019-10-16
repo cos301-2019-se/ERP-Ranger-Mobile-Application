@@ -21,6 +21,7 @@ class FeedbackState extends State<FeedbackScreen> {
   String _feedbackDetails;
   bool _loaded=false;
   bool _sent=false;
+  Auth tempAuth = new Auth();
 
   FeedbackState()
   {
