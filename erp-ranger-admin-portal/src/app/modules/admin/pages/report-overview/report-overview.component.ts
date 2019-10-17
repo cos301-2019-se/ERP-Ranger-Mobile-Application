@@ -195,7 +195,7 @@ export class ReportOverviewComponent implements OnInit {
   }
 
   displayReportsTable() {
-    this.reports.getReports().subscribe(result => {
+    this.reports.getReports(this.park.id).subscribe(result => {
       this.markers = result;
       this.reportArrTable = [];
       for (let i = 0; i < result.length; i++) {
@@ -216,7 +216,8 @@ export class ReportOverviewComponent implements OnInit {
                 console.log("Park not found ");
 
               } else{
-                if (parkID == this.park.id ){
+                console.log(parkDoc.data().name);
+                if (true){
                     var d = new Date(result[i].payload.doc.data()['time'].toDate());
                     var da = (d+"").substring(0,(d+"").indexOf("GMT")-1);
                     var parkName = parkDoc.data().name;
