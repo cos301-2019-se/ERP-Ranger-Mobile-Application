@@ -10,7 +10,7 @@
 
 .page-container{  
   overflow: hidden;
-  height: 95vh;
+  height: 94vh;
 }
 
 .mat-tab-label-container{
@@ -30,9 +30,52 @@ td a{
   color: #121B41;
 }
 
+.dayfilter{
+  width:3.5%; 
+  margin-left: 26%;
+  
+}
 
+.filter{
+  
+  width:23%;
+  margin-left: 1%;
+  margin-right: 1%;
+  
+}
+
+.datefilter{
+  width:3.5%;
+  margin-left:0%;
+  margin-right: 0%;
+}
+
+.yearfilter{
+  width:6%;
+  margin-right : 7%;
+}
+
+.right-align{
+  margin-left:1%;
+}
+
+.header{
+  padding:5px;
+}
 
 .mat-cell{
   
   width:25%;
+}
+
+.mat-cell.ranger{
+  width:18%;
+}
+
+.mat-cell.handled{
+  width:7%;
+}
+
+.cb-form{
+  margin-left:20px;
 }

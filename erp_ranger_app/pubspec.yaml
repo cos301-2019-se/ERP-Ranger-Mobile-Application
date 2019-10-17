@@ -36,6 +36,7 @@ dependencies:
   table_calendar: ^2.0.0  
   compressimage: ^0.1.1
   photo_view:
+  fluttertoast:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

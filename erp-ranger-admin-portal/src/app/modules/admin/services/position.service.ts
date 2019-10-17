@@ -12,7 +12,14 @@ export class PositionService {
   constructor(private fireStore: AngularFirestore) { }
 
   //fetches positions of users
-  getPositions(){
-    return this.fireStore.collection('position');
+  getPositions(parkID?: string) {
+    return this.fireStore.collection('position', (ref) => {
+      let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+      if (parkID) {
+        query = query.where('park', '==', parkID);
+      }
+      return query;
+    });
   }
+
 }

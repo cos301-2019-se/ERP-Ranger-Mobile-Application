@@ -7,6 +7,7 @@ import 'package:erp_ranger_app/services/auth.dart';
 import 'package:erp_ranger_app/services/park.dart';
 import 'package:erp_ranger_app/screens/dashboard.dart';
 import 'package:erp_ranger_app/services/userData.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ProfileScreen extends StatefulWidget{
   @override
@@ -26,6 +27,8 @@ class ProfileState extends State<ProfileScreen> {
   FocusNode _changeFocusNode = new FocusNode();
   TextEditingController _changeController = new TextEditingController();
   Widget _userImage;
+  String _dropdownValue;
+  Park _parks = new Park();
 
   static Firestore _db = Firestore.instance;
   final TextEditingController _textController = new TextEditingController();
@@ -36,6 +39,7 @@ class ProfileState extends State<ProfileScreen> {
     _email = await userData.getUserEmail();
     _points = await userData.getUserPoints();
     _role = await userData.getUserRole();
+    _dropdownValue = await Park.getParkId();
 
     double width = MediaQuery.of(context).size.width;
     Widget details = new Column(
@@ -98,6 +102,7 @@ class ProfileState extends State<ProfileScreen> {
   Future<void> sendPasswordEmail() async{
     _profileAuth.getAuth().sendPasswordResetEmail(email: this._email);
     this._passwordChange = false;
+    Fluttertoast.showToast(msg: 'Password reset email sent', gravity: ToastGravity.BOTTOM);
     setState(() {
 
     });
@@ -171,6 +176,7 @@ class ProfileState extends State<ProfileScreen> {
             _showPoints(),
             _showChangePassword(),
             this._passwordChange == true? _showConfirmNewPassword() : new Container(),
+            _showParksDropdown()
           ],
         ),
       ),
@@ -367,6 +373,53 @@ class ProfileState extends State<ProfileScreen> {
         new Padding(padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0), child: SizedBox( height: 40, child: new RaisedButton(elevation: 5.0, shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(5.0)), color: new Color.fromRGBO(18, 27, 65, 1.0), child: Text("Confirm", style: TextStyle(fontSize: 20.0, color: Colors.white),), onPressed: () => {sendPasswordEmail(),}),),),
         new Padding(padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0), child: SizedBox( height: 40, child: new RaisedButton(elevation: 5.0, shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(5.0)), color: new Color.fromRGBO(200, 0, 0, 1.0), child: Text("Cancel", style: TextStyle(fontSize: 20.0, color: Colors.white),), onPressed: () => {changePassword()}),),)
       ],
+    );
+  }
+
+  Widget _showParksDropdown() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+      child: new Container(
+          padding: EdgeInsets.fromLTRB(12.0, 3.0, 12.0, 3.0),
+          decoration: ShapeDecoration(
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                      width: 1.0,
+                      style: BorderStyle.solid
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(5.0))
+              )
+          ),
+          child: new StreamBuilder(
+              stream: this._parks.read().snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return new Text("Loading...");
+                  default:
+                    return new DropdownButtonHideUnderline(
+                        child: new DropdownButton<String>(
+                          hint: new Text("Select a park"),
+                          isExpanded: true,
+                          value: _dropdownValue,
+                          items: snapshot.data.documents.map((document) =>
+                          new DropdownMenuItem<String>(
+                            child: new Text(document['name']),
+                            value: document.documentID,
+                          )
+                          ).toList(),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              _dropdownValue = newValue;
+                              Park.setParkId(newValue);
+                            });
+                          },
+                        )
+                    );
+                }
+              }
+          )
+      ),
     );
   }
 

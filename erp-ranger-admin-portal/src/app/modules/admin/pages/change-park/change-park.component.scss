@@ -1,0 +1,47 @@
+.page-container {
+  min-width: 100%;
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.content-card {
+  margin-top: 20px;
+  width: 400px;
+  max-width: 80%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+h3 {
+  width: 100%;
+  text-align: center;
+}
+
+mat-card-content {
+  width: 100%;
+}
+
+form {
+  /*width: 400px;*/
+  min-width: 100%;
+}
+
+.form-group {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-form-field mat-icon {
+  margin-right: 10px;
+}
+
+.park-button {
+  width: 100%;
+  margin-bottom: 10px;
+}

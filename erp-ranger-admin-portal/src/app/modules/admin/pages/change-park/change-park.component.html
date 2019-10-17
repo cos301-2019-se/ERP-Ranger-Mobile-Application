@@ -1,0 +1,25 @@
+<div class="page-container">
+  <mat-card class="content-card mat-elevation-z8 animated slideInUp">
+    <mat-card-content>
+      <h1>
+        Select a Park
+      </h1>
+      <form *ngIf="parks" [formGroup]="parkForm" #formDir="ngForm" (ngSubmit)="changePark()">
+        <div>
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+                <mat-select placeholder="Select a Park" type="text" class="form-control" formControlName="park" required>
+                  <mat-option *ngFor="let park of parks" [value]="park">
+                    {{ park.payload.doc.data().name }}
+                  </mat-option>
+                </mat-select>
+              <mat-error *ngIf="parkForm.get('park').hasError('required')">A Park is required.</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <button mat-raised-button color="primary" type="submit" class="button" [disabled]="parkForm.invalid" class="park-button">Select Park</button>
+        <a routerLink=""><button mat-raised-button type="submit" class="button" class="park-button">Cancel</button></a>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

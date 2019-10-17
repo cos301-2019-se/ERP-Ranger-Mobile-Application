@@ -34,22 +34,32 @@ import { ReportTypeUpdateComponent } from './pages/report-type-update/report-typ
 import { ReportReceiverNewComponent } from './pages/report-receiver-new/report-receiver-new.component';
 import { EditRewardComponent } from './pages/edit-reward/edit-reward.component';
 import { ParkMapComponent } from './components/park-map/park-map.component';
-
+import { ChangeParkComponent } from './pages/change-park/change-park.component';
+import { MatFormField, MatFormFieldModule, MatInputModule, MatCheckboxModule, MatPaginatorModule, MatTabsModule, MatOptionModule, MatAutocomplete} from '@angular/material';
+import { MatSelectModule, MatAutocompleteModule } from '@angular/material';
 @NgModule({
 
   declarations: [DashboardComponent, ReportDetailComponent, ShiftFeedbackComponent,
     ShiftListComponent, ShiftNewComponent, ShiftDetailComponent, NavComponent, AddMarkerComponent,
     ReportOverviewComponent, AddUserComponent, UserPositionsComponent, UserListComponent, RewardListComponent,
     AddRewardComponent, EditUserComponent, NotificationListComponent, ReportTypeNewComponent, ReportTypeUpdateComponent,
-    ReportReceiverNewComponent, EditRewardComponent, ParkMapComponent
+    ReportReceiverNewComponent, EditRewardComponent, ParkMapComponent, ChangeParkComponent
   ],
 
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    MatFormFieldModule,
+    MatCheckboxModule,
+    MatInputModule,
     MatTableModule,
+    MatTabsModule,
+    MatSelectModule,
+    MatAutocompleteModule,
+    MatOptionModule,
     MatSortModule,
+    MatPaginatorModule,
     RxReactiveFormsModule,
     AdminRoutingModule,
     MaterialModule,
